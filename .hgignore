@@ -1,0 +1,5 @@
+syntax: glob
+*.o
+a.out
+as/as1
+as/as2

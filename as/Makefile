@@ -1,0 +1,22 @@
+TARGET = as1 as2
+CC     = v6cc
+AS     = v6as
+LD     = v6ld
+
+SRC1 = as11.s as12.s as13.s as14.s as15.s as16.s as17.s as18.s as19.s
+SRC2 = as21.s as22.s as23.s as24.s as25.s as26.s as27.s as28.s as29.s
+
+all: $(TARGET)
+
+as1: $(SRC1)
+	$(AS) $(SRC1)
+	$(LD) a.out
+	mv a.out $@
+
+as2: $(SRC2)
+	$(AS) $(SRC2)
+	$(LD) a.out
+	mv a.out $@
+
+clean:
+	rm -f $(TARGET) a.out
