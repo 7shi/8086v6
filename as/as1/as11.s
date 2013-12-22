@@ -15,7 +15,8 @@ go:
 	movb	fbfil,r0
 	sys	close
 	tstb	errflg
-	bne	aexit
+/	bne	_aexit
+	jne _aexit
 	jsr	r5,fcreat; _atmp3
 	mov	r0,r1
 	mov	symend,0f
@@ -30,11 +31,11 @@ go:
 	mov	$2f,r0
 	jsr	r5,filerr; "?\n
 
-aexit:
-	sys	unlink; _atmp1
-	sys	unlink; _atmp2
-	sys	unlink; _atmp3
-	sys	exit
+/aexit:
+/	sys	unlink; _atmp1
+/	sys	unlink; _atmp2
+/	sys	unlink; _atmp3
+/	sys	exit
 .data
 1:
 	2f
