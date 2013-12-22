@@ -1,14 +1,10 @@
+include ../Makefile.inc
 TARGET = 1.out 2.out
-CC     = v6cc
-AS     = v6as
-LD     = v6ld
-RUN    = 7run
-V6ROOT = /usr/local/v6root
 
 all: $(TARGET)
 
 1.out: 1-s.o 1-c.o
-	$(LD) $^ $(V6ROOT)/lib/libc.a
+	$(LD) $^ $(LIBC)
 	mv a.out $@
 
 1-s.o: 1-s.s
