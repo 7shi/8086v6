@@ -1,6 +1,4 @@
-dummy() {}
-
-/* as18.s */
+/* translated from as18.s */
 
 char atmp1[] "/tmp/atm1a";
 char atmp2[] "/tmp/atm2a";
