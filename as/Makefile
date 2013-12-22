@@ -25,4 +25,4 @@ test: as1 as2
 	cmp a.out as2
 
 clean:
-	rm -f $(TARGET) a.out
+	rm -f $(TARGET) a.out as1.s
