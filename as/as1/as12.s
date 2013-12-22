@@ -53,18 +53,9 @@ betwen:
 	rts	r5
 
 putw:
-	tst	ifflg
-	beq	1f
-	cmp	r4,$'\n
-	bne	2f
-1:
-	mov	r4,*obufp
-	add	$2,obufp
-	cmp	obufp,$outbuf+512.
-	blo	2f
-	mov	$outbuf,obufp
-	movb	pof,r0
-	sys	write; outbuf; 512.
-2:
-	rts	pc
-
+	mov r1, -(sp)
+	mov r4, -(sp)
+	jsr pc, _putw
+	tst (sp)+
+	mov (sp)+, r1
+	rts pc
