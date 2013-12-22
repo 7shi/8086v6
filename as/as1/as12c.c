@@ -5,6 +5,72 @@ putw: as12.s, as14.s, as15.s
 */
 
 /*
+error:
+	incb	errflg
+	mov	r0,-(sp)
+	mov	r1,-(sp)
+	mov	(r5)+,r0
+	tst	*curarg
+	beq	1f
+	mov	r0,-(sp)
+	mov	*curarg,r0
+	clr	*curarg
+	jsr	r5,filerr; '\n
+	mov	(sp)+,r0
+1:
+	mov	r2,-(sp)
+	mov	r3,-(sp)
+	mov	line,r3
+	movb	r0,1f
+	mov	$1f+6,r0
+	mov	$4,r1
+2:
+	clr	r2
+	dvd	$10.,r2
+	add	$'0,r3
+	movb	r3,-(r0)
+	mov	r2,r3
+	sob	r1,2b
+	mov	$1,r0
+	sys	write; 1f; 7
+	mov	(sp)+,r3
+	mov	(sp)+,r2
+	mov	(sp)+,r1
+	mov	(sp)+,r0
+	rts	r5
+
+	.data
+1:	<f xxxx\n>
+	.even
+	.text
+*/
+
+char errflg;
+char **curarg;
+char fxxx[] "f xxxx\n";
+int line;
+
+error(r5)
+char *r5;
+{
+	int i, ln;
+	char *p;
+	++errflg;
+	if (*curarg) {
+		filerr(*curarg, '\n');
+		*curarg = 0;
+	}
+	fxxx[0] = *r5;
+	ln = line;
+	p = &fxxx[6];
+	for (i = 0; i < 4; i++) {
+		*(--p) = '0' + (ln % 10);
+		ln =/ 10;
+	}
+	write(1, fxxx, 7);
+}
+
+/*
 betwen:
 	cmp	r0,(r5)+
 	blt	1f
