@@ -43,14 +43,19 @@ error:
 	.text
 
 betwen:
-	cmp	r0,(r5)+
-	blt	1f
-	cmp	(r5)+,r0
-	blt	2f
-1:
-	tst	(r5)+
-2:
-	rts	r5
+	mov r1, -(sp)
+	mov 2(r5), -(sp)
+	mov r0, -(sp)
+	mov (r5), -(sp)
+	jsr pc, _betwen
+	asl r0 / r0 =<< 1;
+	add $4, r0
+	add r0, r5
+	tst (sp)+
+	mov (sp)+, r0
+	tst (sp)+
+	mov (sp)+, r1
+	rts r5
 
 putw:
 	mov r1, -(sp)
