@@ -24,14 +24,12 @@ error:
 
 betwen:
 	mov r1, -(sp)
-	mov 2(r5), -(sp)
+	mov r5, -(sp)
 	mov r0, -(sp)
-	mov (r5), -(sp)
 	jsr pc, _betwen
-	asl r0 / r0 =<< 1;
-	add $4, r0
 	add r0, r5
-	tst (sp)+
+	add r0, r5
+	cmp (r5)+, (r5)+
 	mov (sp)+, r0
 	tst (sp)+
 	mov (sp)+, r1

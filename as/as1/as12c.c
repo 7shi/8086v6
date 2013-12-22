@@ -89,8 +89,10 @@ like syscall fork
 -> if '0' <= r0 <= '9' skip "br 1f"
 */
 
-betwen(atr5, r0, at2r5) {
-	return atr5 <= r0 && r0 <= at2r5;
+betwen(r0, r5)
+int *r5;
+{
+	return r5[0] <= r0 && r0 <= r5[1];
 }
 
 /*
