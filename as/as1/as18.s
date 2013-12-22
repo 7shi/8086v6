@@ -3,7 +3,7 @@
 
 / a8 -- pdp-11 assembler pass 1
 
-chartab:
+_chartab: chartab:
 	.byte -14,-14,-14,-14,-02,-14,-14,-14
 	.byte -14,-22, -2,-14,-14,-22,-14,-14
 	.byte -14,-14,-14,-14,-14,-14,-14,-14
@@ -23,40 +23,40 @@ chartab:
 
 .data
 
-namedone:.byte 0
+_namedone: namedone:.byte 0
 	.even
-curfb:
+_curfb: curfb:
 	-1;-1;-1;-1;-1;-1;-1;-1;-1;-1
-obufp:	outbuf
-symend:	usymtab
+_obufp: obufp:	outbuf
+_symend: symend:	usymtab
 
 .bss
-curfbr:	.=.+10.
-savdot:	.=.+6
-bufcnt:	.=.+2
+_curfbf: curfbr:	.=.+10.
+_savdot: savdot:	.=.+6
+_bufscnt: bufcnt:	.=.+2
 hshsiz = 1553.
-hshtab:	.=2*hshsiz+.
-pof:	.=.+1
-wordf:	.=.+1
-fin:	.=.+1
-fbfil:	.=.+1
-fileflg:.=.+1
-errflg:	.=.+1
-ch:	.=.+1
+_hshtab: hshtab:	.=2*hshsiz+.
+_pof: pof:	.=.+1
+_wordf: wordf:	.=.+1
+_fin: fin:	.=.+1
+_fbfil: fbfil:	.=.+1
+_fileflg: fileflg:.=.+1
+_errflg: errflg:	.=.+1
+_ch: ch:	.=.+1
 .even
-symbol:	.=.+8.
-obufc:	.=.+2
-outbuf:	.=.+512.
-line:	.=.+2
-inbfcnt:.=.+2
-ifflg:	.=.+2
-inbfp:	.=.+2
-nargs:	.=.+2
-curarg:	.=.+2
-opfound:.=.+2
-savop:	.=.+2
-numval:	.=.+2
-nxtfb:	.=.+4
-usymtab:.=.+36.
-end:
+_symbol: symbol:	.=.+8.
+_obufc: obufc:	.=.+2
+_outbuf: outbuf:	.=.+512.
+_line: line:	.=.+2
+_inbfcnt: inbfcnt:.=.+2
+_ifflg: ifflg:	.=.+2
+_inbfp: inbfp:	.=.+2
+_nargs: nargs:	.=.+2
+_curarg: curarg:	.=.+2
+_opfount: opfound:.=.+2
+_savop: savop:	.=.+2
+_numval: numval:	.=.+2
+_nxtfb: nxtfb:	.=.+4
+_usymtab: usymtab:.=.+36.
+_end: end:
 .text

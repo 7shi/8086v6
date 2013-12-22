@@ -40,7 +40,7 @@ eae = 0
 /	36	jeq, jne, etc
 
 	.data
-symtab:
+_symtab: symtab:
 / special variables
 
 <.\0\0\0\0\0\0\0>; dotrel:02; dot:000000
