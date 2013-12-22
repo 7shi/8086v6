@@ -302,9 +302,9 @@ start:
 2:
 	movb	r0,nargs
 	mov	r5,curarg
-	jsr	r5,fcreat; a.tmp1
+	jsr	r5,fcreat; _atmp1
 	movb	r0,pof
-	jsr	r5,fcreat; a.tmp2
+	jsr	r5,fcreat; _atmp2
 	movb	r0,fbfil
 	jsr	pc,setup
 	jmp	go
