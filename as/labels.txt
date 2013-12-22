@@ -1,0 +1,304 @@
+# as1
+## as11.s
+go: as11.s, as19.s
+aexit: as11.s, as14.s, as15.s, as19.s
+unglob: as11.s, as19.s
+fpass2: as11.s
+filerr: as11.s, as12.s, as14.s
+fcreat: as11.s, as19.s
+## as12.s
+error: as12.s, as13.s, as14.s, as15.s, as16.s, as17.s
+betwen: as12.s, as14.s, as16.s, as17.s
+putw: as12.s, as14.s, as15.s
+## as13.s
+assem: as11.s, as13.s
+ealoop: as13.s
+assem1: as13.s
+fbcheck: as13.s, as14.s
+checkeos: as13.s
+## as14.s
+rname: as14.s, as15.s
+number: as14.s, as15.s
+rch: as14.s, as15.s
+## as15.s
+readop: as13.s, as15.s, as16.s, as17.s
+_readop: as15.s
+escp: as15.s
+esctab: as15.s
+fixor: as15.s
+retread: as15.s
+rdname: as15.s
+rdnum: as15.s
+squote: as15.s
+dquote: as15.s
+skip: as15.s
+garb: as15.s
+string: as15.s, as19.s
+rsch: as15.s
+schar: as15.s
+## as16.s
+opline: as13.s, as16.s
+xpr: as16.s
+opl35: as16.s
+opl36: as16.s
+opl13: as16.s
+opl7: as16.s
+op2: as16.s
+opl15: as16.s
+opl31: as16.s
+opl6: as16.s
+opl10: as16.s
+opl11: as16.s
+opl16: as16.s
+opl17: as16.s
+opl20: as16.s
+opl21: as16.s
+opl22: as16.s
+opl23: as16.s
+opl25: as16.s
+opl26: as16.s
+opl27: as16.s
+opl32: as16.s
+addres: as16.s
+getx: as16.s
+alp: as16.s
+amin: as16.s
+adoll: as16.s
+astar: as16.s
+errora: as16.s
+checkreg: as16.s
+errore: as16.s, as17.s
+checkrp: as16.s
+## as17.s
+expres: as13.s, as16.s, as17.s
+advanc: as17.s
+esw1: as17.s
+binop: as17.s
+exnum: as17.s
+brack: as17.s
+oprand: as17.s
+exsw2: as17.s
+excmbin: as17.s
+exrsh: as17.s
+exlsh: as17.s
+exmod: as17.s
+exadd: as17.s
+exsub: as17.s
+exand: as17.s
+exor: as17.s
+exmul: as17.s
+exdiv: as17.s
+exnot: as17.s
+eoprnd: as17.s
+combin: as17.s
+## as18.s
+chartab: as14.s, as15.s, as18.s
+namedone: as18.s
+a.tmp1: as11.s, as18.s, as19.s
+a.tmp2: as11.s, as18.s, as19.s
+a.tmp3: as11.s, as18.s
+curfb: as13.s, as17.s, as18.s
+obufp: as12.s, as18.s
+symend: as11.s, as14.s, as18.s
+curfbr: as13.s, as17.s, as18.s
+savdot: as16.s, as18.s
+bufcnt: as18.s
+hshtab: as14.s, as18.s, as19.s
+pof: as11.s, as12.s, as18.s, as19.s
+wordf: as18.s
+fin: as14.s, as18.s
+fbfil: as11.s, as13.s, as18.s, as19.s
+fileflg: as14.s, as18.s
+errflg: as11.s, as12.s, as18.s
+ch: as14.s, as15.s, as18.s
+symbol: as14.s, as18.s
+obufc: as18.s
+outbuf: as11.s, as12.s, as18.s
+line: as12.s, as13.s, as14.s, as18.s
+inbfcnt: as14.s, as18.s
+ifflg: as12.s, as13.s, as14.s, as16.s, as18.s
+inbfp: as14.s, as18.s
+nargs: as14.s, as18.s, as19.s
+curarg: as12.s, as14.s, as18.s, as19.s
+opfound: as17.s, as18.s
+savop: as13.s, as15.s, as16.s, as18.s
+numval: as13.s, as15.s, as16.s, as17.s, as18.s
+nxtfb: as13.s, as18.s
+usymtab: as11.s, as14.s, as18.s
+end: as14.s, as18.s
+## as19.s
+symtab: as14.s, as19.s
+dotrel: as13.s, as16.s, as19.s
+dot: as13.s, as16.s, as19.s
+dotdot: as19.s
+ebsymtab: as19.s
+start: as11.s, as19.s
+setup: as19.s
+
+# as2
+## as21.s
+main: as21.s
+go: as21.s, as29.s
+aexit: as21.s, as29.s
+outmod: as21.s, as22.s
+filerr: as21.s, as29.s
+doreloc: as21.s
+setbrk: as21.s
+setup: as21.s
+ofile: as21.s, as29.s
+## as22.s
+outw: as22.s, as26.s
+outb: as22.s, as23.s, as26.s
+error: as22.s, as23.s, as26.s, as27.s
+betwen: as22.s, as26.s, as27.s
+## as23.s
+assem: as21.s, as23.s
+dotmax: as23.s
+eal1: as23.s
+ealoop: as23.s
+checkeos: as23.s
+fbadv: as21.s, as23.s
+## as24.s
+oset: as21.s, as24.s, as26.s
+putw: as21.s, as22.s, as24.s
+flush: as21.s, as24.s, as26.s
+flush1: as24.s
+readop: as23.s, as24.s, as26.s, as27.s
+getw: as21.s, as23.s, as24.s, as26.s, as27.s
+getw1: as24.s
+## as25.s
+## as26.s
+opline: as23.s, as26.s
+xxpr: as26.s
+xpr: as26.s
+opeof: as26.s
+opl30: as26.s
+opl14: as26.s
+opl5: as26.s
+opl13: as26.s
+op2a: as26.s
+op2b: as26.s
+opl15: as26.s
+opl12: as26.s
+opl35: as26.s
+opl36: as26.s
+opl31: as26.s
+opl6: as26.s
+dobranch: as26.s
+opl7: as26.s
+opl10: as26.s
+opl11: as26.s
+opl16: as26.s
+opl17: as26.s
+opl20: as26.s
+opl21: as26.s
+opl22: as26.s
+oplret: as26.s
+opl23: as26.s
+opl25: as26.s
+opl26: as26.s
+opl27: as26.s
+opl32: as26.s
+addres: as26.s
+getx: as26.s
+alp: as26.s
+amin: as26.s
+adoll: as26.s
+astar: as26.s
+errora: as26.s
+checkreg: as26.s
+errore: as26.s, as27.s
+checkrp: as26.s
+setbr: as26.s
+getbr: as26.s
+## as27.s
+expres: as23.s, as26.s, as27.s
+expres1: as27.s
+advanc: as27.s
+esw1: as27.s
+binop: as27.s
+exnum1: as27.s
+exnum: as27.s
+brack: as27.s
+oprand: as27.s
+exsw2: as27.s
+excmbin: as27.s
+exrsh: as27.s
+exlsh: as27.s
+exmod: as27.s
+exadd: as27.s
+exsub: as27.s
+exand: as27.s
+exor: as27.s
+exmul: as27.s
+exdiv: as27.s
+exnot: as27.s
+eoprnd: as27.s
+combin: as27.s
+combin1: as27.s
+maprel: as27.s
+reltp2: as27.s
+reltm2: as27.s
+relte2: as27.s
+## as28.s
+qnl: as21.s, as28.s
+a.out: as21.s, as28.s, as29.s
+a.outp: as28.s, as29.s
+a.tmp1: as21.s, as28.s, as29.s
+a.tmp2: as21.s, as28.s, as29.s
+a.tmp3: as21.s, as28.s, as29.s
+tseekp: as22.s, as26.s, as28.s
+rseekp: as22.s, as26.s, as28.s
+txtmagic: as21.s, as28.s
+txtsiz: as21.s, as23.s, as28.s
+datsiz: as21.s, as28.s
+bsssiz: as21.s, as28.s
+symsiz: as21.s, as28.s
+stksiz: as28.s
+exorig: as28.s
+txtseek: as26.s, as28.s
+datseek: as21.s, as28.s
+trelseek: as21.s, as26.s, as28.s
+drelseek: as21.s, as28.s
+symseek: as21.s, as28.s
+brtab: as26.s, as28.s
+brtabp: as21.s, as26.s, as28.s
+brdelt: as23.s, as26.s, as28.s
+fbbufp: as21.s, as23.s, as28.s
+defund: as21.s, as28.s, as29.s
+savdot: as21.s, as26.s, as28.s
+datbase: as21.s, as28.s
+bssbase: as21.s, as28.s
+fbfil: as21.s, as28.s, as29.s
+fin: as21.s, as24.s, as28.s, as29.s
+ibufc: as21.s, as24.s, as28.s
+txtfil: as21.s, as28.s, as29.s
+symf: as21.s, as28.s, as29.s
+adrbuf: as26.s, as28.s
+xsymbol: as22.s, as26.s, as27.s, as28.s
+fout: as24.s, as28.s, as29.s
+ch: as21.s, as22.s, as28.s
+wordf: as28.s
+argb: as22.s, as26.s, as28.s
+line: as22.s, as23.s, as26.s, as28.s
+savop: as23.s, as24.s, as26.s, as28.s
+curfb: as21.s, as23.s, as27.s, as28.s
+nxtfb: as23.s, as28.s
+numval: as23.s, as27.s, as28.s
+maxtyp: as27.s, as28.s
+relfil: as28.s
+ibufp: as24.s, as28.s
+txtp: as21.s, as22.s, as26.s, as28.s
+relp: as21.s, as22.s, as26.s, as28.s
+swapf: as26.s, as28.s
+rlimit: as26.s, as28.s
+passno: as21.s, as22.s, as23.s, as26.s, as27.s, as28.s
+endtable: as21.s, as28.s
+usymtab: as21.s, as22.s, as24.s, as28.s
+end: as21.s, as28.s
+## as29.s
+symtab: as23.s, as24.s, as29.s
+dotrel: as21.s, as23.s, as29.s
+dot: as21.s, as22.s, as23.s, as26.s, as29.s
+dotdot: as21.s, as22.s, as29.s
+start: as21.s, as29.s
