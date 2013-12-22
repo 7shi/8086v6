@@ -27,10 +27,10 @@ int *obufp;
 char outbuf[512];
 char pof;
 
-putw(w)
+putw(r4)
 {
-	if (!ifflg || w == '\n') {
-		*(obufp++) = w;
+	if (!ifflg || r4 == '\n') {
+		*(obufp++) = r4;
 		if (obufp >= &outbuf[512]) {
 			obufp = outbuf;
 			write(pof, outbuf, 512);
