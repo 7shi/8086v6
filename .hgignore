@@ -2,4 +2,5 @@ syntax: glob
 *.o
 *.out
 as/as1
+as/as1.s
 as/as2
