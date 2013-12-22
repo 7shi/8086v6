@@ -1,5 +1,5 @@
 syntax: glob
 *.o
-a.out
+*.out
 as/as1
 as/as2
