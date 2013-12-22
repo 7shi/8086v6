@@ -25,4 +25,4 @@ test: as1
 	cmp a.out ../as2/as2
 
 clean:
-	rm -f $(TARGET) $(COBJS) a.out 
+	rm -f $(TARGET) $(CASMS) a.out 
