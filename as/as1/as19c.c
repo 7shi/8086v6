@@ -49,6 +49,7 @@ dump(){
     printf(" %2x", *r1);
   }
 }
+
 /*
  * void setup(void);
  */
@@ -77,13 +78,11 @@ setup(){
       if(r4 == 0){
         break;
       }
-      printf("%c", r4);
 
       /* 末尾2文字をハッシュテーブルのIdxの元とする */
       r3 = r3 + r4;
       r3 = (r3 << 8) + ((r3 >> 8) & 0377);
     }while(--r2);
-    printf("\n[%d] idx[%04x]\n", 8-r2, r3);
   
     /* 2: */
     r2 = 0;
@@ -91,19 +90,13 @@ setup(){
     /* r2 = r3 / hshsiz; /* div result   */
     /* r3 = r3 % hshsiz; /* div reminder */
     while(r3 >= hshsiz){
-      /* printf("--%x", r3); */
       r3 = r3 - hshsiz;
       r2++;
     }
-    printf("--- %x / %x\n", r2, r3);
 
-    /* printf("--- %x = %x << 1\n", r2 << 1, r2); */
-    /* printf("--- %x = %x << 1\n", r2 << 1, r2); */
     r2 = r2 << 1 + ((r3 >> 15) & 1);
     r3 = r3 << 1;
-    /* printf("--- %d = %d + %d\n", r3 + hshtab, r3, hshtab); */
     r3 = r3 + hshtab;
-    printf("[-] idx[%04x]\n", r3);
 
     do{
       /* 4: */
@@ -115,15 +108,12 @@ setup(){
       /* 3: */
       r3 =- 2;
     }while(*r3 != 0);
-    printf("[l] idx[%04x]\n", r3);
 
-    printf("--------> %x/%x\n", v1, ebsymtab);
     r1 = v1;
     a = r3;
     *a = r1;
     r1 = r1 + 12; /* シンボルテーブルを1行づつずらす */
 
-    printf("=======> %x, %x @%x\n", *a, r1 - 12, r3);
   }while(r1 < ebsymtab);
 }
 
