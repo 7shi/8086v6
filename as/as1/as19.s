@@ -283,8 +283,7 @@ eae = 0
 
 .globl _ebsymtab; _ebsymtab: ebsymtab:
 
-_hshsiz:
-  hshsiz
+.globl _hshsiz; _hshsiz: hshsiz
 
 //////////////////////////////////////////////////////////
 / start:
@@ -315,7 +314,7 @@ _hshsiz:
 .globl _aexit; _aexit:
  jmp aexit
 
-_fcreat:
+.globl _fcreat; _fcreat:
  mov 2(sp), 0f
  jsr r5, fcreat; 0:0
  rts pc
