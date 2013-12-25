@@ -18,14 +18,14 @@ start(argc, argv) int argc; char *argv[];{
   int ret;
 
   ret = signal(2,1);
-  if(ret & 1 == 0){
+  if (ret & 1 == 0) {
     signal(2, aexit);
   }
 
-  if(argv[1][0] == '-'){
+  if (argv[1][0] == '-') {
     argv++;
     argc--;
-  }else{
+  } else {
     unglob = 0;
   }
 
