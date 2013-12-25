@@ -311,13 +311,18 @@ eae = 0
 / 	jsr	pc,setup
 / 	jmp	go
 
-.globl _aexit; _aexit:
- jmp aexit
-
 .globl _fcreat; _fcreat:
  mov 2(sp), 0f
  jsr r5, fcreat; 0:0
  rts pc
+
+.text
+
+.globl _aexit; _aexit:
+ jmp aexit
+
+.globl _go; _go:
+ jmp go
 
 start:
  mov sp, r5
@@ -325,12 +330,7 @@ start:
  mov r5, -(sp)
  mov r0, -(sp)
  jsr pc, _start
- cmp (sp)+,(sp)+
-
- jsr pc, _setup
- jmp go
-
-setup:
+ sys exit
 
 //////////////////////////////////////////////////////////
 /setup:
@@ -366,6 +366,4 @@ setup:
 /	rts	pc
 
 /overlay buffer
-inbuf	= setup
-.	=inbuf+512.
-
+inbuf: .=.+512.

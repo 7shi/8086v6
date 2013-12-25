@@ -34,6 +34,9 @@ start(argc, argv) int argc; char *argv[];{
 
   pof = fcreat(atmp1);
   fbfil = fcreat(atmp2);
+
+  setup();
+  go();
 }
 
 /* for setup() */
