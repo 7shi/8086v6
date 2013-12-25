@@ -324,14 +324,6 @@ eae = 0
 .globl _go; _go:
  jmp go
 
-start:
- mov sp, r5
- mov (r5)+, r0
- mov r5, -(sp)
- mov r0, -(sp)
- jsr pc, _start
- sys exit
-
 //////////////////////////////////////////////////////////
 /setup:
 /	mov	$symtab,r1

@@ -12,9 +12,9 @@ char atmp2[];
 int aexit();
 
 /*
- * void start (int argc, char* argv[])
+ * void main (int argc, char* argv[])
  */
-start(argc, argv) int argc; char *argv[];{
+main(argc, argv) int argc; char *argv[];{
   int ret;
 
   ret = signal(2,1);

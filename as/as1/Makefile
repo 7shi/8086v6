@@ -10,7 +10,7 @@ COBJS = $(CSRCS:.c=.o)
 all: $(TARGET)
 
 as1: as1.o $(COBJS)
-	$(LD) $^ $(LIBC)
+	$(CC) $^
 	mv a.out $@
 
 as1.o: $(SSRCS)

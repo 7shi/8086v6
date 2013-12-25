@@ -5,7 +5,7 @@
 
 indir	= 0
 
-	jmp	start
+	/jmp	start
 go:
 	jsr	pc,assem
 	movb	pof,r0
