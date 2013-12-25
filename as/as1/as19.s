@@ -357,5 +357,7 @@ eae = 0
 /	blo	1b
 /	rts	pc
 
+.data
+
 /overlay buffer
 inbuf: .=.+512.
