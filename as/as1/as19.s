@@ -40,7 +40,7 @@ eae = 0
 /	36	jeq, jne, etc
 
 	.data
-_symtab: symtab:
+.globl _symtab; _symtab: symtab:
 / special variables
 
 <.\0\0\0\0\0\0\0>; dotrel:02; dot:000000
@@ -281,7 +281,7 @@ _symtab: symtab:
 <.bss\0\0\0\0>;		27;000000
 <.comm\0\0\0>;		32;000000
 
-ebsymtab:
+.globl _ebsymtab; _ebsymtab: ebsymtab:
 
 
 start:

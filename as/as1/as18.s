@@ -3,7 +3,7 @@
 
 / a8 -- pdp-11 assembler pass 1
 
-_chartab: chartab:
+.globl _chartab; _chartab: chartab:
 	.byte -14,-14,-14,-14,-02,-14,-14,-14
 	.byte -14,-22, -2,-14,-14,-22,-14,-14
 	.byte -14,-14,-14,-14,-14,-14,-14,-14
@@ -23,40 +23,40 @@ _chartab: chartab:
 
 .data
 
-_namedone: namedone:.byte 0
+.globl _namedone; _namedone: namedone:.byte 0
 	.even
-_curfb: curfb:
+.globl _curfb; _curfb: curfb:
 	-1;-1;-1;-1;-1;-1;-1;-1;-1;-1
-_obufp: obufp:	outbuf
-_symend: symend:	usymtab
+.globl _obufp; _obufp: obufp:	outbuf
+.globl _symend; _symend: symend:	usymtab
 
 .bss
-_curfbf: curfbr:	.=.+10.
-_savdot: savdot:	.=.+6
-_bufscnt: bufcnt:	.=.+2
+.globl _curfbf; _curfbf: curfbr:	.=.+10.
+.globl _savdot; _savdot: savdot:	.=.+6
+.globl _bufscnt; _bufscnt: bufcnt:	.=.+2
 hshsiz = 1553.
-_hshtab: hshtab:	.=2*hshsiz+.
-_pof: pof:	.=.+1
-_wordf: wordf:	.=.+1
-_fin: fin:	.=.+1
-_fbfil: fbfil:	.=.+1
-_fileflg: fileflg:.=.+1
-_errflg: errflg:	.=.+1
-_ch: ch:	.=.+1
+.globl _hshtab; _hshtab: hshtab:	.=2*hshsiz+.
+.globl _pof; _pof: pof:	.=.+1
+.globl _wordf; _wordf: wordf:	.=.+1
+.globl _fin; _fin: fin:	.=.+1
+.globl _fbfil; _fbfil: fbfil:	.=.+1
+.globl _fileflg; _fileflg: fileflg:.=.+1
+.globl _errflg; _errflg: errflg:	.=.+1
+.globl _ch; _ch: ch:	.=.+1
 .even
-_symbol: symbol:	.=.+8.
-_obufc: obufc:	.=.+2
-_outbuf: outbuf:	.=.+512.
-_line: line:	.=.+2
-_inbfcnt: inbfcnt:.=.+2
-_ifflg: ifflg:	.=.+2
-_inbfp: inbfp:	.=.+2
-_nargs: nargs:	.=.+2
-_curarg: curarg:	.=.+2
-_opfount: opfound:.=.+2
-_savop: savop:	.=.+2
-_numval: numval:	.=.+2
-_nxtfb: nxtfb:	.=.+4
-_usymtab: usymtab:.=.+36.
-_end: end:
+.globl _symbol; _symbol: symbol:	.=.+8.
+.globl _obufc; _obufc: obufc:	.=.+2
+.globl _outbuf; _outbuf: outbuf:	.=.+512.
+.globl _line; _line: line:	.=.+2
+.globl _inbfcnt; _inbfcnt: inbfcnt:.=.+2
+.globl _ifflg; _ifflg: ifflg:	.=.+2
+.globl _inbfp; _inbfp: inbfp:	.=.+2
+.globl _nargs; _nargs: nargs:	.=.+2
+.globl _curarg; _curarg: curarg:	.=.+2
+.globl _opfount; _opfount: opfound:.=.+2
+.globl _savop; _savop: savop:	.=.+2
+.globl _numval; _numval: numval:	.=.+2
+.globl _nxtfb; _nxtfb: nxtfb:	.=.+4
+.globl _usymtab; _usymtab: usymtab:.=.+36.
+.globl _end; _end: end:
 .text
