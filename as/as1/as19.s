@@ -312,7 +312,7 @@ _hshsiz:
 / 	jsr	pc,setup
 / 	jmp	go
 
-_aexit:
+.globl _aexit; _aexit:
  jmp aexit
 
 _fcreat:
