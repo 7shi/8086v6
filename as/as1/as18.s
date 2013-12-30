@@ -31,7 +31,7 @@
 .globl _symend; _symend: symend:	usymtab
 
 .bss
-.globl _curfbf; _curfbf: curfbr:	.=.+10.
+.globl _curfbr; _curfbr: curfbr:	.=.+10.
 .globl _savdot; _savdot: savdot:	.=.+6
 .globl _bufscnt; _bufscnt: bufcnt:	.=.+2
 hshsiz = 1553.
