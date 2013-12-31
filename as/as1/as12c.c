@@ -57,7 +57,7 @@ char *r5;
 	char *p;
 	++errflg;
 	if (*curarg) {
-		filerr(*curarg, '\n');
+		filerr(*curarg, " \n");
 		*curarg = 0;
 	}
 	fxxx[0] = *r5;

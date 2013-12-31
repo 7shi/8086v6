@@ -6,7 +6,7 @@
 .data
 .globl _filerr
 _filerr:
-	mov 4(sp), 0f
+	mov *4(sp), 0f
 	mov 2(sp), r0
 	jsr r5, filerr; 0:0
 	rts pc
