@@ -3,8 +3,8 @@
 
 / a3 -- pdp-11 assembler pass 1
 
-.globl _readop_
-_readop_:
+.globl _readop
+_readop:
 	mov r5, -(sp)
 	jsr pc, readop
 	mov r4, r0

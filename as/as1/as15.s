@@ -15,7 +15,6 @@ readop:
 
 8:
 	jsr	pc,rch
-_readop:
 	mov	r0,r4
 	movb	chartab(r0),r1
 	bgt	rdname

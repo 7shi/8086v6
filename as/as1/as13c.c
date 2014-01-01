@@ -27,7 +27,7 @@ assem() {
 	char *r4;
 	char *oldr4;
 	for (;;) {
-		r4 = readop_();
+		r4 = readop();
 		if (!checkeos(r4)) {
 			if (ifflg) {
 				if (r4 > 0200) {
@@ -39,9 +39,9 @@ assem() {
 				continue;
 			}
 			oldr4 = r4;
-			r4 = readop_();
+			r4 = readop();
 			if (r4 == '=') {
-				r4 = expres(readop_(), &r2, &r3);
+				r4 = expres(readop(), &r2, &r3);
 				r1 = oldr4;
 				if (r1 < 0200)
 					error("x");
@@ -85,7 +85,7 @@ assem() {
 		} else if (r4 != ';') {
 			error("x");
 			while (!checkeos(r4)) {
-				r4 = readop_();
+				r4 = readop();
 			}
 		}
 	}
