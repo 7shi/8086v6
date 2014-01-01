@@ -1,7 +1,7 @@
 TOPDIR = ..
 include $(TOPDIR)/Makefile.inc
 
-all clean:
+all:
 	$(MAKE) $@ -C as1.orig
 	$(MAKE) $@ -C as2.orig
 	$(MAKE) $@ -C as1
@@ -22,3 +22,10 @@ test: dest orig
 	$(RUN) -r $(DESTDIR) $(DESTDIR)/bin/as as2.orig/as2?.s
 	$(LD) a.out
 	cmp a.out as2.orig/as2
+
+clean:
+	$(MAKE) $@ -C as1.orig
+	$(MAKE) $@ -C as2.orig
+	$(MAKE) $@ -C as1
+	$(MAKE) $@ -C as2
+	rm -f a.out
