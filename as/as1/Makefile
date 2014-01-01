@@ -1,10 +1,8 @@
 include ../../Makefile.inc
 TARGET = as1
 
-SSRCS = as11.s as12.s as13.s as14.s as15.s \
-		as16.s as17.s as18.s as19.s
-CSRCS = as11c.c as12c.c as13c.c as14c.c as15c.c \
-		as16c.c as17c.c as18c.c as19c.c
+SSRCS = as11.s as12.s as13.s as14.s as15.s as16.s as17.s as18.s as19.s
+CSRCS = $(SSRCS:.s=c.c)
 COBJS = $(CSRCS:.c=.o)
 
 all: $(TARGET)
