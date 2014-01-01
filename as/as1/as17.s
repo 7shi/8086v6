@@ -192,29 +192,42 @@ eoprnd:
 	jmp	advanc
 
 combin:
-	mov	r0,-(sp)
-	bis	r3,(sp)
-	bic	$!40,(sp)
-	bic	$!37,r0
-	bic	$!37,r3
-	cmp	r0,r3
-	ble	1f
-	mov	r0,-(sp)
-	mov	r3,r0
-	mov	(sp)+,r3
-1:
-	tst	r0
-	beq	1f
-	tst	(r5)+
-	beq	2f
-	cmp	r0,r3
-	bne	2f
-	mov	$1,r3
-	br	2f
-1:
-	tst	(r5)+
-	clr	r3
-2:
-	bis	(sp)+,r3
-	rts	r5
+  mov r1,-(sp)
+  mov r5,-(sp)
+  mov r3,-(sp)
+  mov r0,-(sp)
+  jsr pc, _combin
+  cmp (sp)+,(sp)+
+  mov (sp)+, r5   / 参照渡し
+  mov (sp)+, r1
+  rts r5
+
+///////////////////////
+/combin_:
+/	mov	r0,-(sp)
+/	bis	r3,(sp)
+/	bic	$!40,(sp)
+/	bic	$!37,r0
+/	bic	$!37,r3
+/	cmp	r0,r3
+/	ble	1f
+/	mov	r0,-(sp)
+/	mov	r3,r0
+/	mov	(sp)+,r3
+/1:
+/	tst	r0
+/	beq	1f
+/	tst	(r5)+
+/	beq	2f
+/	cmp	r0,r3
+/	bne	2f
+/	mov	$1,r3
+/	br	2f
+/1:
+/	tst	(r5)+
+/	clr	r3
+/2:
+/	bis	(sp)+,r3
+/	rts	r5
+
 
