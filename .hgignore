@@ -1,5 +1,7 @@
 syntax: glob
 *.o
 *.out
+as/as1.orig/as1
+as/as2.orig/as2
 as/as1/as1
 as/as2/as2

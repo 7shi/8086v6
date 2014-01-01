@@ -22,10 +22,14 @@ as1.o: $(SSRCS)
 	$(CC) -c $<
 
 test: as1
-	$(MAKE) -C ../as2
-	$(RUN) -r $(V6ROOT) as1 ../as2/as2?.s
+	$(MAKE) -C ../as1.orig
+	$(RUN) -r $(V6ROOT) as1 ../as1.orig/as1?.s
 	$(LD) a.out
-	cmp a.out ../as2/as2
+	cmp a.out ../as1.orig/as1
+	$(MAKE) -C ../as2.orig
+	$(RUN) -r $(V6ROOT) as1 ../as2.orig/as2?.s
+	$(LD) a.out
+	cmp a.out ../as2.orig/as2
 
 clean:
 	rm -f $(TARGET) *.o a.out 
