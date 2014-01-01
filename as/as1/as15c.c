@@ -28,8 +28,7 @@ readop() {
 		return r4;
 	}
 	for (;;) {
-		r0 = r4 = rch();
-		r1 = chartab[r0];
+		r1 = chartab[r4 = rch()];
 		if (r1 == -014 /* garb */)
 			error("g");
 		else if (r1 != -022)
@@ -78,12 +77,12 @@ readop() {
 		return '<';
 	case -010: /* rdname */
 	default:
-		ch = r0;
+		ch = r4;
 		if ('0' <= r1 && r1 <= '9') {
 			r4 = number(&r0);
 			break;
 		}
-		return rname(r0);
+		return rname(r4);
 	}
 	putw(r4);
 	if (r4 == 1) {
