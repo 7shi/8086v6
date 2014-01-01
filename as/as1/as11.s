@@ -41,7 +41,7 @@ aexit:
 	_atmp1
 	_atmp2
 	_atmp3
-unglob:
+.globl _unglob; _unglob: unglob:
 	3f
 	0
 	.text
