@@ -1,1 +1,116 @@
-/* translated from as15.s */
+/* translated from as15.s
+readop: as13.s, as15.s, as16.s, as17.s
+_readop: as15.s
+escp: as15.s
+esctab: as15.s
+fixor: as15.s
+retread: as15.s
+rdname: as15.s
+rdnum: as15.s
+squote: as15.s
+dquote: as15.s
+skip: as15.s
+garb: as15.s
+string: as15.s
+rsch: as15.s
+schar: as15.s
+*/
+
+int savop;
+char chartab[];
+char ch;
+int numval;
+
+readop() {
+	int r0, oldr0, r1, r4;
+	if (r4 = savop) {
+		savop = 0;
+		return r4;
+	}
+	for (;;) {
+		r0 = r4 = rch();
+		r1 = chartab[r0];
+		if (r1 == -014 /* garb */)
+			error("g");
+		else if (r1 != -022)
+			break;
+	}
+	switch (r1) {
+	case -026: /* fixor */
+		r4 = 037;
+		break;
+	case -024: /* escp */
+		switch (r4 = rch()) {
+		case '/': r4 = '/'; break;
+		case '<': r4 = 035; break;
+		case '>': r4 = 036; break;
+		case '%': r4 = 037; break;
+		}
+		break;
+	case -020: /* retread */
+		break;
+	case -016: /* dquote */
+		rsch(&oldr0);
+		rsch(&r0);
+		r0 =<< 8;
+		r0 =| oldr0;
+		r4 = 1;
+		break;
+	case -012: /* squote */
+		rsch(&r0);
+		r4 = 1;
+		break;
+	case -006: /* skip */
+		do {
+			r4 = rch();
+		} while (r4 != 4/*EOT*/ && r4 != '\n');
+		break;
+	case -004: /* rdnum */
+		r4 = number(&r0);
+		break;
+	case -002: /* retread */
+		break;
+	case  000: /* string */
+		putw('<');
+		for (numval = 0; !rsch(&r0); ++numval)
+			putw(r0 | 0400);
+		putw(-1);
+		return '<';
+	case -010: /* rdname */
+	default:
+		ch = r0;
+		if ('0' <= r1 && r1 <= '9') {
+			r4 = number(&r0);
+			break;
+		}
+		return rname(r0);
+	}
+	putw(r4);
+	if (r4 == 1) {
+		/* rdname(number() -> 1), rdnum, squote, dquote */
+		putw(numval = r0);
+	}
+	return r4;
+}
+
+rsch(r0)
+int *r0;
+{
+	*r0 = rch();
+	if (*r0 == 4/*EOT*/ || *r0 == '\n') {
+		error("<");
+		aexit();
+	} else if (*r0 == '\\') {
+		switch (*r0 = rch()) {
+		case 'n': *r0 = 012; break;
+		case 't': *r0 = 011; break;
+		case 'e': *r0 = 004; break;
+		case '0': *r0 = 000; break;
+		case 'r': *r0 = 015; break;
+		case 'a': *r0 = 006; break;
+		case 'p': *r0 = 033; break;
+		}
+		return 0;
+	}
+	return *r0 == '>';
+}
