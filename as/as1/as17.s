@@ -4,15 +4,22 @@
 /  a7 -- pdp-11 assembler pass 1
 
 expres:
-	mov	r5,-(sp)
-	mov	$'+,-(sp)
+	mov	r5,-(sp)  / create auto variableA : arg2
+	mov	$'+,-(sp) / create auto variableB : arg1
 	clr	opfound
 	clr	r2
 	mov	$1,r3
-	br	1f
+	/br	1f
+  jsr pc,sbrtn1
+  /rtn pc / add
+
 advanc:
 	jsr	pc,readop
-1:
+  /br  sbrtn1
+  jsr pc,sbrtn1
+	
+sbrtn1:
+  tst (sp)+     // add: trash return pos of jsr
 	mov	r4,r0
 	jsr	r5,betwen; 0; 177
 		br .+4
@@ -46,8 +53,9 @@ advanc:
 	bne	2f
 	jsr	pc,errore
 2:
-	tst	(sp)+
-	mov	(sp)+,r5
+  / return to client
+	tst	(sp)+     / use variable B
+	mov	(sp)+,r5  / use variable A
 	rts	pc
 1:
 	jmp	*(r1)
@@ -69,11 +77,11 @@ esw1:
 	0;	0
 
 binop:
-	cmpb	(sp),$'+
+	cmpb	(sp),$'+ / use variableB
 	beq	1f
 	jsr	pc,errore
 1:
-	movb	r4,(sp)
+	movb	r4,(sp)  / use variableB
 	br	advanc
 
 exnum:
@@ -82,8 +90,8 @@ exnum:
 	br	oprand
 
 brack:
-	mov	r2,-(sp)
-	mov	r3,-(sp)
+	mov	r2,-(sp)  / create auto variable2
+	mov	r3,-(sp)  / create auto variable3
 	jsr	pc,readop
 	jsr	pc,expres
 	cmp	r4,$']
@@ -92,14 +100,17 @@ brack:
 1:
 	mov	r3,r0
 	mov	r2,r1
-	mov	(sp)+,r3
-	mov	(sp)+,r2
+	mov	(sp)+,r3  / remove auto variable3
+	mov	(sp)+,r2  / remove auto variable2
+
+  // add
+  br  oprand
 
 oprand:
 	inc	opfound
 	mov	$exsw2,r5
 1:
-	cmp	(sp),(r5)+
+	cmp	(sp),(r5)+ / use variableB
 	beq	1f
 	tst	(r5)+
 	bne	1b
@@ -138,10 +149,10 @@ exlsh:
 
 exmod:
 	jsr	r5,combin; 0
-	mov	r1,-(sp)
+	mov	r1,-(sp)     / create auto variable2
 	mov	r2,r1
 	clr	r0
-	dvd	(sp)+,r0
+	dvd	(sp)+,r0     / remove auto variable2
 	mov	r1,r2
 	br	eoprnd
 
@@ -174,10 +185,10 @@ exmul:
 
 exdiv:
 	jsr	r5,combin; 0
-	mov	r1,-(sp)
+	mov	r1,-(sp)     / create auto variable2
 	mov	r2,r1
 	clr	r0
-	dvd	(sp)+,r0
+	dvd	(sp)+,r0     / remove auto variable2
 	mov	r0,r2
 	br	eoprnd
 
@@ -188,8 +199,8 @@ exnot:
 	br	eoprnd
 
 eoprnd:
-	mov	$'+,(sp)
-	jmp	advanc
+	mov	$'+,(sp)     / variable1
+  jmp	advanc
 
 combin:
   mov r1,-(sp)
