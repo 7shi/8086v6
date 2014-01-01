@@ -43,7 +43,8 @@ eae = 0
 .globl _symtab; _symtab: symtab:
 / special variables
 
-<.\0\0\0\0\0\0\0>; dotrel:02; dot:000000
+.globl _dotrel; .globl _dot
+<.\0\0\0\0\0\0\0>; _dotrel: dotrel:02; _dot: dot:000000
 <..\0\0\0\0\0\0>;	01; dotdot:000000
 
 / register
