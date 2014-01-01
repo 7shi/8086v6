@@ -1,10 +1,4 @@
-/* translated from as13.s
-assem: as11.s, as13.s
-ealoop: as13.s
-assem1: as13.s
-fbcheck: as13.s, as14.s
-checkeos: as13.s
-*/
+/* translated from as13.s */
 
 struct opcode { char op0, op1; int op2; };
 

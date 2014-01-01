@@ -1,20 +1,4 @@
-/* translated from as15.s
-readop: as13.s, as15.s, as16.s, as17.s
-_readop: as15.s
-escp: as15.s
-esctab: as15.s
-fixor: as15.s
-retread: as15.s
-rdname: as15.s
-rdnum: as15.s
-squote: as15.s
-dquote: as15.s
-skip: as15.s
-garb: as15.s
-string: as15.s
-rsch: as15.s
-schar: as15.s
-*/
+/* translated from as15.s */
 
 int savop;
 char chartab[];
@@ -86,7 +70,7 @@ readop() {
 	}
 	putw(r4);
 	if (r4 == 1) {
-		/* rdname(number() -> 1), rdnum, squote, dquote */
+		/* rdname(数字のとき), rdnum, squote, dquote */
 		putw(numval = r0);
 	}
 	return r4;
