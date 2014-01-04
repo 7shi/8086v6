@@ -14,6 +14,20 @@ int line;
 
 int aexit();
 
+char sdbgrch[] "rch: 00000\n";
+
+dbgrch(r0) {
+	int i, v;
+	char *p;
+	v = r0;
+	p = &sdbgrch[10];
+	for (i = 0; i < 5; i++) {
+		*--p = '0' + (v % 10);
+		v =/ 10;
+	}
+	write(1, sdbgrch, 11);
+}
+
 /*
 -- ch == 0の場合
 最初の実行時はこの関数下部にある処理で
@@ -24,7 +38,7 @@ int aexit();
 -- ch > 0の場合
 chを0クリアし、関数実行時のchにあった値を返す
 */
-rch() {
+rch_() {
     int r0, r1, r4;
     int n, readnum;
     char *filename, prevflg;
