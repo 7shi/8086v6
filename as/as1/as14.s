@@ -158,87 +158,8 @@ number:
 	add	$2,(sp)
 	rts	pc
 
-.globl _rch
-_rch:
 rch:
 	mov r1, -(sp)
-	/ switch original/C-translated
-	/jsr pc, rch_ / original
-	jsr pc, _rch_ / C-translated
-	mov r0, -(sp)
-	jsr pc, _dbgrch
-	mov (sp)+, r0
+	jsr pc, _rch
 	mov (sp)+, r1
 	rts pc
-
-rch_:
-	movb	ch,r0
-	beq	1f
-	clrb	ch
-	rts	pc
-1:
-	dec	inbfcnt
-	blt	2f
-	movb	*inbfp,r0
-	inc	inbfp
-	bic	$!177,r0
-	beq	1b
-	rts	pc
-2:
-	movb	fin,r0
-	beq	3f
-	sys	read; inbuf;512.
-	bcs	2f
-	tst	r0
-	beq	2f
-	mov	r0,inbfcnt
-	mov	$inbuf,inbfp
-	br	1b
-2:
-	movb	fin,r0
-	clrb	fin
-	sys	close
-3:
-	decb	nargs
-	bgt	2f
-	mov	$'\e,r0
-	rts	pc
-2:
-	tst	ifflg
-	beq	2f
-	jsr	r5,error; 'i
-	jmp	aexit
-2:
-	mov	curarg,r0
-	tst	(r0)+
-	mov	(r0),0f
-	mov	r0,curarg
-	incb	fileflg
-	sys	indir; 9f
-	.data
-9:	sys	open; 0:0; 0
-	.text
-	bec	2f
-	mov	0b,r0
-	jsr	r5,filerr; <?\n>
-	jmp	 aexit
-2:
-	movb	r0,fin
-	mov	$1,line
-	mov	r4,-(sp)
-	mov	r1,-(sp)
-	mov	$5,r4
-	jsr	pc,putw
-	mov	*curarg,r1
-2:
-	movb	(r1)+,r4
-	beq	2f
-	jsr	pc,putw
-	br	2b
-2:
-	mov	$-1,r4
-	jsr	pc,putw
-	mov	(sp)+,r1
-	mov	(sp)+,r4
-	br	1b
-

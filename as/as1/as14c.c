@@ -14,20 +14,6 @@ int line;
 
 int aexit();
 
-char sdbgrch[] "rch: 00000\n";
-
-dbgrch(r0) {
-	int i, v;
-	char *p;
-	v = r0;
-	p = &sdbgrch[10];
-	for (i = 0; i < 5; i++) {
-		*--p = '0' + (v % 10);
-		v =/ 10;
-	}
-	write(1, sdbgrch, 11);
-}
-
 /*
 -- ch == 0の場合
 最初の実行時はこの関数下部にある処理で
@@ -38,7 +24,7 @@ dbgrch(r0) {
 -- ch > 0の場合
 chを0クリアし、関数実行時のchにあった値を返す
 */
-rch_() {
+rch() {
     int r0;
     int n, readnum;
     char *filename, prevflg;
@@ -66,9 +52,9 @@ rch_() {
         */
         if (fin) {
             readnum = read(fin, inbuf, 512);
-            if (!(inbuf < 0 || readnum == 0)) {
+        	if (readnum > 0) {
                 inbfcnt = readnum;
-                inbfp = &inbuf;
+                inbfp = inbuf;
                 continue;
             }
 
@@ -82,18 +68,17 @@ rch_() {
         }
 
         if (ifflg != 0) {
-            error('i');
+            error("i");
             aexit();
         }
 
-        filename = curarg[1];
-        curarg = &(curarg[1]);
+        filename = *++curarg;
         prevflg = fileflg;
         fileflg++;
 
         fin = open(filename, 0);
         if (fileflg < prevflg) {
-            filerr(filename, "<?\n>");
+            filerr(filename, "?\n");
             aexit();
         }
 
@@ -101,8 +86,8 @@ rch_() {
         putw(5);
 
         n = 0;
-        while ((*curarg)[n]) {
-            putw((*curarg)[n]);
+        while (filename[n]) {
+            putw(filename[n]);
             n++;
         }
 
