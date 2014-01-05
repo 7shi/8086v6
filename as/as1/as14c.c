@@ -8,7 +8,7 @@ char fileflg;
 char **curarg;
 int nargs;
 int inbfcnt;
-int *inbfp;
+char *inbfp;
 int ifflg;
 int line;
 
@@ -39,7 +39,7 @@ dbgrch(r0) {
 chを0クリアし、関数実行時のchにあった値を返す
 */
 rch_() {
-    int r0, r1, r4;
+    int r0;
     int n, readnum;
     char *filename, prevflg;
 

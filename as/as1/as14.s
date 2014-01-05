@@ -163,8 +163,8 @@ _rch:
 rch:
 	mov r1, -(sp)
 	/ switch original/C-translated
-	jsr pc, rch_ / original
-	/jsr pc, _rch_ / C-translated
+	/jsr pc, rch_ / original
+	jsr pc, _rch_ / C-translated
 	mov r0, -(sp)
 	jsr pc, _dbgrch
 	mov (sp)+, r0
