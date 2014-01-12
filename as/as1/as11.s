@@ -15,7 +15,7 @@ go:
 	movb	fbfil,r0
 	sys	close
 	tstb	errflg
-	bne	aexit
+    bne aexit
 	jsr	r5,fcreat; _atmp3
 	mov	r0,r1
 	mov	symend,0f
@@ -31,10 +31,8 @@ go:
 	jsr	r5,filerr; "?\n
 
 aexit:
-	sys	unlink; _atmp1
-	sys	unlink; _atmp2
-	sys	unlink; _atmp3
-	sys	exit
+    jmp _aexit
+
 .data
 1:
 	2f
@@ -53,31 +51,14 @@ fpass2:
 	.even
 
 filerr:
-	mov	r4,-(sp)
-	mov	r0,r4
-	mov	r4,0f
-	clr	r0
-1:
-	tstb	(r4)+
-	beq	1f
-	inc	r0
-	br	1b
-1:
-	mov	r0,1f
-	mov	$1,r0
-	sys	indir; 9f
-	.data
-9:	sys	write; 0:0; 1:0
-	.text
-	mov	r5,0f
-	mov	$1,r0
-	sys	indir; 9f
-	.data
-9:	sys	write; 0:0; 2
-	.text
-	tst	(r5)+
-	mov	(sp)+,r4
-	rts	r5
+    mov r1, -(sp)
+    mov r5, -(sp)
+    mov r0, -(sp)
+    jsr pc, _filerr
+    cmp (sp)+, (sp)+
+    mov (sp)+, r1
+    tst (r5)+
+    rts r5
 
 fcreat:
 	mov	r4,-(sp)

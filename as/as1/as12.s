@@ -3,15 +3,6 @@
 
 / a2 -- pdp-11 assembler pass 1
 
-.data
-.globl _filerr
-_filerr:
-	mov *4(sp), 0f
-	mov 2(sp), r0
-	jsr r5, filerr; 0:0
-	rts pc
-
-.text
 error:
 	mov	r0, -(sp)
 	mov	r1, -(sp)
