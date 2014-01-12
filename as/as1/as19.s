@@ -312,10 +312,10 @@ eae = 0
 / 	jsr	pc,setup
 / 	jmp	go
 
-.globl _fcreat; _fcreat:
- mov 2(sp), 0f
- jsr r5, fcreat; 0:0
- rts pc
+/.globl _fcreat; _fcreat:
+/ mov 2(sp), 0f
+/ jsr r5, fcreat; 0:0
+/ rts pc
 
 .text
 

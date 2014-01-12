@@ -4,6 +4,7 @@ char atmp2[];
 char atmp3[];
 
 char errflg;
+char *outbuf;
 
 aexit()
 {
@@ -23,4 +24,23 @@ char *r5;
 	for(i = 0; r0[i] != 0; i++);
 	write(1, r0, i);
 	write(1, r5, 2);
+}
+
+
+fcreat(r4)
+char *r4;
+{
+	int ret;
+	do {
+		if(stat(r4, outbuf) < 0) {
+			ret = creat(r4, 0444);
+			if(ret > 0) {
+				return ret;
+			}
+		}
+		++r4[9];		
+	} while(r4[9] <= 'z');
+
+	filerr(r4, "?\n");
+	exit(1);
 }

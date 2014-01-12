@@ -57,31 +57,12 @@ filerr:
     jsr pc, _filerr
     cmp (sp)+, (sp)+
     mov (sp)+, r1
-    tst (r5)+
     rts r5
 
 fcreat:
-	mov	r4,-(sp)
-	mov	(r5)+,r4
-	mov	r4,0f
-1:
-	sys	indir; 9f
-	.data
-9:	sys	stat; 0:..; outbuf
-	.text
-	bec	2f
-	mov	r4,0f
-	sys	indir; 9f
-	.data
-9:	sys	creat; 0:..; 444
-	.text
-	bes	2f
-	mov	(sp)+,r4
-	rts	r5
-2:
-	incb	9.(r4)
-	cmpb	9.(r4),$'z
-	blos	1b
-	mov	r4,r0
-	jsr	r5,filerr; "?\n
-	sys	exit
+    mov r1, -(sp)
+	mov (r5)+, -(sp)
+	jsr pc, _fcreat
+	tst (sp)+
+    mov (sp)+, r1
+    rts r5
