@@ -10,6 +10,22 @@ char fbfil;
 char **symend;
 char *usymtab;
 
+char sdebug8[] " 000000\n";
+
+debug8(str, val) char *str; {
+	register int i, v;
+	register char *p;
+	for (i = 0; str[i]; ++i);
+	write(1, str, i);
+	v = val;
+	p = &sdebug8[7];
+	for (i = 0; i < 6; i++) {
+		*--p = '0' + (v & 7);
+		v =>> 3;
+	}
+	write(1, sdebug8, 8);
+}
+
 go()
 {
 	int i;  /* for debug */
@@ -30,7 +46,10 @@ go()
 	write(1, "\n\n\n", 3);
 	write(1, fp + '0', 1);
 	write(1, "\n\n\n", 3);
-	printf("abc %d", (*symend - usymtab));
+	debug8("symend", symend);
+	debug8("*symend", *symend);
+	debug8("usymtab", usymtab);
+	debug8("*symend - usymtab", *symend - usymtab);
 	write(1, "\n\n\n", 3);
 
 	write(fp, usymtab, (*symend - usymtab));
