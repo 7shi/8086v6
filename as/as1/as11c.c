@@ -5,6 +5,43 @@ char atmp3[];
 
 char errflg;
 char *outbuf;
+char pof;
+char fbfil;
+char **symend;
+char *usymtab;
+
+go()
+{
+	int i;  /* for debug */
+
+	int fp;
+	assem();
+	write(pof, outbuf, 512);
+	close(pof);
+	close(fbfil);
+
+	if(errflg != 0) {
+		aexit(); 
+	}
+
+	fp = fcreat(atmp3);
+	
+	write(1, atmp3, 10);
+	write(1, "\n\n\n", 3);
+	write(1, fp + '0', 1);
+	write(1, "\n\n\n", 3);
+	printf("abc %d", (*symend - usymtab));
+	write(1, "\n\n\n", 3);
+
+	write(fp, usymtab, (*symend - usymtab));
+	close(fp);
+
+	/*
+	execl("/lib/as2", "/lib/as2", atmp1, atmp2, atmp3, "-g");
+	filerr("lib/as2", "?\n");
+	*/
+}
+
 
 aexit()
 {
