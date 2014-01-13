@@ -7,8 +7,8 @@ char errflg;
 char *outbuf;
 char pof;
 char fbfil;
-char **symend;
-char *usymtab;
+char *symend;
+char usymtab[];
 
 char sdebug8[] " 000000\n";
 
@@ -47,12 +47,11 @@ go()
 	write(1, fp + '0', 1);
 	write(1, "\n\n\n", 3);
 	debug8("symend", symend);
-	debug8("*symend", *symend);
 	debug8("usymtab", usymtab);
-	debug8("*symend - usymtab", *symend - usymtab);
+	debug8("symend - usymtab", symend - usymtab);
 	write(1, "\n\n\n", 3);
 
-	write(fp, usymtab, (*symend - usymtab));
+	write(fp, usymtab, (symend - usymtab));
 	close(fp);
 
 	/*
