@@ -4,7 +4,35 @@ char atmp2[];
 char atmp3[];
 
 char errflg;
-char *outbuf;
+char outbuf[];
+char pof;
+char fbfil;
+char *symend[];
+char usymtab[];
+
+
+go()
+{
+	int fp;
+	assem();
+	write(pof, outbuf, 512);
+	close(pof);
+	close(fbfil);
+
+	if(errflg != 0) {
+		aexit(); 
+	}
+
+	fp = fcreat(atmp3);
+	
+	write(fp, usymtab, (*symend - usymtab));
+	close(fp);
+
+
+	execl("/lib/as2", "/lib/as2", atmp1, atmp2, atmp3, "-g");
+	filerr("lib/as2", "?\n");
+}
+
 
 aexit()
 {
