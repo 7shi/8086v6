@@ -140,12 +140,15 @@ error:
 	.text
 
 betwen:
-	cmp	r0,(r5)+
-	blt	1f
-	cmp	(r5)+,r0
-	blt	2f
-1:
-	tst	(r5)+
-2:
-	rts	r5
+	mov r1, -(sp)
+	mov r5, -(sp)
+	mov r0, -(sp)
+	jsr pc, _betwen
+	cmp (r5)+, (r5)+
+	add r0, r5
+	add r0, r5
+	mov (sp)+, r0
+	tst (sp)+
+	mov (sp)+, r1
+	rts r5
 
