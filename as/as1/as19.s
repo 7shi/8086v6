@@ -351,8 +351,3 @@ eae = 0
 /	cmp	r1,$ebsymtab
 /	blo	1b
 /	rts	pc
-
-.data
-
-/overlay buffer
-inbuf: .=.+512.
