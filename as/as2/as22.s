@@ -99,47 +99,62 @@ outb:
 	inc	dot
 	rts	pc
 
-
-/ outmodを0666に変えた後，argbからの文字列を出力し，lineに格納されたデータを10進数4桁で表示する
+/ wrapper function
 error:
-	mov	$666,outmod		/ make nonexecutable / 666モードに変更
-	mov	r3,-(sp)        / スタックに退避
-	mov	r2,-(sp)
-	mov	r1,-(sp)
-	mov	r0,-(sp)
-	mov	$argb,r1        / argbのアドレスをr1に代入
-1:
-	movb	(r1),ch     / ここから，r1に設定されたアドレスの中身を1文字ずつ出力
-	beq	1f              / 0がきたら1fにジャンプ
-	clrb	(r1)+       / r1の中身を0にしている
-	mov	$1,r0
-	sys	write; ch; 1
-	br	1b
-1:
-	mov	(r5)+,r0        / pcの値をr0に代入. これは呼ぶときにつける1文字('rなど)を指している
-	movb	r0,0f
-	mov	line,r3         / lineは2バイト
-	mov	$0f+6,r0
-	mov	$4,r1           / 4回繰り返す -> 10000で割る？
-2:
-	clr	r2
-	dvd	$10.,r2         / r2, r3を32ビットと考えて，10で除算.　ドットが付いているので，10進数？
-	add	$'0,r3          / r3には除算の余りが入っている．数字を文字の数字にしている
-	movb	r3,-(r0)
-	mov	r2,r3
-	sob	r1,2b           / r1をデクリメントした結果，0でなかったら2bにジャンプ. -> r1には除算の回数がはいっている
-	mov	$1,r0
-	sys	write; 0f; 7
-	mov	(sp)+,r0
-	mov	(sp)+,r1
-	mov	(sp)+,r2
-	mov	(sp)+,r3
-	rts	r5
+	mov r3, -(sp)
+	mov r2, -(sp)
+	mov r1, -(sp)
+	mov r0, -(sp)
+	mov (r5)+, -(sp)   / next character
+    mov $outmod, -(sp) / outmod address
+	jsr pc, _error
+	cmp (sp)+, (sp)+
+	mov (sp)+, r0
+	mov (sp)+, r1
+	mov (sp)+, r2
+	mov (sp)+, r3
+	rts r5
 
-	.data
-0:	<f xxxx\n>
-	.even
-	.text
+
+/error:
+/	mov	r3,-(sp)        
+/	mov	r2,-(sp)
+/	mov	r1,-(sp)
+/	mov	r0,-(sp)
+/	mov	$666,outmod		
+/	mov	$argb,r1        
+/1:
+/	movb	(r1),ch     
+/	beq	1f              
+/	clrb	(r1)+       
+/	mov	$1,r0
+/	sys	write; ch; 1
+/	br	1b
+/1:
+/	mov	(r5)+,r0        
+/	movb	r0,0f
+/	mov	line,r3         
+/	mov	$0f+6,r0
+/	mov	$4,r1           
+/2:
+/	clr	r2
+/	dvd	$10.,r2         
+/	add	$'0,r3          
+/	movb	r3,-(r0)
+/	mov	r2,r3
+/	sob	r1,2b           
+/	mov	$1,r0
+/	sys	write; 0f; 7
+/	mov	(sp)+,r0
+/	mov	(sp)+,r1
+/	mov	(sp)+,r2
+/	mov	(sp)+,r3
+/	rts	r5
+
+/	.data
+/0:	<f xxxx\n>
+/	.even
+/	.text
 
 betwen:
 	mov r1, -(sp)
