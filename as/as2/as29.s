@@ -276,5 +276,4 @@ start:
 	jmp	go
 
 / overlaid buffer
-inbuf	= start
-.	= inbuf+512.
+.globl _inbuf; _inbuf: inbuf: .=.+512.

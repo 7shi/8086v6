@@ -76,6 +76,7 @@ readop:
 	rts	pc
 1:
 	jsr	pc,getw1
+	bic $1, _ps_psw
 	cmp	r4,$200
 	blo	1f
 	cmp	r4,$4000
@@ -88,26 +89,16 @@ readop:
 	rts	pc
 
 getw:
-	mov	savop,r4
-	beq	getw1
-	clr	savop
+	mov r1, -(sp)
+	jsr pc, _getw
+	mov r0, r4
+	mov (sp)+, r1
 	rts	pc
+
 getw1:
-	dec	ibufc
-	bgt	1f
-	movb	fin,r0
-	sys	read; inbuf; 512.
-	bes	3f
-	asr	r0
-	mov	r0,ibufc
-	bne	2f
-3:
-	mov	$4,r4
-	sev
-	rts	pc
-2:
-	mov	$inbuf,ibufp
-1:
-	mov	*ibufp,r4
-	add	$2,ibufp
-	rts	pc
+	mov r1, -(sp)
+	jsr pc, _getw1
+	mov r0, r4
+	mov (sp)+, r1
+	rts pc
+
