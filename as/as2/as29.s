@@ -274,6 +274,3 @@ start:
 1:
 	movb	r0,fout
 	jmp	go
-
-/ overlaid buffer
-.globl _inbuf; _inbuf: inbuf: .=.+512.
