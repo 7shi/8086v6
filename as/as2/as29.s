@@ -248,29 +248,21 @@ dotrel: 02; dot:000000 /.
 27;000000 /.bss
 32;000000 /.comm
 
-start:
-	cmp	(sp),$4
-	bge	1f
-	jmp	aexit
-1:
-	cmp	(sp)+,$5
-	blt	1f
-	mov	$40,defund		/ globalize all undefineds
-1:
-	tst	(sp)+
-	mov	(sp)+,a.tmp1
-	mov	(sp)+,a.tmp2
-	mov	(sp)+,a.tmp3
-	jsr	r5,ofile; a.tmp1
-	movb	r0,txtfil
-	jsr	r5,ofile; a.tmp2
-	movb	r0,fbfil
-	jsr	r5,ofile; a.tmp3
-	movb	r0,symf
-	movb	r0,fin
-	sys	creat; a.out; 0
-	bec	1f
-	jsr	r5,filerr; a.outp
-1:
-	movb	r0,fout
-	jmp	go
+
+.globl _ofile; _ofile:
+	mov sp, r0
+	tst (r0)+
+	mov r0, 0f
+	jsr r5, ofile; 0: ..
+	rts pc
+
+.globl _filerr; _filerr:
+	mov sp, r0
+	tst (r0)+
+	mov r0, 0f
+	jsr r5, filerr; 0: ..
+	rts pc
+
+.text
+.globl _aexit; _aexit: jmp aexit
+.globl _go; _go: jmp go

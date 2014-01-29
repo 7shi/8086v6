@@ -5,14 +5,6 @@
 
 indir	= 0
 
-main:
-	sys	signal; 2; 1
-	ror	r0
-	bcs	1f
-	sys	signal; 2; aexit
-1:
-	jmp	start
-
 / set up sizes and origins
 
 go:
