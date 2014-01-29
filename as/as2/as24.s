@@ -7,14 +7,14 @@ oset:
 	mov	r2,-(sp)
 	mov	(r5)+,r1
 	mov	r0,r2
-	bic	$!777,r0
-	add	r1,r0
-	add	$6,r0
-	mov	r0,(r1)+	/ next slot
-	mov	r1,r0
-	add	$1004,r0
-	mov	r0,(r1)+	/ buf max
-	mov	r2,(r1)+	/ seek addr
+	mov r2,-(sp)
+	mov r1,-(sp)
+	mov r0,-(sp)
+	jsr pc, _oset
+	tst (sp)+
+	tst (sp)+
+	mov (sp)+,r2
+	mov r0, r1
 	mov	(sp)+,r2
 	rts	r5
 

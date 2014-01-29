@@ -5,6 +5,28 @@ int *ibufp;
 int fin;
 int inbuf[256];
 
+int
+oset(r0, r1, r2)
+{
+	int *ptr;
+
+	ptr = r1;
+	r0 = r0 & 0777;
+	r0 = r0 + r1;
+	r0 = r0 + 6;
+
+	*ptr = r0;
+	ptr++;
+	r0 = ptr;
+	r0 = r0 + 01004;
+	*ptr = r0;
+	ptr++;
+	*ptr = r2;
+	ptr++;
+
+	return ptr;
+}
+
 int 
 getw(r4)
 int *r4;
