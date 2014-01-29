@@ -1,10 +1,10 @@
 /* translated from as22.s */
 
+int outmod;
 char argb[];
 int line[];
 
-error(outmod, r5)
-int *outmod;
+error(r5)
 char r5;
 {
 	int i, data;
@@ -13,7 +13,7 @@ char r5;
 	buf = "f xxxx\n";
 
 	/* outmodを666にする */
-	*outmod = 0666;
+	outmod = 0666;
 
 	/* argbの内容を書き出し，終了を0を書き込む */
 	for(i = 0; argb[i] != 0; i++);

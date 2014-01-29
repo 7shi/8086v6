@@ -172,7 +172,6 @@ go:
 	jsr	r5,flush; txtp
 	jmp	aexit
 
-	.data
 aexit:
 	mov	a.tmp1,0f
 	sys	unlink; 0:..
@@ -180,9 +179,11 @@ aexit:
 	sys	unlink; 0:..
 	mov	a.tmp3,0f
 	sys	unlink; 0:..
-	sys	chmod; a.out; outmod: 777
-	sys	exit
+	sys indir; 0f
+	.data
+0:	sys	chmod; a.out; .globl _outmod; _outmod: outmod: 777
 	.text
+	sys	exit
 
 filerr:
 	mov	*(r5),r5

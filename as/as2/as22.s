@@ -106,9 +106,8 @@ error:
 	mov r1, -(sp)
 	mov r0, -(sp)
 	mov (r5)+, -(sp)   / next character
-    mov $outmod, -(sp) / outmod address
 	jsr pc, _error
-	cmp (sp)+, (sp)+
+	tst (sp)+
 	mov (sp)+, r0
 	mov (sp)+, r1
 	mov (sp)+, r2
