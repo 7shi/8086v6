@@ -76,7 +76,6 @@ readop:
 	rts	pc
 1:
 	jsr	pc,getw1
-	bic $1, _ps_psw
 	cmp	r4,$200
 	blo	1f
 	cmp	r4,$4000
@@ -90,15 +89,31 @@ readop:
 
 getw:
 	mov r1, -(sp)
+	tst -(sp)
+	mov sp, r0
+	mov r0, -(sp)
 	jsr pc, _getw
-	mov r0, r4
+	tst (sp)+
+	mov (sp)+, r4
 	mov (sp)+, r1
+	tst r0
+	beq 0f
+	sev
+0:
 	rts	pc
 
 getw1:
 	mov r1, -(sp)
+	tst -(sp)
+	mov sp, r0
+	mov r0, -(sp)
 	jsr pc, _getw1
-	mov r0, r4
+	tst (sp)+
+	mov (sp)+, r4
 	mov (sp)+, r1
+	tst r0
+	beq 0f
+	sev
+0:
 	rts pc
 

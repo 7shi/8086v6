@@ -22,8 +22,7 @@ go:
 	mov	$usymtab,r1
 1:
 	jsr	pc,getw
-	bit $2, _ps_psw	
-	bne 1f
+	bvs	1f
 	add	$14,symsiz		/ count symbols
 	jsr	pc,getw
 	jsr	pc,getw
@@ -48,7 +47,7 @@ go:
 	jsr	pc,setbrk
 	br	1b
 1:
-	bic $2, _ps_psw	
+
 / read in f-b definitions
 
 	mov	r1,fbbufp
@@ -56,8 +55,7 @@ go:
 	clr	ibufc
 1:
 	jsr	pc,getw
-	bit $2, _ps_psw	
-	bne	1f
+	bvs	1f
 	add	$31,r4			/ "estimated"
 	mov	r4,(r1)+
 	jsr	pc,getw
@@ -65,7 +63,6 @@ go:
 	jsr	pc,setbrk
 	br	1b
 1:
-	bic $2, _ps_psw	
 	mov	r1,endtable
 	mov	$100000,(r1)+
 
@@ -152,8 +149,7 @@ go:
 	mov	$usymtab,r1
 1:
 	jsr	pc,getw
-	bit $2, _ps_psw	
-	bne	1f
+	bvs	1f
 	mov	r4,r0
 	jsr	r5,putw; txtp
 	jsr	pc,getw
@@ -173,7 +169,6 @@ go:
 	jsr	pc,getw
 	br	1b
 1:
-	bic $2, _ps_psw	
 	jsr	r5,flush; txtp
 	jmp	aexit
 
