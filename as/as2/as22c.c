@@ -2,50 +2,48 @@
 
 int outmod;
 char argb[];
-int line[];
+char fxxxx[] "f xxxx\n";
+int line;
 
 error(r5)
-char r5;
+char *r5;
 {
-	int i, data;
-	char *buf, *p;
-	
-	buf = "f xxxx\n";
+	int i, ln;
+	char *p;
 
 	/* outmodを666にする */
 	outmod = 0666;
 
 	/* argbの内容を書き出し，終了を0を書き込む */
-	for(i = 0; argb[i] != 0; i++);
+	for(i = 0; argb[i]; i++);
 	write(1, argb, i);
-	for(i = 0; argb[i] != 0; i++) argb[i] = 0;
+	for(i = 0; argb[i]; i++) argb[i] = 0;
 
-
-	data = line[0];
-	buf[0] = r5;
+	fxxxx[0] = *r5;
+	ln = line;
 
 	/* line[0]の内容を10進数で表示する */
-	p = &buf[6];
-	for(i = 0; i < 4; i++) {
-		*(--p) = '0' + (data % 10);
-		data =/ 10;
+	p = &fxxxx[6];
+	for (i = 0; i < 4; i++) {
+		*(--p) = '0' + (ln % 10);
+		ln =/ 10;
 	}
-
-	write(1, buf, 7);
-
-	return;
+	write(1, fxxxx, 7);
 }
 
+/* betwen
+戻り先をずらすことで条件判定を行っている。
+C言語からは使わずにインラインで条件判定を書いた方が良い。
+
+【例】
+jsr r5, betwen; '0; '9
+    br 1f
+     ↓
+if (r0 < '0' || '9' < r0) goto 1f;
+*/
 
 betwen(r0, r5)
-int r0;
-int r5[];
+int *r5;
 {
-	if(r0 < r5[0]) {
-		return 0;
-	} else if(r5[1] < r0) {
-		return 0;
-	}
-	return 1;
+	return r5[0] <= r0 && r0 <= r5[1];
 }
-

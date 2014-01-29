@@ -105,55 +105,15 @@ error:
 	mov r2, -(sp)
 	mov r1, -(sp)
 	mov r0, -(sp)
-	mov (r5)+, -(sp)   / next character
+	mov r5, -(sp)
 	jsr pc, _error
 	tst (sp)+
 	mov (sp)+, r0
 	mov (sp)+, r1
 	mov (sp)+, r2
 	mov (sp)+, r3
-	rts r5
-
-
-/error:
-/	mov	r3,-(sp)        
-/	mov	r2,-(sp)
-/	mov	r1,-(sp)
-/	mov	r0,-(sp)
-/	mov	$666,outmod		
-/	mov	$argb,r1        
-/1:
-/	movb	(r1),ch     
-/	beq	1f              
-/	clrb	(r1)+       
-/	mov	$1,r0
-/	sys	write; ch; 1
-/	br	1b
-/1:
-/	mov	(r5)+,r0        
-/	movb	r0,0f
-/	mov	line,r3         
-/	mov	$0f+6,r0
-/	mov	$4,r1           
-/2:
-/	clr	r2
-/	dvd	$10.,r2         
-/	add	$'0,r3          
-/	movb	r3,-(r0)
-/	mov	r2,r3
-/	sob	r1,2b           
-/	mov	$1,r0
-/	sys	write; 0f; 7
-/	mov	(sp)+,r0
-/	mov	(sp)+,r1
-/	mov	(sp)+,r2
-/	mov	(sp)+,r3
-/	rts	r5
-
-/	.data
-/0:	<f xxxx\n>
-/	.even
-/	.text
+	tst (r5)+
+	rts	r5
 
 betwen:
 	mov r1, -(sp)

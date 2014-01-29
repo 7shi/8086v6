@@ -19,9 +19,9 @@ betwen:
 	mov r5, -(sp)
 	mov r0, -(sp)
 	jsr pc, _betwen
-	add r0, r5
-	add r0, r5
 	cmp (r5)+, (r5)+
+	add r0, r5
+	add r0, r5
 	mov (sp)+, r0
 	tst (sp)+
 	mov (sp)+, r1
