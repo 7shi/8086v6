@@ -17,7 +17,7 @@
 .globl _tseekp; _tseekp: tseekp:	txtseek
 .globl _rseekp; _rseekp: rseekp:	trelseek
 
-txtmagic:
+.globl _txtmagic; _txtmagic: txtmagic:
 	br	.+20
 .globl _txtsiz; _txtsiz: txtsiz:	.=.+2
 .globl _datsiz; _datsiz: datsiz:	.=.+2
