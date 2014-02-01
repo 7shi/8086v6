@@ -153,8 +153,6 @@ char *r3;
     }
 
     putw(r4p);
-
-    return r4p;
 }
 
 char inbuf[512];
