@@ -312,18 +312,12 @@ eae = 0
 / 	jsr	pc,setup
 / 	jmp	go
 
-.globl _fcreat; _fcreat:
- mov 2(sp), 0f
- jsr r5, fcreat; 0:0
- rts pc
+/.globl _fcreat; _fcreat:
+/ mov 2(sp), 0f
+/ jsr r5, fcreat; 0:0
+/ rts pc
 
 .text
-
-.globl _aexit; _aexit:
- jmp aexit
-
-.globl _go; _go:
- jmp go
 
 //////////////////////////////////////////////////////////
 /setup:
@@ -357,8 +351,3 @@ eae = 0
 /	cmp	r1,$ebsymtab
 /	blo	1b
 /	rts	pc
-
-.data
-
-/overlay buffer
-inbuf: .=.+512.
