@@ -3,23 +3,46 @@
 
 /  a7 -- pdp-11 assembler pass 1
 
+/ input: r4
 expres:
-	mov	r5,-(sp)  / create auto variableA : arg2
+  mov r3,-(sp)
+  mov sp,r3
+  mov r2,-(sp)
+  mov sp,r2
+
+	mov	r5,-(sp)  / create auto variableA :
+  mov r4,-(sp)  / create auto variableC : arg (additional)
+  mov r3,-(sp)
+  mov r2,-(sp)
+  /jsr pc,_cexprs
+  jsr pc,expres_
+  /mov (sp)+,r2
+  /mov (sp)+,r3
+  tst (sp)+
+  tst (sp)+
+	tst	(sp)+     / use variable B
+	mov	(sp)+,r5  / use variable A
+
+  mov (sp)+,r2 
+  mov (sp)+,r3
+	rts pc
+
+expres_:
+  /mov 2(sp),r2
+  /mov 4(sp),r3
+  mov 6(sp),r4  / variableC(arg) -> r4
 	mov	$'+,-(sp) / create auto variableB : arg1
 	clr	opfound
 	clr	r2
 	mov	$1,r3
-	/br	1f
-  jsr pc,sbrtn1
-  /rtn pc / add
+  br sbrtn
 
-advanc:
+advanc_:
 	jsr	pc,readop
-  /br  sbrtn1
-  jsr pc,sbrtn1
-	
-sbrtn1:
-  tst (sp)+     // add: trash return pos of jsr
+  jmp  sbrtn
+  /br  sbrtn
+
+sbrtn:
 	mov	r4,r0
 	jsr	r5,betwen; 0; 177
 		br .+4
@@ -28,9 +51,9 @@ sbrtn1:
 	mov	2(r4),r1
 	br	oprand
 7:
-	cmp	r4,$141
+	cmp	r4,$141                / 0x61('a')
 	blo	1f
-	cmp	r4,$141+10.
+	cmp	r4,$141+10.            / 0x6b('k')
 	bhis	2f
 	movb	curfbr-141(r4),r0
 	asl	r4
@@ -55,7 +78,12 @@ sbrtn1:
 2:
   / return to client
 	tst	(sp)+     / use variable B
-	mov	(sp)+,r5  / use variable A
+	/mov	(sp)+,r5  / use variable A
+  /tst (sp)+     /     variable C
+  /mov r2,2(sp) 
+  /mov r3,4(sp) 
+  mov r2,*2(sp) 
+  mov r3,*4(sp) 
 	rts	pc
 1:
 	jmp	*(r1)
@@ -82,7 +110,8 @@ binop:
 	jsr	pc,errore
 1:
 	movb	r4,(sp)  / use variableB
-	br	advanc
+	/br	advanc_    / -----
+	jmp	advanc_    / -----
 
 exnum:
 	mov	numval,r1
@@ -93,7 +122,9 @@ brack:
 	mov	r2,-(sp)  / create auto variable2
 	mov	r3,-(sp)  / create auto variable3
 	jsr	pc,readop
-	jsr	pc,expres
+
+	jsr	pc,expres / --OK
+
 	cmp	r4,$']
 	beq	1f
 	jsr	r5,error; ']
@@ -118,7 +149,7 @@ oprand:
 1:
 	jmp	*(r5)
 
-exsw2:
+exsw2: _exsw2:
 	'+; exadd
 	'-; exsub
 	'*; exmul
@@ -199,22 +230,34 @@ exnot:
 	br	eoprnd
 
 eoprnd:
-	mov	$'+,(sp)     / variable1
-  jmp	advanc
+	mov	$'+,(sp)     / variableB
+  jmp	advanc_       / -----
 
 combin:
+  mov r4,-(sp)
+  mov r2,-(sp)
+  mov r3,-(sp)
+  mov sp,r3
   mov r1,-(sp)
+
   mov r5,-(sp)
   mov r3,-(sp)
   mov r0,-(sp)
   jsr pc, _combin
-  cmp (sp)+,(sp)+
-  mov (sp)+, r5   / 参照渡し
-  mov (sp)+, r1
+  tst (sp)+
+  tst (sp)+
+  mov (sp)+, r5
+
+  mov (sp)+,r1
+  mov (sp)+,r3
+  mov (sp)+,r2
+  mov (sp)+,r4
+
+  tst (r5)+
   rts r5
 
 ///////////////////////
-/combin_:
+/combin2:
 /	mov	r0,-(sp)
 /	bis	r3,(sp)
 /	bic	$!40,(sp)
@@ -223,22 +266,23 @@ combin:
 /	cmp	r0,r3
 /	ble	1f
 /	mov	r0,-(sp)
-/	mov	r3,r0
-/	mov	(sp)+,r3
+/	mov	r3,r0     /-------- r0
+/	mov	(sp)+,r3  /-------- r3
 /1:
 /	tst	r0
 /	beq	1f
-/	tst	(r5)+
+/	tst	(r5)+     / when exsub then 1
 /	beq	2f
 /	cmp	r0,r3
 /	bne	2f
 /	mov	$1,r3
 /	br	2f
 /1:
-/	tst	(r5)+
+/	tst	(r5)+     / when exsub then 1
 /	clr	r3
 /2:
 /	bis	(sp)+,r3
-/	rts	r5
+/	rts	pc
+//	rts	r5
 
 
