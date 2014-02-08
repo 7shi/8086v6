@@ -18,10 +18,7 @@ int btwn(r0, pc1, pc2) int r0; int pc1; int pc2;{
 int* cexprs(r2, r3, r4) int* r2; int* r3; int* r4;{
   register int r0;
   register int r1;
-  /* register int r2; */
-  /* int r5; */
   int tmp;
-  /* int r3; */
   char* c_r4;
   char sp;
   char sp1;
@@ -31,19 +28,18 @@ int* cexprs(r2, r3, r4) int* r2; int* r3; int* r4;{
   opfound = 0;
   *r2 = 0;
   *r3 = 1; 
-  write(0,"-->cexprs\n",10);
+  /* write(0,"-->cexprs\n",10); */
 
 sbrtn:
   r0 = r4;
   c_r4 = r4;
 
-  write(0,"sbrtn\n",6);
-  /* printf("%d %d\n", r0, r4); */
+  /* write(0,"sbrtn\n",6); */
+  /* printf("%d %d\n", r0, r4);*/
 
   /*  */
   if(btwn(r0, 0, 0177) != 1){
-    write(0,">betwin<\n",9);
-    /* r0 = (r0 & 0177400) | *c_r4; */
+    /* write(0,">betwin<\n",9); */
     /* TODO:
      * movb (r4),r0
      *  r4[0] & 0xFF >>> r0 ?
@@ -51,23 +47,13 @@ sbrtn:
      *  *(r4 & 0xFF) >>> r0 ? */
     r0 = (*r4) & 0377;
     r1 = *(r4 + 4);
-    /*TODO: r1 = *(r4 + 2); */
+    /* TODO: r1 = *(r4 + 2); */
     goto oprand;
   }
 
-  write(0,"<1>",3);
   tmp = r4;
   if(tmp >= 0141){ /* dic:97 */
-    write(0,"<2>",3);
     if(tmp < 0141+012){ /* dic:107*/
-      write(0,"ooo\n",4);
-      /*
-      tmp = curfbr - 0141;
-      r0 = (r0 & 0177400) | c_r4[tmp];
-      r4 << 1;
-      tmp = curfb - 2*0141;
-      r2 = r4[tmp];
-      */
       tmp = r4;
       tmp =- 0141;
       r0 = curfbr[tmp] & 0377;
@@ -79,18 +65,13 @@ sbrtn:
         goto oprand;
       }else{
         error('f');
-        /* TODO */
-        write(0, "r2\n", 3);
-        /* exit(1); */
         goto oprand;
       }
     }
-    write(0,"---\n",4);
     *r3 = 0;
     *r2 = 0;
     goto oprand;
   }
-  write(0,"0<a<0141\n",9);
   /* mov $esw1,r1; */
 
   switch(r4){
@@ -109,7 +90,6 @@ sbrtn:
     case '^': /*94*/ 
       goto binop;
     case   1:        
-      /* exnum(r0, r1, r2, r3, &r4, sp); return; */
       goto exnum;
     case '!': /*33*/ 
       goto binop;
@@ -120,52 +100,38 @@ sbrtn:
 
 
   if(opfound != 0){
-    write(0,"to be finished at cexpres\n", 26);
     goto finish;
   }else{
-    /* write(0,"to be errored at cexpres\n",25); */
-    /* TODO: should be changed to errore() */
     error('e');
-   /* TODO */
-    write(0, "opfound\n", 8);
-    goto finish; /* TODO: */
+    goto finish;
   }
 
 binop:
-  write(0,"binop\n",6);
+  /* write(0,"binop\n",6); */
 
   if(sp != '+'){
-    /* TODO: should be changed to errore() */
     error('e');
-    /* TODO */
-    /* write(0, "binop\n", 6); */
-    /* exit(1); */
-    /*errore();*/
   }
   sp = r4;
 
   goto advanc; 
 
 exnum:
-  write(0,"exnum\n",6);
+  /* write(0,"exnum\n",6); */
 
   r1 = numval;
   r0 = 1;
   goto oprand;
 
 brack:
-  write(0, "brack\n", 6);
+  /* write(0, "brack\n", 6); */
   sp1 = *r2;
   sp2 = *r3;
-  write(0,"->cexprs\n",9);
   r4 = cexprs(r2, r3, readop_());
-  write(0,"->cexprs-end\n",13);
 
   tmp = r4;
   if(tmp != ']'){
     error('f');
-    /* TODO */
-    /* write(0, "brack\n", 6); */
   }
   r0 = *r3;
   r1 = *r2;
@@ -174,16 +140,7 @@ brack:
   goto oprand;
 
 oprand:
-  /*
-  printf("--r0 r1 r2 :%x %x %x\n", r0, r1, r2);
-  printf("--r3 r4 -- :%x %x\n", r3, r4);
-  printf("---------- :%c(%d)\n", sp, sp);
-  */
-  /* oprand(r0, r1, r2, r3, r4, sp); */
-  
-  write(0,"oprand\n",7);
-
-  /* r5 = exsw2 */; 
+  /* write(0,"oprand\n",7); */
   opfound =+ 1;
  
   switch(sp){
@@ -214,7 +171,6 @@ oprand:
       break;
   }
 
-  /* TODO: */
   goto eoprnd; 
 
 exadd:
@@ -268,8 +224,6 @@ exor:
 
 exand:
   /* write(0,"exand\n",6); */
-  /* TODO: */
-  /* exit(1); */
   r0 = combin(r0, r3, 0);
   r1 = ~r1;
   *r2 = (~r1) & *r2;
@@ -282,16 +236,12 @@ exrsh:
     goto exlsh;
   }
   r1++;
-  /* TODO */
-  /* exit(1); */
   *r2 = ((*r2 >> 1) & 177) | (*r2 << 15);
   goto exlsh;
  
 exlsh:
   /* write(0,"exlsh\n",6); */
   r0 = combin(r0, r3, 0);
-  /* TODO */
-  /* exit(1); */
   if(r1>0){
     *r2 = *r2 << r1;
   }else{
@@ -329,25 +279,16 @@ excmbin:
   goto eoprnd;
 
 eoprnd:
-  write(0,"eoprnd\n",7);
+  /* write(0,"eoprnd\n",7); */
   sp = '+';
   goto advanc;
 
 advanc:
-  write(0,"advanc\n",7);
-  /* advanc */ 
   r4 = readop_();
-  /* printf("%d\n", r4); */
-  /* cexprs(r2, r3, r4); */
   goto sbrtn;
 
 finish:
-  write(0,"finish\n",7);
-  /* exit(0); */
-  /*
-  printf("---%d(opfound\n", opfound);
-  */
-  /* printf("fin cexprs (eof): r4:%x\n", r4); */
+
   return r4;
 }
 

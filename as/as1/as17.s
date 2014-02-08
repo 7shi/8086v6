@@ -5,6 +5,8 @@
 
 / input: r4
 expres:
+  mov r0,-(sp)
+
   mov r3,-(sp)
   mov sp,r3
   mov r2,-(sp)
@@ -17,8 +19,6 @@ expres:
   mov r2,-(sp)
   jsr pc,_cexprs
   /jsr pc,expres_
-  /mov (sp)+,r2
-  /mov (sp)+,r3
   tst (sp)+
   tst (sp)+
 	tst	(sp)+     / use variable B
@@ -29,11 +29,10 @@ expres:
   mov (sp)+,r3
 
   mov r0,r4     / return value
+  mov (sp)+,r0
 	rts pc
 
 expres_:
-  /mov 2(sp),r2
-  /mov 4(sp),r3
   mov 6(sp),r4  / variableC(arg) -> r4
 	mov	$'+,-(sp) / create auto variableB : arg1
 	clr	opfound
@@ -44,7 +43,6 @@ expres_:
 advanc_:
 	jsr	pc,readop
   jmp  sbrtn
-  /br  sbrtn
 
 sbrtn:
 	mov	r4,r0
@@ -82,10 +80,6 @@ sbrtn:
 2:
   / return to client
 	tst	(sp)+     / use variable B
-	/mov	(sp)+,r5  / use variable A
-  /tst (sp)+     /     variable C
-  /mov r2,2(sp) 
-  /mov r3,4(sp) 
   mov r2,*2(sp) 
   mov r3,*4(sp) 
 	rts	pc
