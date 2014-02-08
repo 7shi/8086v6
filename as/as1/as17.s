@@ -9,13 +9,14 @@ expres:
   mov sp,r3
   mov r2,-(sp)
   mov sp,r2
+  mov r1,-(sp)
 
 	mov	r5,-(sp)  / create auto variableA :
   mov r4,-(sp)  / create auto variableC : arg (additional)
   mov r3,-(sp)
   mov r2,-(sp)
-  /jsr pc,_cexprs
-  jsr pc,expres_
+  jsr pc,_cexprs
+  /jsr pc,expres_
   /mov (sp)+,r2
   /mov (sp)+,r3
   tst (sp)+
@@ -23,8 +24,11 @@ expres:
 	tst	(sp)+     / use variable B
 	mov	(sp)+,r5  / use variable A
 
+  mov (sp)+,r1
   mov (sp)+,r2 
   mov (sp)+,r3
+
+  mov r0,r4     / return value
 	rts pc
 
 expres_:
@@ -257,7 +261,7 @@ combin:
   rts r5
 
 ///////////////////////
-/combin2:
+/combin:
 /	mov	r0,-(sp)
 /	bis	r3,(sp)
 /	bic	$!40,(sp)

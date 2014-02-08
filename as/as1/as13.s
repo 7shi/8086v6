@@ -23,11 +23,11 @@ _opline:
 .globl _expres
 _expres:
 	mov r5, -(sp)
-	mov 4(sp), r4
+	mov 4(sp), r4  / arg1
 	jsr pc, expres
-	mov r2, *6(sp)
-	mov r3, *8(sp)
-	mov r4, r0
+	mov r2, *6(sp) / arg2
+	mov r3, *8(sp) / arg3
+	mov r4, r0     / return
 	mov (sp)+, r5
 	rts pc
 
