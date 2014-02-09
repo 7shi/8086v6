@@ -3,16 +3,70 @@
 
 /  a7 -- pdp-11 assembler pass 1
 
+/* for debug */
+dump16:
+  mov r5,-(sp)
+  mov r4,-(sp)
+  mov r3,-(sp)
+  mov r2,-(sp)
+  mov r1,-(sp)
+  mov r0,-(sp)
+
+  mov 16(sp),-(sp)
+  jsr pc,_dump16
+  tst (sp)+
+
+  mov (sp)+, r0
+  mov (sp)+, r1
+  mov (sp)+, r2 
+  mov (sp)+, r3
+  mov (sp)+, r4
+  mov (sp)+, r5
+  rts pc
+
+/ input: r4
 expres:
-	mov	r5,-(sp)
-	mov	$'+,-(sp)
+  mov r0,-(sp)
+
+  mov r3,-(sp)
+  mov sp,r3
+  mov r2,-(sp)
+  mov sp,r2
+  mov r1,-(sp)
+
+	mov	r5,-(sp)  / create auto variableA :
+  mov r4,-(sp)  / create auto variableC : arg (additional)
+  mov r3,-(sp)
+  mov r2,-(sp)
+  /jsr pc,_cexprs
+  jsr pc,expres_
+  tst (sp)+
+  tst (sp)+
+	tst	(sp)+     / use variable B
+	mov	(sp)+,r5  / use variable A
+
+  mov (sp)+,r1
+  mov (sp)+,r2 
+  mov (sp)+,r3
+
+  mov r0,r4     / return value
+  mov (sp)+,r0
+	rts pc
+
+expres_:
+  mov 6(sp),r4  / variableC(arg) -> r4
+	mov	$'+,-(sp) / create auto variableB : arg1
 	clr	opfound
 	clr	r2
 	mov	$1,r3
-	br	1f
-advanc:
+
+  br sbrtn
+
+advanc_:
 	jsr	pc,readop
-1:
+  jmp  sbrtn
+
+sbrtn:
 	mov	r4,r0
 	jsr	r5,betwen; 0; 177
 		br .+4
@@ -21,14 +75,17 @@ advanc:
 	mov	2(r4),r1
 	br	oprand
 7:
-	cmp	r4,$141
+	cmp	r4,$141                / 0x61('a')
 	blo	1f
-	cmp	r4,$141+10.
+	cmp	r4,$141+10.            / 0x6b('k')
 	bhis	2f
 	movb	curfbr-141(r4),r0
 	asl	r4
 	mov	curfb-[2*141](r4),r2
+ 
+  tst r2
 	bpl	oprand
+
 	jsr	r5,error; 'f
 	br	oprand
 2:
@@ -46,8 +103,10 @@ advanc:
 	bne	2f
 	jsr	pc,errore
 2:
-	tst	(sp)+
-	mov	(sp)+,r5
+  / return to client
+	tst	(sp)+     / use variable B
+  mov r2,*2(sp) 
+  mov r3,*4(sp) 
 	rts	pc
 1:
 	jmp	*(r1)
@@ -69,37 +128,43 @@ esw1:
 	0;	0
 
 binop:
-	cmpb	(sp),$'+
+	cmpb	(sp),$'+ / use variableB
 	beq	1f
 	jsr	pc,errore
 1:
-	movb	r4,(sp)
-	br	advanc
+	movb	r4,(sp)  / use variableB
+	/br	advanc_    / -----
+	jmp	advanc_    / -----
 
 exnum:
-	mov	numval,r1
+  mov	numval,r1
 	mov	$1,r0
 	br	oprand
 
 brack:
-	mov	r2,-(sp)
-	mov	r3,-(sp)
+	mov	r2,-(sp)  / create auto variable2
+	mov	r3,-(sp)  / create auto variable3
 	jsr	pc,readop
-	jsr	pc,expres
+
+	jsr	pc,expres / --OK
+
 	cmp	r4,$']
 	beq	1f
 	jsr	r5,error; ']
 1:
 	mov	r3,r0
 	mov	r2,r1
-	mov	(sp)+,r3
-	mov	(sp)+,r2
+	mov	(sp)+,r3  / remove auto variable3
+	mov	(sp)+,r2  / remove auto variable2
+
+  // add
+  br  oprand
 
 oprand:
 	inc	opfound
 	mov	$exsw2,r5
 1:
-	cmp	(sp),(r5)+
+	cmp	(sp),(r5)+ / use variableB
 	beq	1f
 	tst	(r5)+
 	bne	1b
@@ -107,7 +172,7 @@ oprand:
 1:
 	jmp	*(r5)
 
-exsw2:
+exsw2: _exsw2:
 	'+; exadd
 	'-; exsub
 	'*; exmul
@@ -138,10 +203,10 @@ exlsh:
 
 exmod:
 	jsr	r5,combin; 0
-	mov	r1,-(sp)
+	mov	r1,-(sp)     / create auto variable2
 	mov	r2,r1
 	clr	r0
-	dvd	(sp)+,r0
+	dvd	(sp)+,r0     / remove auto variable2
 	mov	r1,r2
 	br	eoprnd
 
@@ -174,10 +239,10 @@ exmul:
 
 exdiv:
 	jsr	r5,combin; 0
-	mov	r1,-(sp)
+	mov	r1,-(sp)     / create auto variable2
 	mov	r2,r1
 	clr	r0
-	dvd	(sp)+,r0
+	dvd	(sp)+,r0     / remove auto variable2
 	mov	r0,r2
 	br	eoprnd
 
@@ -188,33 +253,59 @@ exnot:
 	br	eoprnd
 
 eoprnd:
-	mov	$'+,(sp)
-	jmp	advanc
+	mov	$'+,(sp)     / variableB
+  jmp	advanc_       / -----
 
 combin:
-	mov	r0,-(sp)
-	bis	r3,(sp)
-	bic	$!40,(sp)
-	bic	$!37,r0
-	bic	$!37,r3
-	cmp	r0,r3
-	ble	1f
-	mov	r0,-(sp)
-	mov	r3,r0
-	mov	(sp)+,r3
-1:
-	tst	r0
-	beq	1f
-	tst	(r5)+
-	beq	2f
-	cmp	r0,r3
-	bne	2f
-	mov	$1,r3
-	br	2f
-1:
-	tst	(r5)+
-	clr	r3
-2:
-	bis	(sp)+,r3
-	rts	r5
+  mov r4,-(sp)
+  mov r2,-(sp)
+  mov r3,-(sp)
+  mov sp,r3
+  mov r1,-(sp)
+
+  mov r5,-(sp)
+  mov r3,-(sp)
+  mov r0,-(sp)
+  jsr pc, _combin
+  tst (sp)+
+  tst (sp)+
+  mov (sp)+, r5
+
+  mov (sp)+,r1
+  mov (sp)+,r3
+  mov (sp)+,r2
+  mov (sp)+,r4
+
+  tst (r5)+
+  rts r5
+
+///////////////////////
+/combin:
+/	mov	r0,-(sp)
+/	bis	r3,(sp)
+/	bic	$!40,(sp)
+/	bic	$!37,r0
+/	bic	$!37,r3
+/	cmp	r0,r3
+/	ble	1f
+/	mov	r0,-(sp)
+/	mov	r3,r0     /-------- r0
+/	mov	(sp)+,r3  /-------- r3
+/1:
+/	tst	r0
+/	beq	1f
+/	tst	(r5)+     / when exsub then 1
+/	beq	2f
+/	cmp	r0,r3
+/	bne	2f
+/	mov	$1,r3
+/	br	2f
+/1:
+/	tst	(r5)+     / when exsub then 1
+/	clr	r3
+/2:
+/	bis	(sp)+,r3
+/	rts	pc
+//	rts	r5
+
 
