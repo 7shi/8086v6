@@ -16,32 +16,13 @@ int btwn(r0, pc1, pc2) int r0; int pc1; int pc2;{
 
 /* for debug */
 int dump16(r0) int r0;{
-  char tbl[16];
-  char c[4];
-
-  tbl[0] = '0';
-  tbl[1] = '1';
-  tbl[2] = '2';
-  tbl[3] = '3';
-  tbl[4] = '4';
-  tbl[5] = '5';
-  tbl[6] = '6';
-  tbl[7] = '7';
-  tbl[8] = '8';
-  tbl[9] = '9';
-  tbl[10] = 'a';
-  tbl[11] = 'b';
-  tbl[12] = 'c';
-  tbl[13] = 'd';
-  tbl[14] = 'e';
-  tbl[15] = 'f';
-
+  char *tbl, c[4];
+  tbl = "0123456789abcdef";
 
   c[3] = tbl[((r0      ) & 017)];
   c[2] = tbl[((r0 >>  4) & 017)];
   c[1] = tbl[((r0 >>  8) & 017)];
   c[0] = tbl[((r0 >> 12) & 017)];
-  
 
   write(0,&c,4);
   write(0,"\n",1);
