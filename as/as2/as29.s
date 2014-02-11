@@ -6,8 +6,7 @@
 eae = 0
 
 	.data
-symtab:
-
+.globl _symtab; _symtab: symtab:
 / special variables
 
 dotrel: 02; dot:000000 /.

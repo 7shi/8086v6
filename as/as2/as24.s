@@ -70,22 +70,13 @@ flush1:
 	rts	r5
 
 readop:
-	mov	savop,r4
-	beq	1f
-	clr	savop
-	rts	pc
-1:
-	jsr	pc,getw1
-	cmp	r4,$200
-	blo	1f
-	cmp	r4,$4000
-	blo	2f
-	add	$usymtab-4000,r4
-	rts	pc
-2:
-	add	$symtab-1000,r4
-1:
-	rts	pc
+	mov r0, -(sp)
+	mov r1, -(sp)
+	jsr pc, _readop
+	mov (sp)+, r1
+	mov r0, r4
+	mov (sp)+, r0
+	rts pc	
 
 getw:
 	mov r1, -(sp)

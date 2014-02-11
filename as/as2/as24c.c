@@ -4,6 +4,8 @@ int ibufc;
 int *ibufp;
 int fin;
 int inbuf[256];
+char symtab[];
+char usymtab[];
 
 int
 oset(r0, r1, r2)
@@ -25,6 +27,33 @@ oset(r0, r1, r2)
 	ptr++;
 
 	return ptr;
+}
+
+int
+readop()
+{
+	int r4;
+	int head;
+
+	r4 = savop;
+	if( r4 != 0 ){
+		savop = 0;
+		return r4;
+	}
+
+	getw1(&r4);
+	if( r4 < 0200 ){
+		return r4;
+	}
+
+	if( r4 < 04000 ){
+		head = &symtab[0];
+		r4 = r4 + (head - 01000);
+		return r4;
+	}
+	head = &usymtab[0];
+	r4 = r4 + (head - 04000);
+	return r4;
 }
 
 int 
