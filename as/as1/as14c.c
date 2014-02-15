@@ -48,7 +48,7 @@ char *r3;
     /*
     retrieve source code by rch() while continuous normal characters
     */
-    while (true) {
+    for (;;) {
         r3 = rch();
         if (r3 <= 0) {
             break;
@@ -78,7 +78,7 @@ char *r3;
         r1 =* 2;
         r1p = hshtab + r1;
 
-        while (true) {
+        for (;;) {
             r1p =- r0;
             if (r1p < hshtab) {
                 r1 =+ 2*(*hshsiz);
