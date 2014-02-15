@@ -77,17 +77,17 @@ rname0:
 	mov	r4,(r1)
 4:
 	mov	$symbol,r2
-	mov	r4,-(sp)
-	add	$20,r4
-	cmp	r4,0f
-	blos	4f
-	add	$512.,0f
-	sys	indir; 9f
-	.data
-9:	sys	break; 0:end
-	.text
-4:
-	mov	(sp)+,r4
+/	mov	r4,-(sp)
+/	add	$20,r4
+/	cmp	r4,0f
+/	blos	4f
+/	add	$512.,0f
+/	sys	indir; 9f
+/	.data
+/9:	sys	break; 0:end
+/	.text
+/4:
+/	mov	(sp)+,r4
 	mov	(r2)+,(r4)+
 	mov	(r2)+,(r4)+
 	mov	(r2)+,(r4)+

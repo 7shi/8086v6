@@ -9,40 +9,33 @@ int *end;
 char usymtab[36];
 char symtab[];
 
-rname(r0, r1, r2, r3)
+rname(r0)
 int r0;
-int r1;
-char *r2;
-char *r3;
 {
-    int r4, r5;
-    int *r0p, *r1p, *r4p;
+    int r1, r5;
+    int *r2;
+    char *r3;
+    int *r0p, *r1p, *r4;
     int i, tmp1, tmp2;
     int loop_flag, jump_flag;
+    int stack[10];
     int *sp;
-    char stack[10];
 
     loop_flag = jump_flag = 0;
-    sp = &stack[9];
+    sp = &stack[10];
 
-    *sp = r1;
-    *(--sp) = r2;
-    *(--sp) = r3;
-
-    
     r5 = 8;
-    r2 = symbol+8;
+    r2 = symbol+4;
     for (i = 0; i < 4; i++) {
-        *r2 = 0;
         r2--;
+        *r2 = 0;
     }
-    *(--sp) = 0;
-    *(--sp) = 0;
-    
-    /* see later */
+    *(sp--) = 0;
+    *(sp--) = 0;
+
     if (r0 == '~') {
-        sp =+ 2;
-        *sp =+ 1;
+        sp[1]++;
+        ch = 0;
     }
 
     /*
@@ -70,7 +63,7 @@ char *r3;
     r0 = 0;
     
     if (*(sp++) != 0) {
-        r4 = *symend;
+        r4 = symend;
     } else {
         r0 = r0 / hshsiz;
         r1 = r0 % hshsiz;
@@ -85,10 +78,10 @@ char *r3;
             }
 
             r2 = symbol;
-            r4p = *(--r1p);
-            if (r4p != 0) {
+            r4 = *(--r1p);
+            if (r4 != 0) {
                 for (i = 0; i < 4; i++) {
-                    if (*(r2++) != *(r4p++)) {
+                    if (*(r2++) != *(r4++)) {
                         loop_flag = 1;
                         break;
                     }
@@ -106,7 +99,7 @@ char *r3;
 
         if (jump_flag == 0) {
             /*3:*/
-            r4 = *symend;
+            r4 = symend;
             *r1p = r4;
         }
     }
@@ -117,42 +110,41 @@ char *r3;
         *(--sp) = r4;
         r4 =+ 20;
 
-        if (r4 > end) {
-            end =+ 512;
-        }
         /*4:*/
-        r4p = *(sp++);
+        r4 = *(sp++);
         for (i = 0; i < 4; i++) {
-            *(r4p++) = *(r2++);
+            *(r4++) = *(r2++);
         }
-        *(r4p++) = 0;
-        *(r4p++) = 0;
+        *(r4++) = 0;
+        *(r4++) = 0;
 
-        symend = *(r4p);
-        r4p =- 4;
+        symend = *(r4);
+        r4 =- 4;
     }
        
     /* 1: */
-    *(--sp) = r4p;
-    r3 = r4p;
+    *(--sp) = r4;
+    r3 = r4;
     r3 =- 8;
     if (r3 >= usymtab) {
         r3 =- usymtab;
         r2 = 0;
         r2 = 3 / r3;
         r3 = 3 % r3;
-        r4p = r2;
-        r4p =+ 4000;
+        r4 = r2;
+        r4 =+ 4000;
     } else {
         r3 =- symtab;
         r2 = 0;
         r2 = 3 / r3;
         r3 = 3 % r3;
-        r4p = r2;
-        r4p =+ 1000;
+        r4 = r2;
+        r4 =+ 1000;
     }
 
-    putw(r4p);
+    putw(r4);
+
+    return &stack[9];
 }
 
 char inbuf[512];

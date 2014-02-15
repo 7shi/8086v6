@@ -13,7 +13,7 @@ char *s; {
 	write(2, s, i);
 	for (i = 0; i < 6; ++i) {
 		buf[5 - i] = '0' + (v & 7);
-		v =<< 3;
+		v =>> 3;
 	}
 	buf[6] = '\n';
 	write(2, buf, 7);
@@ -80,7 +80,7 @@ readop() {
 			r4 = number(&r0);
 			break;
 		}
-		r0 = rname0(r4);
+		r0 = rname(r4);
 		debug8("rname0: ", r0);
 		return r0;
 	}
