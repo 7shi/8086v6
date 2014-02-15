@@ -5,7 +5,6 @@ char *symbol;
 int *symend;
 int *hshsiz;
 int *hshtab;
-int *end;
 char usymtab[36];
 char symtab[];
 
@@ -25,13 +24,13 @@ int r0;
     sp = &stack[10];
 
     r5 = 8;
-    r2 = symbol+4;
-    for (i = 0; i < 4; i++) {
-        r2--;
-        *r2 = 0;
-    }
-    *(sp--) = 0;
-    *(sp--) = 0;
+    r2 = symbol+8;
+	*(--r2) = 0;
+	*(--r2) = 0;
+	*(--r2) = 0;
+	*(--r2) = 0;
+    *(--sp) = 0;
+    *(--sp) = 0;
 
     if (r0 == '~') {
         sp[1]++;

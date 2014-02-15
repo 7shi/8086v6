@@ -7,13 +7,14 @@ rname:
     mov r1,-(sp)
     mov r2,-(sp)
     mov r3,-(sp)
+	mov r0,-(sp)
 
     jsr pc,_rname
 
+	tst	(sp)+
 	mov	(sp)+,r3
 	mov	(sp)+,r2
 	mov	(sp)+,r1
-	tst	(sp)+
 	rts	pc
 
 rname0:
