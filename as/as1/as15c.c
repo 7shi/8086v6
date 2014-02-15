@@ -5,6 +5,20 @@ char chartab[];
 char ch;
 int numval;
 
+debug8(s, v)
+char *s; {
+	int i;
+	char buf[7];
+	for (i = 0; s[i]; ++i);
+	write(2, s, i);
+	for (i = 0; i < 6; ++i) {
+		buf[5 - i] = '0' + (v & 7);
+		v =<< 3;
+	}
+	buf[6] = '\n';
+	write(2, buf, 7);
+}
+
 readop() {
 	int r0, oldr0, r1, r4;
 	if (r4 = savop) {
@@ -66,7 +80,9 @@ readop() {
 			r4 = number(&r0);
 			break;
 		}
-		return rname0(r4);
+		r0 = rname0(r4);
+		debug8("rname0: ", r0);
+		return r0;
 	}
 	putw(r4);
 	if (r4 == 1) {
