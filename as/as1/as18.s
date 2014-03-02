@@ -58,5 +58,5 @@ hshsiz = 1553.
 .globl _numval; _numval: numval:	.=.+2
 .globl _nxtfb; _nxtfb: nxtfb:	.=.+4
 .globl _usymtab; _usymtab: usymtab:.=.+36.
-.globl _end; _end: end:
+.globl _end; _end: end:.=.+512.
 .text

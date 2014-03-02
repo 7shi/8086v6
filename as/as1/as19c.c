@@ -42,7 +42,7 @@ main(argc, argv) int argc; char *argv[];{
 /* for setup() */
 char symtab[];
 char ebsymtab[];
-char* hshsiz;
+int hshsiz;
 char hshtab[];
 
 dump(){

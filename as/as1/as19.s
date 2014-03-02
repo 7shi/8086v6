@@ -284,8 +284,6 @@ eae = 0
 
 .globl _ebsymtab; _ebsymtab: ebsymtab:
 
-.globl _hshsiz; _hshsiz: hshsiz
-
 //////////////////////////////////////////////////////////
 / start:
 / 	sys	signal; 2; 1

@@ -3,18 +3,6 @@
 
 / a5 -- pdp-11 assembler pass 1
 
-.globl _rname
-_rname:
-	mov r5, -(sp)
-	mov 4(sp), r0
-	jsr pc, _rname_
-	mov r4, r0
-	mov (sp)+, r5
-	rts pc
-
-_rname_:
-	jsr pc, rname
-
 .globl _number
 _number:
 	jsr pc, number
