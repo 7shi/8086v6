@@ -80,9 +80,7 @@ readop() {
 			r4 = number(&r0);
 			break;
 		}
-		r0 = rname(r4);
-		debug8("rname0: ", r0);
-		return r0;
+		return rname(r4);
 	}
 	putw(r4);
 	if (r4 == 1) {
