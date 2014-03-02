@@ -3,17 +3,18 @@
 char ch;
 char *symbol;
 int *symend;
-int *hshsiz;
-int *hshtab;
+int hshsiz 1553;
+char *hshtab;
 char usymtab[36];
 char symtab[];
+char chartab[];
 
 rname(r0)
 int r0;
 {
     int r1, r5;
-    int *r2;
-    char *r3;
+    char *r2;
+    char r3;
     int *r0p, *r1p, *r4;
     int i, tmp1, tmp2;
     int loop_flag, jump_flag;
@@ -41,14 +42,15 @@ int r0;
     retrieve source code by rch() while continuous normal characters
     */
     for (;;) {
-        r3 = rch();
+        r3 = chartab[r0 = rch()];
         if (r3 <= 0) {
             break;
         } else {
             tmp1 = tmp2 = *sp + r3;
             tmp2 = tmp2 << 8;
-            tmp1 = tmp1 >> 8;
+            tmp1 = (tmp1 >> 8) & 255;
             *sp = tmp1 | tmp2;
+            debug8("line53: ", *sp);
 
             if (--r5 >= 0) {
                 *r2 = r3;
@@ -73,7 +75,7 @@ int r0;
         for (;;) {
             r1p =- r0;
             if (r1p < hshtab) {
-                r1 =+ 2*(*hshsiz);
+                r1p =+ hshsiz;
             }
 
             r2 = symbol;
@@ -105,8 +107,10 @@ int r0;
 
     /*4:*/
     if (jump_flag == 0) {
+        debug8("line110:", r4);
         r2 = symbol;
         *(--sp) = r4;
+        debug8("line112:", *sp);
         r4 =+ 20;
 
         /*4:*/
@@ -123,6 +127,7 @@ int r0;
        
     /* 1: */
     *(--sp) = r4;
+    debug8("line129:", *sp);
     r3 = r4;
     r3 =- 8;
     if (r3 >= usymtab) {
@@ -143,7 +148,7 @@ int r0;
 
     putw(r4);
 
-    return &stack[9];
+    return stack[9];
 }
 
 char inbuf[512];
