@@ -18,27 +18,18 @@ int r0;
     int *r0p;
     int i, tmp1, tmp2;
     int loop_flag;
-    int stack[10];
-    int *sp;
-
-    sp = &stack[10];
+    int key, tilde, ret;
 
     r5 = 8;
-    r2 = symbol+8;
+    r2 = symbol;
     /* clearing r2 8times cause r2 declared in char */
-	*(--r2) = 0;
-	*(--r2) = 0;
-	*(--r2) = 0;
-	*(--r2) = 0;
-	*(--r2) = 0;
-	*(--r2) = 0;
-	*(--r2) = 0;
-	*(--r2) = 0;
-    *(--sp) = 0;
-    *(--sp) = 0;
+    for (i = 0; i < 8; ++i) {
+        r2[i] = 0;
+    }
+    key = tilde = 0;
 
     if (r0 == '~') {
-        sp[1]++;
+        tilde = 1;
         ch = 0;
     }
 
@@ -50,10 +41,10 @@ int r0;
         if (r3 <= 0) {
             break;
         } else {
-            tmp1 = tmp2 = *sp + r3;
+            tmp1 = tmp2 = key + r3;
             tmp2 = tmp2 << 8;
             tmp1 = (tmp1 >> 8) & 255;
-            *sp = tmp1 | tmp2;
+            key = tmp1 | tmp2;
 
             if (--r5 >= 0) {
                 *r2 = r3;
@@ -63,10 +54,9 @@ int r0;
     }
 
     ch = r0;
-    r1 = *(sp++);
-    r0 = 0;
+    r1 = key;
     
-    if (*(sp++) != 0) {
+    if (tilde) {
         r4 = symend;
     } else {
         r0 = ldiv(0, r1, hshsiz);
@@ -123,7 +113,7 @@ int r0;
     }
        
     /* 1: */
-    *(--sp) = r4;
+    ret = r4;
     r3 = r4;
     r3 =- 8;
     if (r3 >= usymtab) {
@@ -138,7 +128,7 @@ int r0;
 
     putw(r4);
 
-    return stack[9];
+    return ret;
 }
 
 char inbuf[512];
