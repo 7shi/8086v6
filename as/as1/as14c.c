@@ -2,12 +2,11 @@
 
 int  ch;
 char *symbol;
-int *symend;
 int hshsiz 1553;
 int hshtab[];
-char usymtab[36];
 char symtab[];
 char chartab[];
+char *usymtab, *symend;
 
 rname(r0)
 int r0;

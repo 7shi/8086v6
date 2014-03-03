@@ -28,7 +28,6 @@
 .globl _curfb; _curfb: curfb:
 	-1;-1;-1;-1;-1;-1;-1;-1;-1;-1
 .globl _obufp; _obufp: obufp:	outbuf
-.globl _symend; _symend: symend:	usymtab
 
 .bss
 .globl _curfbr; _curfbr: curfbr:	.=.+10.
@@ -57,6 +56,4 @@ hshsiz = 1553.
 .globl _savop; _savop: savop:	.=.+2
 .globl _numval; _numval: numval:	.=.+2
 .globl _nxtfb; _nxtfb: nxtfb:	.=.+4
-.globl _usymtab; _usymtab: usymtab:.=.+36.
-.globl _end; _end: end:.=.+512.
 .text
