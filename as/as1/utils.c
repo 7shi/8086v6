@@ -28,7 +28,8 @@ char *d;
 }
 
 debug8(s, v)
-char *s; {
+char *s;
+{
 	int i;
 	char buf[7];
 	for (i = 0; s[i]; ++i);
