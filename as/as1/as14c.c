@@ -17,11 +17,10 @@ int r0;
     char **r1p, *r4;
     int *r0p;
     int i, tmp1, tmp2;
-    int loop_flag, jump_flag;
+    int loop_flag;
     int stack[10];
     int *sp;
 
-    loop_flag = jump_flag = 0;
     sp = &stack[10];
 
     r5 = 8;
@@ -89,10 +88,7 @@ int r0;
                         break;
                     }
                 }
-                if (loop_flag == 1) {
-                    continue;
-                } else {
-                    jump_flag = 1;
+                if (loop_flag == 0) {
                     break;
                 }
             } else {
@@ -106,7 +102,7 @@ int r0;
     }
 
     /*4:*/
-    if (jump_flag == 0) {
+    if (r4 == symend) {
         r2 = symbol;
         if (r4 + 16 > memend) {
             sbrk(512);
