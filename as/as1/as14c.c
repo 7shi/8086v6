@@ -39,7 +39,7 @@ int r0;
     } else {
         r0 = ldiv(0, key, hshsiz);
         r1p = hshtab + lrem(0, key, hshsiz);
-        for (;;) {
+        do {
             r1p =- r0;
             if (r1p <= hshtab) {
                 r1p =+ hshsiz;
@@ -51,10 +51,7 @@ int r0;
                 *r1p = r4;
                 break;
             }
-            if (!strncmp(symbol, r4, 8)) {
-                break;
-            }
-        }
+        } while (strncmp(symbol, r4, 8));
     }
 
     /*4:*/
