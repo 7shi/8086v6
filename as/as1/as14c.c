@@ -11,14 +11,13 @@ char *usymtab, *symend, *memend;
 rname(r0)
 int r0;
 {
-    int r1, r5;
+    int r3, r5;
     char *r2;
-    int r3;
     char **r1p, *r4;
     int *r0p;
-    int i, tmp1, tmp2;
+    int i;
     int loop_flag;
-    int key, tilde, ret;
+    int key, tilde;
 
     r5 = 8;
     r2 = symbol;
@@ -40,27 +39,22 @@ int r0;
         r3 = chartab[r0 = rch()];
         if (r3 <= 0) {
             break;
-        } else {
-            tmp1 = tmp2 = key + r3;
-            tmp2 = tmp2 << 8;
-            tmp1 = (tmp1 >> 8) & 255;
-            key = tmp1 | tmp2;
-
-            if (--r5 >= 0) {
-                *r2 = r3;
-                r2++;
-            }
+        }
+        key =+ r3;
+        key = (key << 8) | ((key >> 8) & 255);
+        if (--r5 >= 0) {
+            *r2 = r3;
+            r2++;
         }
     }
 
     ch = r0;
-    r1 = key;
     
     if (tilde) {
         r4 = symend;
     } else {
-        r0 = ldiv(0, r1, hshsiz);
-        r1p = hshtab + lrem(0, r1, hshsiz);
+        r0 = ldiv(0, key, hshsiz);
+        r1p = hshtab + lrem(0, key, hshsiz);
 
         for (;;) {
             r1p =- r0;
@@ -103,32 +97,23 @@ int r0;
         for (i = 0; i < 8; i++) {
             *(r4++) = *(r2++);
         }
-        *(r4++) = 0;
-        *(r4++) = 0;
-        *(r4++) = 0;
-        *(r4++) = 0;
+        for (i = 0; i < 4; i++) {
+            *(r4++) = 0;
+        }
 
         symend = r4;
         r4 =- 4;
     }
        
     /* 1: */
-    ret = r4;
-    r3 = r4;
-    r3 =- 8;
+    r3 = r4 - 8;
     if (r3 >= usymtab) {
-        r3 =- usymtab;
-        r2 = 0;
-        r4 = r3 / 3 + 2048;
+        putw((r3 - usymtab) / 3 + 2048);
     } else {
-        r3 =- symtab;
-        r2 = 0;
-        r4 = r3 / 3 + 512;
+        putw((r3 - symtab) / 3 + 512);
     }
 
-    putw(r4);
-
-    return ret;
+    return r4;
 }
 
 char inbuf[512];
