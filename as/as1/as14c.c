@@ -3,14 +3,30 @@
 strncmp(s1, s2, n)
 char *s1, *s2;
 {
-    int i, d;
-    for (i = 0; i < n; ++i, ++s1, ++s2) {
+    int d;
+    for (; n > 0; --n, ++s1, ++s2) {
         d = *s1 - *s2;
         if (d < 0) return -1;
         if (d > 0) return 1;
         if (!*s1) return 0;
     }
     return 0;
+}
+
+memcpy(d, s, n)
+char *d, *s;
+{
+    for (; n > 0; --n, ++d, ++s) {
+        *d = *s;
+    }
+}
+
+memset(d, v, n)
+char *d;
+{
+    for (; n > 0; --n, ++d) {
+        *d = v;
+    }
 }
 
 int  ch;
@@ -24,38 +40,25 @@ char *usymtab, *symend, *memend;
 rname(r0)
 int r0;
 {
-    int r3, r5;
-    char *r2;
+    int r3;
     char **r1p, *r4;
     int i, key, tilde;
 
-    r5 = 8;
-    r2 = symbol;
-    /* clearing r2 8times cause r2 declared in char */
-    for (i = 0; i < 8; ++i) {
-        r2[i] = 0;
-    }
-    key = tilde = 0;
+    /* clearing symbol 8 chars */
+    memset(symbol, 0, 8);
 
-    if (r0 == '~') {
-        tilde = 1;
-        ch = 0;
-    }
+    key = 0;
+    tilde = r0 == '~';
 
     /*
     retrieve source code by rch() while continuous normal characters
     */
-    for (;;) {
+    for (i = 0;; ++i) {
         r3 = chartab[r0 = rch()];
-        if (r3 <= 0) {
-            break;
-        }
+        if (r3 <= 0) break;
         key =+ r3;
         key = (key << 8) | ((key >> 8) & 255);
-        if (--r5 >= 0) {
-            *r2 = r3;
-            r2++;
-        }
+        if (i < 8) symbol[i] = r3;
     }
 
     ch = r0;
@@ -70,7 +73,6 @@ int r0;
             if (r1p <= hshtab) {
                 r1p =+ hshsiz;
             }
-            r2 = symbol;
             r4 = *(--r1p);
             if (!r4) {
                 /*3:*/
@@ -78,8 +80,7 @@ int r0;
                 *r1p = r4;
                 break;
             }
-            if (!strncmp(r2, r4, 8)) {
-                r4 =+ 8;
+            if (!strncmp(symbol, r4, 8)) {
                 break;
             }
         }
@@ -87,33 +88,26 @@ int r0;
 
     /*4:*/
     if (r4 == symend) {
-        r2 = symbol;
         if (r4 + 16 > memend) {
             sbrk(512);
             memend =+ 512;
         }
 
         /*4:*/
-        for (i = 0; i < 8; i++) {
-            *(r4++) = *(r2++);
-        }
-        for (i = 0; i < 4; i++) {
-            *(r4++) = 0;
-        }
+        memcpy(r4, symbol, 8);
+        memset(r4 + 8, 0, 4);
 
-        symend = r4;
-        r4 =- 4;
+        symend =+ 12;
     }
-       
+
     /* 1: */
-    r3 = r4 - 8;
-    if (r3 >= usymtab) {
-        putw((r3 - usymtab) / 3 + 2048);
+    if (r4 >= usymtab) {
+        putw((r4 - usymtab) / 3 + 2048);
     } else {
-        putw((r3 - symtab) / 3 + 512);
+        putw((r4 - symtab) / 3 + 512);
     }
 
-    return r4;
+    return r4 + 8;
 }
 
 char inbuf[512];
