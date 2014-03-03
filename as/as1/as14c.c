@@ -1,5 +1,18 @@
 /* translated from as14.s */
 
+strncmp(s1, s2, n)
+char *s1, *s2;
+{
+    int i, d;
+    for (i = 0; i < n; ++i, ++s1, ++s2) {
+        d = *s1 - *s2;
+        if (d < 0) return -1;
+        if (d > 0) return 1;
+        if (!*s1) return 0;
+    }
+    return 0;
+}
+
 int  ch;
 char *symbol;
 int hshsiz 1553;
@@ -14,10 +27,7 @@ int r0;
     int r3, r5;
     char *r2;
     char **r1p, *r4;
-    int *r0p;
-    int i;
-    int loop_flag;
-    int key, tilde;
+    int i, key, tilde;
 
     r5 = 8;
     r2 = symbol;
@@ -55,34 +65,24 @@ int r0;
     } else {
         r0 = ldiv(0, key, hshsiz);
         r1p = hshtab + lrem(0, key, hshsiz);
-
         for (;;) {
             r1p =- r0;
             if (r1p <= hshtab) {
                 r1p =+ hshsiz;
             }
-
             r2 = symbol;
             r4 = *(--r1p);
-            if (r4 != 0) {
-                loop_flag = 0;
-                for (i = 0; i < 8; i++) {
-                    if (*(r2++) != *(r4++)) {
-                        loop_flag = 1;
-                        break;
-                    }
-                }
-                if (loop_flag == 0) {
-                    break;
-                }
-            } else {
+            if (!r4) {
                 /*3:*/
                 r4 = symend;
                 *r1p = r4;
                 break;
             }
+            if (!strncmp(r2, r4, 8)) {
+                r4 =+ 8;
+                break;
+            }
         }
-
     }
 
     /*4:*/
