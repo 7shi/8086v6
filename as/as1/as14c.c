@@ -6,7 +6,7 @@ int hshsiz 1553;
 int hshtab[];
 char symtab[];
 char chartab[];
-char *usymtab, *symend;
+char *usymtab, *symend, *memend;
 
 rname(r0)
 int r0;
@@ -123,11 +123,12 @@ int r0;
     /*4:*/
     if (jump_flag == 0) {
         r2 = symbol;
-        *(--sp) = r4;
-        r4 =+ 16;
+        if (r4 + 16 > memend) {
+            sbrk(512);
+            memend =+ 512;
+        }
 
         /*4:*/
-        r4 = *(sp++);
         for (i = 0; i < 8; i++) {
             *(r4++) = *(r2++);
         }

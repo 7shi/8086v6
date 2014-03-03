@@ -7,13 +7,14 @@ char errflg;
 char outbuf[];
 char pof;
 char fbfil;
-char *usymtab, *symend;
+char *usymtab, *symend, *memend;
 
 
 go()
 {
 	int fp;
-	usymtab = symend = sbrk(4096);
+	usymtab = symend = sbrk(36);
+	memend = usymtab + 36;
 	assem();
 	write(pof, outbuf, 512);
 	close(pof);
