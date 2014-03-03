@@ -20,7 +20,6 @@ int r0;
     int loop_flag, jump_flag;
     int stack[10];
     int *sp;
-    char *quot, *remainder;
 
     loop_flag = jump_flag = 0;
     sp = &stack[10];
@@ -71,22 +70,8 @@ int r0;
     if (*(sp++) != 0) {
         r4 = symend;
     } else {
-        /*
-        implement "div" instruction using by subtraction.
-        this instruction operates 32bit value which joined two registers.
-        for example, if set r0 in destination operand then r0 and r1 are joined
-        and r0 is placed upper 16bit and r1 is placed lower 16bit.
-        in addition, we must assume r1 is positive value in every instance.
-        this process is not implemented in this version's C so we use 
-        subtraction as alternative of "div".
-        */
-        remainder = r1;
-        for (quot = 0; remainder >= hshsiz; quot++) {
-            remainder =- hshsiz;
-        }
-        r0 = quot;
-        r1 = remainder;
-        r1p = hshtab + r1;
+        r0 = ldiv(0, r1, hshsiz);
+        r1p = hshtab + lrem(0, r1, hshsiz);
 
         for (;;) {
             r1p =- r0;

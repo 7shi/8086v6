@@ -43,27 +43,17 @@ main(argc, argv) int argc; char *argv[];{
 char symtab[];
 char ebsymtab[];
 int hshsiz;
-char hshtab[];
-
-dump(){
-  char* r1;
-  for(r1 = hshtab;r1 < hshtab+hshsiz*2;r1++){
-    if((r1 - hshtab)%16 == 0) printf("\n%04x:", r1);
-    printf(" %2x", *r1);
-  }
-}
+int hshtab[];
 
 /*
  * void setup(void);
  */
 setup(){
   char* r1;
-  char* r3;
-  char* r2;
+  int r2, r3;
   char* v1;
   char r4;
-
-  char* *a;
+  char* *r3p;
 
   r1 = symtab;
 
@@ -88,33 +78,22 @@ setup(){
     }while(--r2);
   
     /* 2: */
-    r2 = 0;
-
-    /* r2 = r3 / hshsiz; /* div result   */
-    /* r3 = r3 % hshsiz; /* div reminder */
-    while(r3 >= hshsiz){
-      r3 = r3 - hshsiz;
-      r2++;
-    }
-
-    r2 = r2 << 1 + ((r3 >> 15) & 1);
-    r3 = r3 << 1;
-    r3 = r3 + hshtab;
+    r2 = ldiv(0, r3, hshsiz);
+    r3p = hshtab + lrem(0, r3, hshsiz);
 
     do{
       /* 4: */
-      r3 = r3 - r2;
-      if(hshtab >= r3){
-        r3 = r3 + hshsiz * 2; /* r3 += 1553 * 2 */
+      r3p =- r2;
+      if(hshtab >= r3p){
+        r3p =+ hshsiz; /* r3 += 1553 * 2 */
       }
   
       /* 3: */
-      r3 =- 2;
-    }while(*r3 != 0);
+      --r3p;
+    }while(*r3p);
 
     r1 = v1;
-    a = r3;
-    *a = r1;
+    *r3p = r1;
     r1 = r1 + 12; /* シンボルテーブルを1行づつずらす */
 
   }while(r1 < ebsymtab);
@@ -129,8 +108,7 @@ setup2(){
   char quot;   /* r2 2nd: quotient */
 
   char* key;   /* r3 1st */
-  char* idx;   /* r3 2nd */
-  char* *hash; /* r3 3rd */
+  char* *idx;  /* r3 2nd */
 
   char ch;     /* r4 */
 
@@ -156,44 +134,23 @@ setup2(){
     }while(--count);
   
     /* 2: */
-    quot = 0;
-    idx = key;
-
-    /* 
-     * div命令の置き換え, 32bit演算のため演算子'/'は使用できない 
-     * div $hshsiz, r2
-     * */
-    while(idx >= hshsiz){
-      idx =- hshsiz;
-      quot++;
-    }
-
-    /* 
-     * ashc命令の置き換え, 32bit演算のため演算子'<<'はそのままでは使用できない
-     * ashc $1, r2 ---> quot(商):idx(剰余)
-     * */
-    /* 実際にはhshsizは1533.(0x611)なのでashcでキャリーは発生しないので
-     * ここは単純に値を2倍にしているだけだと思われる */
-    /* quot = quot << 1 + ((idx >> 15) & 1); */
-    quot = quot << 1;
-    idx = idx << 1;
-    idx =+ hshtab;
+    quot = ldiv(0, key, hshsiz);
+    idx = hshtab + lrem(0, key, hshsiz);
 
     do{
       /* 4: */
       idx =- quot;
       if(hshtab >= idx){
-        idx =+ hshsiz * 2;
+        idx =+ hshsiz;
       }
   
       /* 3: */
       /* 終端をオーバーフローしないように2[Byte]分減算する
        * 先頭をアンダーフローすることは無い（∵ ashcで2倍にしているから）*/
-      idx =- 2;
-    }while(*idx != 0);
+      --idx;
+    }while(*idx);
 
-    hash = idx;
-    *hash = c_sym;
+    *idx = c_sym;
     p_sym = c_sym + 12; /* シンボルテーブルを1行づつずらす */
     c_sym = p_sym;
 
