@@ -14,23 +14,6 @@ int btwn(r0, pc1, pc2) int r0; int pc1; int pc2;{
  *     0x60 | 0x61   0x6b | 0x6c   0x7f
  */
 
-/* for debug */
-int dump16(r0) int r0;{
-  char *tbl, c[4];
-  tbl = "0123456789abcdef";
-
-  c[3] = tbl[((r0      ) & 017)];
-  c[2] = tbl[((r0 >>  4) & 017)];
-  c[1] = tbl[((r0 >>  8) & 017)];
-  c[0] = tbl[((r0 >> 12) & 017)];
-
-  write(0,&c,4);
-  write(0,"\n",1);
-
-  return 0;
-}
-
-
 
 int* cexprs(r2, r3, r4) int* r2; int* r3; int* r4;{
   int r0;

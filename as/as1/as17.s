@@ -3,27 +3,6 @@
 
 /  a7 -- pdp-11 assembler pass 1
 
-/* for debug */
-dump16:
-  mov r5,-(sp)
-  mov r4,-(sp)
-  mov r3,-(sp)
-  mov r2,-(sp)
-  mov r1,-(sp)
-  mov r0,-(sp)
-
-  mov 16(sp),-(sp)
-  jsr pc,_dump16
-  tst (sp)+
-
-  mov (sp)+, r0
-  mov (sp)+, r1
-  mov (sp)+, r2 
-  mov (sp)+, r3
-  mov (sp)+, r4
-  mov (sp)+, r5
-  rts pc
-
 / input: r4
 expres:
   mov r0,-(sp)

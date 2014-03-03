@@ -41,3 +41,20 @@ char *s;
 	buf[6] = '\n';
 	write(2, buf, 7);
 }
+
+char hexstr[] "0123456789abcdef";
+
+debug16(s, v)
+char *s;
+{
+	int i;
+	char buf[5];
+	for (i = 0; s[i]; ++i);
+	write(2, s, i);
+	for (i = 0; i < 4; ++i) {
+		buf[3 - i] = hexstr[v & 15];
+		v =>> 4;
+	}
+	buf[4] = '\n';
+	write(2, buf, 5);
+}
