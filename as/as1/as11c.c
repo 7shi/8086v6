@@ -7,7 +7,7 @@ char errflg;
 char outbuf[];
 char pof;
 char fbfil;
-char *symend[];
+char *symend;
 char usymtab[];
 
 
@@ -25,7 +25,7 @@ go()
 
 	fp = fcreat(atmp3);
 	
-	write(fp, usymtab, (*symend - usymtab));
+	write(fp, usymtab, symend - usymtab);
 	close(fp);
 
 
