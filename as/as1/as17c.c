@@ -6,14 +6,9 @@ int opfound;
 char exsw2[];
 int numval;
 
-int btwn(r0, pc1, pc2) int r0; int pc1; int pc2;{
-  return pc1 <= r0 && r0 <= pc2;
-}
-
 /* 0 - 0140 | 0141 - 0153 | 0154 - 0177
  *     0x60 | 0x61   0x6b | 0x6c   0x7f
  */
-
 
 int* cexprs(r2, r3, r4) int* r2; int* r3; int* r4;{
   int r0;
@@ -36,7 +31,7 @@ sbrtn:
 
   /* printf("%d %d\n", r0, r4); */
   /*  */
-  if(btwn(r0, 0, 0177) != 1){
+  if(r0 < 0 || 0177 < r0){
     /* write(0,">betwin<\n",9); */
     /* TODO:
      * movb (r4),r0
