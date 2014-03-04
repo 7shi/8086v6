@@ -134,7 +134,7 @@ sbrtn:
     case   0:
     default:
       if(opfound == 0) error('e');
-      goto finish;
+      return r4;
   }
 
 oprand:
@@ -142,154 +142,101 @@ oprand:
  
   switch(sp){
     case '+': ;
-      goto exadd;
+      *r3 = combin(r0, *r3, 0);
+      *r2 =+ r1;
+      break;
+
     case '-': 
-      goto exsub;
+      *r3 = combin(r0, *r3, 1);
+      *r2 =- r1;
+      break;
+
     case '*': 
-      goto exmul;
+      *r3 = combin(r0, *r3, 0);
+    
+      /* TODO: mpy r2,r1 --> r0 untouched */
+      /* mul(mpy) */
+      /* R/Rv1 = R * src ---> r2/r3 = r2 * r1*/
+      /* printf("div: r2r3 = %x %x\n", r2 * r1); */
+      r1 = r1 * *r2;
+      *r2 = r1; 
+      break;
+
     case '/': 
-      goto exdiv;
+      *r3 = combin(r0, *r3, 0);
+      tmp = r1;
+      r1 = *r2;
+      r0 = 0;
+    
+      /* div */
+      /* r0 = r1 / (sp)=tmp;  div result   */
+      /* r1 = r1 % (sp)=tmp;  div reminder */
+      while(r1 >= tmp){
+        r1 = r1 - tmp;
+        r0++;
+      }
+    
+      *r2 = r0;
+      break;
+
     case 037: 
-      goto exor;
+      *r3 = combin(r0, *r3, 0);
+      *r2 =| r1;
+      break;
+
     case '&': 
-      goto exand;
-    case 035: 
-      goto exlsh;
+      *r3 = combin(r0, *r3, 0);
+      r1 = ~r1;
+      *r2 = (~r1) & *r2;
+      break;
+
     case 036: 
-      goto exrsh;
+      r1 = -r1;
+      if(r1){
+        r1++;
+        *r2 = ((*r2 >> 1) & 177) | (*r2 << 15);
+      }
+    case 035: 
+      *r3 = combin(r0, *r3, 0);
+      if(r1>0){
+        *r2 = *r2 << r1;
+      }else{
+        *r2 = *r2 >> (-r1);
+      }
+      break;
+
     case '%': 
-      goto exmod;
+      *r3 = combin(r0, *r3, 0);
+      sp1 = r1;
+      r1 = *r2;
+      r0 = 0;
+      /*TODO: dvd (sp)+,r0     / remove auto variable2  */ 
+      /* div */
+      /* r0 = r1 / (sp)=tmp;  div result   */
+      /* r1 = r1 % (sp)=tmp;  div reminder */
+      while(r1 >= sp1){
+        r1 = r1 - sp1;
+        r0++;
+      }
+      *r2 = r1;
+      break;
+
     case '!': 
-      goto exnot;
+      *r3 = combin(r0, *r3, 0);
+      r1 = ~r1;
+      *r2 =+ r1;
+      break;
+
     case '^': 
-      goto excmbin;
-    case   0:
-    default : 
+      *r3 = r0;
       break;
   }
 
-  goto eoprnd; 
-
-excmbin:
-  /* write(0,"excmbin\n",8); */
-  *r3 = r0;
-  goto eoprnd;
-
-exrsh:
-  /* write(0,"exrsh\n",6); */
-  r1 = -r1;
-  if(r1 == 0){
-    goto exlsh;
-  }
-  r1++;
-  *r2 = ((*r2 >> 1) & 177) | (*r2 << 15);
-  goto exlsh;
- 
-exlsh:
-  /* write(0,"exlsh\n",6); */
-  *r3 = combin(r0, *r3, 0);
-  if(r1>0){
-    *r2 = *r2 << r1;
-  }else{
-    *r2 = *r2 >> (-r1);
-  }
-  goto eoprnd; 
-
-
-exmod:
-  /* write(0,"exmod\n",6);*/
-  *r3 = combin(r0, *r3, 0);
-  sp1 = r1;
-  r1 = *r2;
-  r0 = 0;
-  /*TODO: dvd (sp)+,r0     / remove auto variable2  */ 
-  /* div */
-  /* r0 = r1 / (sp)=tmp;  div result   */
-  /* r1 = r1 % (sp)=tmp;  div reminder */
-  while(r1 >= sp1){
-    r1 = r1 - sp1;
-    r0++;
-  }
-  *r2 = r1;
-  goto eoprnd;
-
-exadd:
-  /* write(0,"exadd\n",6); */
-
-  *r3 = combin(r0, *r3, 0);
-
-  *r2 =+ r1;
-  goto eoprnd; 
-
-exsub:
-  /* write(0,"exsub\n",6); */
-
-  *r3 = combin(r0, *r3, 1);
-  *r2 =- r1;
-  goto eoprnd; 
-
-exmul:
-  /* write(0,"exmul\n",6); */
-  *r3 = combin(r0, *r3, 0);
-
-  /* TODO: mpy r2,r1 --> r0 untouched */
-  /* mul(mpy) */
-  /* R/Rv1 = R * src ---> r2/r3 = r2 * r1*/
-  /* printf("div: r2r3 = %x %x\n", r2 * r1); */
-  r1 = r1 * *r2;
-  *r2 = r1; 
-  goto eoprnd; 
-
-exdiv:
-  /* write(0,"exdiv\n",6); */
-  *r3 = combin(r0, *r3, 0);
-  tmp = r1;
-  r1 = *r2;
-  r0 = 0;
-
-  /* div */
-  /* r0 = r1 / (sp)=tmp;  div result   */
-  /* r1 = r1 % (sp)=tmp;  div reminder */
-  while(r1 >= tmp){
-    r1 = r1 - tmp;
-    r0++;
-  }
-
-  *r2 = r0;
-  goto eoprnd; 
-
-exor:
-  /* write(0,"exor\n",5); */
-  *r3 = combin(r0, *r3, 0);
-  *r2 =| r1;
-  goto eoprnd; 
-
-exand:
- /* write(0,"exand\n",6); */
-  *r3 = combin(r0, *r3, 0);
-  r1 = ~r1;
-  *r2 = (~r1) & *r2;
-  goto eoprnd; 
-
-exnot:
-  /* write(0,"exnot!!!!!\n",11); */
-  *r3 = combin(r0, *r3, 0);
-  r1 = ~r1;
-  *r2 =+ r1;
-  goto eoprnd;
-
-eoprnd:
-  /* write(0,"eoprnd\n",7); */
   sp = '+';
-  goto advanc;
-
+    
 advanc:
   r4 = readop();
   goto sbrtn;
-
-finish:
-
-  return r4;
 }
 
  /* void _combin(r0:in, r3:out, r5:in)
