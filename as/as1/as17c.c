@@ -93,30 +93,12 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
 
       case '*': 
         *r3 = combin(r0, *r3, 0);
-      
-        /* TODO: mpy r2,r1 --> r0 untouched */
-        /* mul(mpy) */
-        /* R/Rv1 = R * src ---> r2/r3 = r2 * r1*/
-        /* printf("div: r2r3 = %x %x\n", r2 * r1); */
-        r1 = r1 * *r2;
-        *r2 = r1; 
+        *r2 =* r1;
         break;
 
       case '/': 
         *r3 = combin(r0, *r3, 0);
-        tmp = r1;
-        r1 = *r2;
-        r0 = 0;
-      
-        /* div */
-        /* r0 = r1 / (sp)=tmp;  div result   */
-        /* r1 = r1 % (sp)=tmp;  div reminder */
-        while(r1 >= tmp){
-          r1 = r1 - tmp;
-          r0++;
-        }
-      
-        *r2 = r0;
+        *r2 =/ r1;
         break;
 
       case 037: 
@@ -126,45 +108,27 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
 
       case '&': 
         *r3 = combin(r0, *r3, 0);
-        r1 = ~r1;
-        *r2 = (~r1) & *r2;
+        *r2 =& r1;
+        break;
+
+      case 035: 
+        *r3 = combin(r0, *r3, 0);
+        *r2 =<< r1;
         break;
 
       case 036: 
-        r1 = -r1;
-        if(r1){
-          r1++;
-          *r2 = ((*r2 >> 1) & 177) | (*r2 << 15);
-        }
-      case 035: 
         *r3 = combin(r0, *r3, 0);
-        if(r1>0){
-          *r2 = *r2 << r1;
-        }else{
-          *r2 = *r2 >> (-r1);
-        }
+        *r2 =>> r1;
         break;
 
       case '%': 
         *r3 = combin(r0, *r3, 0);
-        sp1 = r1;
-        r1 = *r2;
-        r0 = 0;
-        /*TODO: dvd (sp)+,r0     / remove auto variable2  */ 
-        /* div */
-        /* r0 = r1 / (sp)=tmp;  div result   */
-        /* r1 = r1 % (sp)=tmp;  div reminder */
-        while(r1 >= sp1){
-          r1 = r1 - sp1;
-          r0++;
-        }
-        *r2 = r1;
+        *r2 =% r1;
         break;
 
       case '!': 
         *r3 = combin(r0, *r3, 0);
-        r1 = ~r1;
-        *r2 =+ r1;
+        *r2 =+ ~r1;
         break;
 
       case '^': 
