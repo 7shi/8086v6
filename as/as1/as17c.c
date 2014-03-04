@@ -95,73 +95,49 @@ sbrtn:
   /* mov $esw1,r1; */
 
   switch(r4){
+    case 035:
+    case 036:
+    case 037:
     case '+': /*43*/
     case '-': /*45*/
     case '*': /*42*/
     case '/': /*47*/
     case '&': /*38*/
-    case 037:
-    case 035:
-    case 036:
     case '%': /*37*/ 
-      goto binop;
-    case '[': /*91*/ 
-      goto brack;
     case '^': /*94*/ 
-      goto binop;
-    case   1:        
-      goto exnum;
     case '!': /*33*/ 
-      goto binop;
+      if(sp != '+'){
+        error('e');
+      }
+      sp = r4;
+      goto advanc;
+
+    case '[': /*91*/ 
+      sp1 = *r2;
+      sp2 = *r3;
+      r4 = expres(readop(), r2, r3);
+      tmp = r4;
+      if(tmp != ']'){
+        error('f');
+      }
+      r0 = *r3;
+      r1 = *r2;
+      *r3 = sp2;
+      *r2 = sp1; 
+      break;
+
+    case   1:        
+      r1 = numval;
+      r0 = 1;
+      break;
+
     case   0:
     default:
-      break;
+      if(opfound == 0) error('e');
+      goto finish;
   }
-
-  if(opfound != 0){
-    /* write(0,"e-pos0\n", 7); */
-    goto finish;
-  }else{
-    write(0,"e-pos1\n", 7);
-    error('e');
-    goto finish;
-  }
-
-binop:
-  /* write(0,"binop\n",6); */
-
-  if(sp != '+'){
-    error('e');
-  }
-  sp = r4;
-
-  goto advanc; 
-
-exnum:
-  /* write(0,"exnum\n",6); */
-  r1 = numval;
-  r0 = 1;
-  goto oprand;
-
-brack:
-  /* write(0, "brack\n", 6); */
-  sp1 = *r2;
-  sp2 = *r3;
-  r4 = expres(readop(), r2, r3);
-
-  tmp = r4;
-  if(tmp != ']'){
-    error('f');
-  }
-  r0 = *r3;
-  r1 = *r2;
-  *r3 = sp2;
-  *r2 = sp1; 
-  goto oprand;
 
 oprand:
-
-  /* write(0,"oprand\n",7); */
   opfound =+ 1;
  
   switch(sp){
