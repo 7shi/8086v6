@@ -7,8 +7,8 @@ char exsw2[];
 int numval;
 struct { char op0, op1; int op2; };
 
-/* 0 - 0140 | 0141 - 0153 | 0154 - 0177
- *     0x60 | 0x61   0x6b | 0x6c   0x7f
+/* 0 - 0140 | 0141 - 0152 | 0153 - 0177
+ *     0x60 | 0x61   0x6a | 0x6b   0x7f
  */
 
 int* expres(r4, r2, r3) int r4, *r2, *r3;{
@@ -22,20 +22,16 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
 
   /* sbrtn: */
   for(;;){
-    r0 = r4;
-    if(r0 < 0 || 0177 < r0){
+    if(r4 < 0 || 0177 < r4){
       r0 = r4->op0;
       r1 = r4->op2;
+    }else if(r4 >= 0141+10){ /* dic:107*/
+      r0 = r4;
+      *r2 = *r3 = 0;
     }else if(r4 >= 0141){ /* dic:97 */
-      if(r4 < 0141+10){ /* dic:107*/
-        r0  = curfbr[r4 - 0141];
-        *r2 = curfb [r4 - 0141];
-        if(*r2 < 0){
-          error("f");
-        }
-      }else{
-        *r2 = *r3 = 0;
-      }
+      r0  = curfbr[r4 - 0141];
+      *r2 = curfb [r4 - 0141];
+      if(*r2 < 0) error("f");
     }else{
       /* mov $esw1,r1; */
       switch(r4){
