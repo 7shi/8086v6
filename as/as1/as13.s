@@ -23,9 +23,6 @@ _expres:
 	mov (sp)+, r5
 	rts pc
 
-assem:
-	jmp _assem
-
 fbcheck:
 	mov r1, -(sp)
 	mov r0, -(sp)

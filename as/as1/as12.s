@@ -26,11 +26,3 @@ betwen:
 	tst (sp)+
 	mov (sp)+, r1
 	rts r5
-
-putw:
-	mov r1, -(sp)
-	mov r4, -(sp)
-	jsr pc, _putw
-	tst (sp)+
-	mov (sp)+, r1
-	rts pc
