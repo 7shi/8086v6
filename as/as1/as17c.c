@@ -10,7 +10,7 @@ int numval;
  *     0x60 | 0x61   0x6b | 0x6c   0x7f
  */
 
-int* cexprs(r2, r3, r4) int* r2; int* r3; int* r4;{
+int* expres(r4, r2, r3) int *r4, *r2, *r3;{
   int r0;
   int r1;
   int tmp;
@@ -23,7 +23,7 @@ int* cexprs(r2, r3, r4) int* r2; int* r3; int* r4;{
   opfound = 0;
   *r2 = 0;
   *r3 = 1; 
-  /* write(0,"-->cexprs\n",10); */
+  /* write(0,"-->expres\n",10); */
 
 sbrtn:
   r0 = r4;
@@ -147,7 +147,7 @@ brack:
   /* write(0, "brack\n", 6); */
   sp1 = *r2;
   sp2 = *r3;
-  r4 = cexprs(r2, r3, readop());
+  r4 = expres(readop(), r2, r3);
 
   tmp = r4;
   if(tmp != ']'){
