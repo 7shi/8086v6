@@ -31,7 +31,7 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
         r0  = curfbr[r4 - 0141];
         *r2 = curfb [r4 - 0141];
         if(*r2 < 0){
-          error('f');
+          error("f");
         }
       }else{
         *r2 = *r3 = 0;
@@ -51,7 +51,7 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
         case '^': /*94*/ 
         case '!': /*33*/ 
           if(sp != '+'){
-            error('e');
+            error("e");
           }
           sp = r4;
           r4 = readop();
@@ -62,7 +62,7 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
           sp2 = *r3;
           r4 = expres(readop(), r2, r3);
           if(r4 != ']'){
-            error('f');
+            error("f");
           }
           r0 = *r3;
           r1 = *r2;
@@ -77,7 +77,7 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
 
         case   0:
         default:
-          if(opfound == 0) error('e');
+          if(opfound == 0) error("e");
           return r4;
       }
     }
