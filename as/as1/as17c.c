@@ -297,28 +297,14 @@ finish:
   *  bool  : r5
   */
 combin(r0, r3, r5) {
-  int local1;
-  int local2;
+  int v;
 
-  local1 = r0;
-  local1 = local1 | r3;
+  v  = 040 & (r0 | r3);
+  r0 = 037 & r0;
+  r3 = 037 & r3;
 
-  local1 = (040) & local1;
-  r0     = (037) & r0;
-  r3     = (037) & r3;
-
-  if(r0 > r3){
-    local2 = r0;
-    r0 = r3;
-    r3 = local2;
-  }
-
-  /* 1: */
-  if(r0 == 0){ 
-    r3 = 0;
-  }else if(r5 && r0 == r3){
-    r3 = 1;
-  }
-
-  return r3 | local1;
+  if(r0 == 0 || r3 == 0) return v;
+  if(r5 && r0 == r3) return v | 1;
+  if(r0 > r3) return v | r0;
+  return v | r3;
 }
