@@ -187,7 +187,7 @@ exrsh:
  
 exlsh:
   /* write(0,"exlsh\n",6); */
-  combin(r0, r3, 0);
+  *r3 = combin(r0, *r3, 0);
   if(r1>0){
     *r2 = *r2 << r1;
   }else{
@@ -198,7 +198,7 @@ exlsh:
 
 exmod:
   /* write(0,"exmod\n",6);*/
-  combin(r0, r3, 0);
+  *r3 = combin(r0, *r3, 0);
   sp1 = r1;
   r1 = *r2;
   r0 = 0;
@@ -216,7 +216,7 @@ exmod:
 exadd:
   /* write(0,"exadd\n",6); */
 
-  combin(r0, r3, 0);
+  *r3 = combin(r0, *r3, 0);
 
   *r2 =+ r1;
   goto eoprnd; 
@@ -224,13 +224,13 @@ exadd:
 exsub:
   /* write(0,"exsub\n",6); */
 
-  combin(r0, r3, 1);
+  *r3 = combin(r0, *r3, 1);
   *r2 =- r1;
   goto eoprnd; 
 
 exmul:
   /* write(0,"exmul\n",6); */
-  combin(r0, r3, 0);
+  *r3 = combin(r0, *r3, 0);
 
   /* TODO: mpy r2,r1 --> r0 untouched */
   /* mul(mpy) */
@@ -242,7 +242,7 @@ exmul:
 
 exdiv:
   /* write(0,"exdiv\n",6); */
-  combin(r0, r3, 0);
+  *r3 = combin(r0, *r3, 0);
   tmp = r1;
   r1 = *r2;
   r0 = 0;
@@ -260,20 +260,20 @@ exdiv:
 
 exor:
   /* write(0,"exor\n",5); */
-  combin(r0, r3, 0);
+  *r3 = combin(r0, *r3, 0);
   *r2 =| r1;
   goto eoprnd; 
 
 exand:
  /* write(0,"exand\n",6); */
-  combin(r0, r3, 0);
+  *r3 = combin(r0, *r3, 0);
   r1 = ~r1;
   *r2 = (~r1) & *r2;
   goto eoprnd; 
 
 exnot:
   /* write(0,"exnot!!!!!\n",11); */
-  combin(r0, r3, 0);
+  *r3 = combin(r0, *r3, 0);
   r1 = ~r1;
   *r2 =+ r1;
   goto eoprnd;
@@ -293,33 +293,32 @@ finish:
 }
 
  /* void _combin(r0:in, r3:out, r5:in)
-  *  value     : r0,r3  (r3 == pc)
-  *  reference : r5
+  *  value : r0, r3  (r3 == pc)
+  *  bool  : r5
   */
-combin(r0, r3, r5) int* r3;{
+combin(r0, r3, r5) {
   int local1;
   int local2;
 
   local1 = r0;
-  local1 = local1 | *r3;
+  local1 = local1 | r3;
 
   local1 = (040) & local1;
   r0     = (037) & r0;
-  (*r3)     = (037) & (*r3);
+  r3     = (037) & r3;
 
-  if(r0 > (*r3)){
+  if(r0 > r3){
     local2 = r0;
-    r0 = (*r3);
-    (*r3) = local2;
+    r0 = r3;
+    r3 = local2;
   }
 
   /* 1: */
   if(r0 == 0){ 
-    (*r3) = 0;
-  }else if(r5 != 0 && r0 == (*r3)){
-    (*r3) = 1;
+    r3 = 0;
+  }else if(r5 && r0 == r3){
+    r3 = 1;
   }
 
-  (*r3) = (*r3) | local1;
+  return r3 | local1;
 }
-
