@@ -29,23 +29,3 @@ char *idx, *name;
 {
 	return strncmp(idx < usymtab ? idx->ival : idx, name, 8);
 }
-
-/* シンボルを追加 */
-char *
-addsym(name, type, val)
-char *name;
-{
-	char *sym;
-	sym = symend;
-	symend =+ 12;
-	if (symend > memend) {
-		sbrk(512);
-		memend =+ 512;
-	}
-
-	memset(sym, 0, 8);
-	strncpy(sym, name, 8);
-	(sym +  8)->ival = type;
-	(sym + 10)->ival = val;
-	return sym;
-}
