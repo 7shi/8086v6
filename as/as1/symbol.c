@@ -17,3 +17,29 @@ char *name;
 	} while (*idx && strncmp(*idx, name, 8));
 	return idx;
 }
+
+char *memend, *symend;
+
+struct {
+	char symname[8];
+	int symtype, symval;
+};
+
+char *
+addsym(name, type, val)
+char *name;
+{
+	char *sym;
+	sym = symend;
+	symend =+ 12;
+	if (symend > memend) {
+		sbrk(512);
+		memend =+ 512;
+	}
+
+	memset(sym, 0, 8);
+	strncpy(sym, name, 8);
+	sym->symtype = type;
+	sym->symval  = val;
+	return sym;
+}
