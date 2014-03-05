@@ -324,3 +324,33 @@ setup(){
     *symget(key, p[0]) = p;
   }
 }
+
+/* 以下は独自に追加した関数 */
+
+int hshsiz;
+int hshtab[];
+
+/* シンボルテーブルを検索 */
+char **
+symget(key, name)
+char *name;
+{
+	int quot, *idx;
+	quot = ldiv(0, key, hshsiz);
+	idx = hshtab + lrem(0, key, hshsiz);
+	do {
+		idx =- quot + 1;
+		if(idx < hshtab) idx =+ hshsiz;
+	} while (*idx && symcmp(*idx, name));
+	return idx;
+}
+
+char *usymtab;
+
+/* シンボル名をチェック */
+symcmp(idx, name)
+int *idx;
+{
+	if (idx < usymtab) idx = *idx;
+	return strncmp(idx, name, 8);
+}
