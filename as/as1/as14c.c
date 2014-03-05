@@ -19,7 +19,7 @@ int r0;
     memset(symbol, 0, 8);
 
     key = 0;
-    tilde = r0 == '~';
+    tilde = r0 == '~'; /* symbol not for hash table */
 
     /*
     retrieve source code by rch() while continuous normal characters
@@ -70,9 +70,9 @@ int r0;
 
     /* 1: */
     if (r4 >= usymtab) {
-        putw((r4 - usymtab) / 3 + 2048);
+        putw((r4 - usymtab) / 3 + 04000); /* user symbol */
     } else {
-        putw((r4 - symtab) / 3 + 512);
+        putw((r4 - symtab) / 3 + 01000); /* builtin symbol */
     }
 
     return r4 + 8;
