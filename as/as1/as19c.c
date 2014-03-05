@@ -279,11 +279,8 @@ int aexit();
 /*
  * void main (int argc, char* argv[])
  */
-main(argc, argv) int argc; char *argv[];{
-  int ret;
-
-  ret = signal(2,1);
-  if (ret & 1 == 0) {
+main(argc, argv) char *argv[];{
+  if (signal(2, 1) & 1 == 0) {
     signal(2, aexit);
   }
 
