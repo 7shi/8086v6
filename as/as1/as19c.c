@@ -49,37 +49,22 @@ int hshtab[];
  * void setup(void);
  */
 setup(){
-  char* p_sym; /* r1          : current position of name in symboltbl */
-  char* c_sym; /* optional var: current position of symboltbl*/
-
-  char count;  /* r2 1st */
-  char quot;   /* r2 2nd: quotient */
-
+  char* p_sym; /* r1 current position of name in symboltbl */
+  char quot;   /* r2 quotient */
   char* key;   /* r3 1st */
   char* *idx;  /* r3 2nd */
-
   char ch;     /* r4 */
+  int i;
 
-  p_sym = symtab;
-  c_sym = symtab;
-
-  do{
+  for(p_sym = symtab; p_sym < ebsymtab; p_sym =+ 12){
     /* 1: */
     key = 0;
-    count = 8;
-    /* c_sym = p_sym; */
 
-    /* 2: */
-    do{
-      ch = *(p_sym++);
-      if(ch == '\0'){
-        break;
-      }
-
-      /* 末尾2文字をハッシュテーブルのkeyとする */
+    /* 2: バイト反転しながら文字を加算してハッシュを算出 */
+    for(i = 0; i < 8 && (ch = p_sym[i]); ++i){
       key =+ ch;
       key = (key << 8) + ((key >> 8) & 0377);
-    }while(--count);
+    }
   
     /* 2: */
     quot = ldiv(0, key, hshsiz);
@@ -98,9 +83,6 @@ setup(){
       --idx;
     }while(*idx);
 
-    *idx = c_sym;
-    p_sym = c_sym + 12; /* シンボルテーブルを1行づつずらす */
-    c_sym = p_sym;
-
-  }while(p_sym < ebsymtab);
+    *idx = p_sym;
+  }
 }
