@@ -41,16 +41,17 @@ int r0;
         r4 = *(r1p = symget(key, symbol));
     }
 
-    /* 4: シンボルテーブルにシンボルを追加 */
+    /* 4: */
     if (!r4) {
-        /* メモリが足りなければ拡張 */
+        /* シンボルがなければ追加 */
         r4 = symend;
         symend =+ 12;
         if (symend > memend) {
+            /* メモリが足りなければ拡張 */
             sbrk(512);
             memend =+ 512;
         }
-        /* 4: シンボルを作成 */
+        /* 4: シンボルを初期化 */
         memcpy(r4, symbol, 8);
         memset(r4 + 8, 0, 4);
         if (r1p) *r1p = r4;
@@ -58,11 +59,12 @@ int r0;
 
     /* 1: */
     if (r4 >= usymtab) {
-        putw((r4 - usymtab) / 3 + 04000); /* user symbol */
+        /* user symbol */
+        putw((r4 - usymtab) / 3 + 04000);
         return r4 + 8;
     }
-
-    putw((r4 - symtab) * 2 / 3 + 01000); /* builtin symbol */
+    /* builtin symbol */
+    putw((r4 - symtab) * 2 / 3 + 01000);
     return r4 + 2;
 }
 
