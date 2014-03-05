@@ -11,6 +11,19 @@ char *s1, *s2;
 	return 0;
 }
 
+char *
+strncpy(s1, s2, n)
+char *s1, *s2;
+{
+	char *ret;
+	ret = s1;
+	for (; n > 0; --n, ++s1, ++s2) {
+		*s1 = *s2;
+		if (!*s2) break;
+	}
+	return ret;
+}
+
 memcpy(d, s, n)
 char *d, *s;
 {
