@@ -41,13 +41,12 @@ int r0;
         r4 = *(r1p = symget(key, symbol));
     }
 
-    /* 4: */
+    /* 4: シンボルがなければ追加 */
     if (!r4) {
-        /* シンボルがなければ追加 */
         r4 = symend;
         symend =+ 12;
+        /* メモリが足りなければ拡張 */
         if (symend > memend) {
-            /* メモリが足りなければ拡張 */
             sbrk(512);
             memend =+ 512;
         }
