@@ -49,58 +49,6 @@ int hshtab[];
  * void setup(void);
  */
 setup(){
-  char* r1;
-  int r2, r3;
-  char* v1;
-  char r4;
-  char* *r3p;
-
-  r1 = symtab;
-
-  do{
-    /* 1: */
-    r3 = 0;
-    r2 = 8;
-    v1 = r1;
-
-    /* 2: */
-    /* char r4 */
-    do{
-      r4 = *(r1++);
-      /* r4 == '\0' */
-      if(r4 == 0){
-        break;
-      }
-
-      /* 末尾2文字をハッシュテーブルのIdxの元とする */
-      r3 = r3 + r4;
-      r3 = (r3 << 8) + ((r3 >> 8) & 0377);
-    }while(--r2);
-  
-    /* 2: */
-    r2 = ldiv(0, r3, hshsiz);
-    r3p = hshtab + lrem(0, r3, hshsiz);
-
-    do{
-      /* 4: */
-      r3p =- r2;
-      if(hshtab >= r3p){
-        r3p =+ hshsiz; /* r3 += 1553 * 2 */
-      }
-  
-      /* 3: */
-      --r3p;
-    }while(*r3p);
-
-    r1 = v1;
-    *r3p = r1;
-    r1 = r1 + 12; /* シンボルテーブルを1行づつずらす */
-
-  }while(r1 < ebsymtab);
-}
-
-/* setupの変数を書き直したもの */
-setup2(){
   char* p_sym; /* r1          : current position of name in symboltbl */
   char* c_sym; /* optional var: current position of symboltbl*/
 
@@ -156,4 +104,3 @@ setup2(){
 
   }while(p_sym < ebsymtab);
 }
-
