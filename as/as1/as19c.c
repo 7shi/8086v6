@@ -45,37 +45,34 @@ char ebsymtab[];
 int hshsiz;
 int hshtab[];
 
+/* シンボルテーブルを検索（独自関数） */
+char **srchsym(key){
+  int quot;
+  char ch, **idx;
+
+  quot = ldiv(0, key, hshsiz);
+  idx = hshtab + lrem(0, key, hshsiz);
+  do{
+    idx =- quot + 1;
+    if(idx < hshtab) idx =+ hshsiz;
+  }while(*idx);
+  return idx;
+}
+
 /*
  * void setup(void);
  */
 setup(){
-  char* p_sym; /* r1 current position of name in symboltbl */
-  char quot;   /* r2 quotient */
-  char* key;   /* r3 1st */
-  char* *idx;  /* r3 2nd */
-  char ch;     /* r4 */
-  int i;
+  char ch, *p;
+  int key, i;
 
-  for(p_sym = symtab; p_sym < ebsymtab; p_sym =+ 12){
+  for(p = symtab; p < ebsymtab; p =+ 12){
     /* バイト反転しながら文字を加算してハッシュを算出 */
-    for(key = 0, i = 0; i < 8 && (ch = p_sym[i]); ++i){
+    for(key = 0, i = 0; i < 8 && (ch = p[i]); ++i){
       key =+ ch;
       key = (key << 8) + ((key >> 8) & 0377);
     }
-  
-    quot = ldiv(0, key, hshsiz);
-    idx = hshtab + lrem(0, key, hshsiz);
-    do{
-      idx =- quot;
-      if(hshtab >= idx){
-        idx =+ hshsiz;
-      }
-  
-      /* 終端をオーバーフローしないように2[Byte]分減算する
-       * 先頭をアンダーフローすることは無い（∵ ashcで2倍にしているから）*/
-      --idx;
-    }while(*idx);
 
-    *idx = p_sym;
+    *srchsym(key) = p;
   }
 }
