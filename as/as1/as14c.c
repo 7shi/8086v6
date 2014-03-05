@@ -37,21 +37,8 @@ int r0;
     if (tilde) {
         r4 = symend;
     } else {
-        r0 = ldiv(0, key, hshsiz);
-        r1p = hshtab + lrem(0, key, hshsiz);
-        do {
-            r1p =- r0;
-            if (r1p <= hshtab) {
-                r1p =+ hshsiz;
-            }
-            r4 = *(--r1p);
-            if (!r4) {
-                /*3:*/
-                r4 = symend;
-                *r1p = r4;
-                break;
-            }
-        } while (strncmp(symbol, r4, 8));
+        r4 = *(r1p = srchsym(key, symbol));
+        if (!r4) *r1p = r4 = symend;
     }
 
     /*4:*/
