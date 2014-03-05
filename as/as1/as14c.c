@@ -41,9 +41,18 @@ int r0;
         r4 = *(r1p = srchsym(key, symbol));
     }
 
-    /*4:*/
+    /* 4: シンボルテーブルにシンボルを追加 */
     if (!r4) {
-        r4 = addsym(symbol, 0, 0);
+        /* メモリが足りなければ拡張 */
+        r4 = symend;
+        symend =+ 12;
+        if (symend > memend) {
+            sbrk(512);
+            memend =+ 512;
+        }
+        /* 4: シンボルを作成 */
+        memcpy(r4, symbol, 8);
+        memset(r4 + 8, 0, 4);
         if (r1p) *r1p = r4;
     }
 
