@@ -6,8 +6,7 @@ char *savop;
 int ifflg;
 int line;
 int numval;
-int dotrel;
-int dot;
+int *dotrel, *dot;
 char fbfil;
 struct opcode nxtfb;
 char curfbr[];
@@ -34,28 +33,28 @@ assem() {
 				r1 = oldr4;
 				if (r1 < 0200)
 					error("x");
-				else if (r1 != &dotrel || (r3 & ~040) == dotrel) {
+				else if (r1 != dotrel || (r3 & ~040) == *dotrel) {
 					r3 =& 037;
 					r1->op0 =& ~037;
 					r1->op0 =| r3;
 					r1->op2 = r3 ? r2 : 0;
 				} else {
 					error(".");
-					dotrel = 2;
+					*dotrel = 2;
 				}
 			} else if (r4 == ':') {
 				r4 = oldr4;
 				if (r4 >= 0200) {
 					if (r4->op0 & 037) error("m");
-					r4->op0 =| dotrel;
-					r4->op2 = dot;
+					r4->op0 =| *dotrel;
+					r4->op2 = *dot;
 				} else if (r4 == 1/*digit*/) {
 					r0 = fbcheck(numval);
-					curfbr[r0] = dotrel;
-					curfb[r0] = dot;
-					nxtfb.op0 = dotrel;
+					curfbr[r0] = *dotrel;
+					curfb[r0] = *dot;
+					nxtfb.op0 = *dotrel;
 					nxtfb.op1 = r0 << 1;
-					nxtfb.op2 = dot;
+					nxtfb.op2 = *dot;
 					write(fbfil, &nxtfb, 4);
 				} else
 					error("x");

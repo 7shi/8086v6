@@ -1,7 +1,10 @@
 int hshsiz;
 int hshtab[];
+char *usymtab, *symend, *memend;
 
-/* シンボルテーブルを検索（独自関数） */
+/* 以下は独自に追加した関数 */
+
+/* シンボルテーブルを検索 */
 char **
 srchsym(key, name)
 char *name;
@@ -18,13 +21,16 @@ char *name;
 	return idx;
 }
 
-char *memend, *symend;
+struct { int ival; };
 
-struct {
-	char symname[8];
-	int symtype, symval;
-};
+/* シンボル名をチェック */
+cmpsym(idx, name)
+char *idx, *name;
+{
+	return strncmp(idx < usymtab ? idx->ival : idx, name, 8);
+}
 
+/* シンボルを追加 */
 char *
 addsym(name, type, val)
 char *name;
@@ -39,7 +45,7 @@ char *name;
 
 	memset(sym, 0, 8);
 	strncpy(sym, name, 8);
-	sym->symtype = type;
-	sym->symval  = val;
+	(sym +  8)->ival = type;
+	(sym + 10)->ival = val;
 	return sym;
 }

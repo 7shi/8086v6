@@ -13,8 +13,7 @@ char *usymtab, *symend, *memend;
 go()
 {
 	int fp;
-	usymtab = symend = sbrk(36);
-	memend = usymtab + 36;
+	usymtab = symend = memend = sbrk(0);
 	assem();
 	write(pof, outbuf, 512);
 	close(pof);

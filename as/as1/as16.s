@@ -12,7 +12,7 @@ opline:
 	jmp	opl17
 xpr:
 	jsr	pc,expres
-	add	$2,dot
+	add	$2,*_dot
 	rts	pc
 1:
 	movb	(r4),r0
@@ -64,15 +64,15 @@ opl36:
 	mov	$6,-(sp)
 1:
 	jsr	pc,expres
-	cmp	r3,dotrel
+	cmp	r3,*_dotrel
 	bne	1f
-	sub	dot,r2
+	sub	*_dot,r2
 	bge	1f
 	cmp	r2,$-376
 	blt	1f
 	mov	$2,(sp)
 1:
-	add	(sp)+,dot
+	add	(sp)+,*_dot
 	rts	pc
 
 /double
@@ -88,7 +88,7 @@ op2:
 	jsr	pc,readop
 opl15:   / single operand
 	jsr	pc,addres
-	add	$2,dot
+	add	$2,*_dot
 	rts	pc
 
 opl31:	/ sob
@@ -104,13 +104,13 @@ opl6:
 opl10:
 opl11:
 	jsr	pc,expres
-	add	$2,dot
+	add	$2,*_dot
 	rts	pc
 
 / .byte
 opl16:
 	jsr	pc,expres
-	inc	dot
+	inc	*_dot
 	cmp	r4,$',
 	bne	1f
 	jsr	pc,readop
@@ -120,14 +120,14 @@ opl16:
 
 / < (.ascii)
 opl17:
-	add	numval,dot
+	add	numval,*_dot
 	jsr	pc,readop
 	rts	pc
 
 /.even
 opl20:
-	inc	dot
-	bic	$1,dot
+	inc	*_dot
+	bic	$1,*_dot
 	rts	pc
 
 /.if
@@ -159,13 +159,13 @@ opl23:
 opl25:
 opl26:
 opl27:
-	mov	dotrel,r1
+	mov	*_dotrel,r1
 	asl	r1
-	mov	dot,savdot-4(r1)
-	mov	savdot-[2*25](r0),dot
+	mov	*_dot,savdot-4(r1)
+	mov	savdot-[2*25](r0),*_dot
 	asr	r0
 	sub	$25-2,r0
-	mov	r0,dotrel
+	mov	r0,*_dotrel
 	rts	pc
 
 / .common
@@ -200,7 +200,7 @@ getx:
 	jsr	pc,expres
 	jsr	pc,checkreg
 	jsr	pc,checkrp
-	add	$2,dot
+	add	$2,*_dot
 	clr	r0
 	rts	pc
 2:
@@ -210,7 +210,7 @@ getx:
 	clr	r0
 	rts	pc
 1:
-	add	$2,dot
+	add	$2,*_dot
 	clr	r0
 	rts	pc
 
@@ -246,7 +246,7 @@ amin:
 adoll:
 	jsr	pc,readop
 	jsr	pc,expres
-	add	$2,dot
+	add	$2,*_dot
 	clr	r0
 	rts	pc
 
@@ -257,7 +257,7 @@ astar:
 	jsr	r5,error; '*
 1:
 	jsr	pc,addres
-	add	r0,dot
+	add	r0,*_dot
 	rts	pc
 
 errora:
