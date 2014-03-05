@@ -33,7 +33,7 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
       *r2 = curfb [r4 - 0141];
       if(*r2 < 0) error("f");
     }else{
-      /* mov $esw1,r1; */
+      /* mov $esw1,r1 */
       switch(r4){
         case 035:
         case 036:
@@ -46,6 +46,7 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
         case '%': /*37*/ 
         case '^': /*94*/ 
         case '!': /*33*/ 
+          /* binop: */
           if(sp != '+'){
             error("e");
           }
@@ -54,6 +55,7 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
           continue;
 
         case '[': /*91*/ 
+          /* brack: */
           sp1 = *r2;
           sp2 = *r3;
           r4 = expres(readop(), r2, r3);
@@ -67,6 +69,7 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
           break;
 
         case   1:        
+          /* exnum: */
           r1 = numval;
           r0 = 1;
           break;
@@ -74,70 +77,71 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
         case   0:
         default:
           if(opfound == 0) error("e");
-          return r4;
+          return r4; /* finish: */
       }
     }
 
+    /* oprand: */
     opfound =+ 1;
    
     switch(sp){
-      case '+': ;
+      case '+': /* exadd: */
         *r3 = combin(r0, *r3, 0);
         *r2 =+ r1;
         break;
 
-      case '-': 
+      case '-': /* exsub: */
         *r3 = combin(r0, *r3, 1);
         *r2 =- r1;
         break;
 
-      case '*': 
+      case '*': /* exmul: */
         *r3 = combin(r0, *r3, 0);
         *r2 =* r1;
         break;
 
-      case '/': 
+      case '/': /* exdiv: */
         *r3 = combin(r0, *r3, 0);
         *r2 =/ r1;
         break;
 
-      case 037: 
+      case 037: /* exor: */
         *r3 = combin(r0, *r3, 0);
         *r2 =| r1;
         break;
 
-      case '&': 
+      case '&': /* exand: */
         *r3 = combin(r0, *r3, 0);
         *r2 =& r1;
         break;
 
-      case 035: 
+      case 035: /* exlsh: */
         *r3 = combin(r0, *r3, 0);
         *r2 =<< r1;
         break;
 
-      case 036: 
+      case 036: /* exrsh: */
         *r3 = combin(r0, *r3, 0);
         *r2 =>> r1;
         break;
 
-      case '%': 
+      case '%': /* exmod: */
         *r3 = combin(r0, *r3, 0);
         *r2 =% r1;
         break;
 
-      case '!': 
+      case '!': /* exnot: */
         *r3 = combin(r0, *r3, 0);
         *r2 =+ ~r1;
         break;
 
-      case '^': 
-        *r3 = r0;
+      case '^': /* excmbin: */
+        *r3 = r0; /* give left flag of right */
         break;
     }
 
-    sp = '+';
-    r4 = readop();
+    sp = '+'; /* eoprnd: */
+    r4 = readop(); /* advanc: */
   }
 }
 
