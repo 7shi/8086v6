@@ -25,7 +25,8 @@ int r0;
     retrieve source code by rch() while continuous normal characters
     */
     for (i = 0;; ++i) {
-        r3 = chartab[r0 = rch()];
+        r0 = rch();
+        r3 = chartab[r0];
         if (r3 <= 0) break;
         key =+ r3;
         key = (key << 8) | ((key >> 8) & 255);

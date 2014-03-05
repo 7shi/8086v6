@@ -12,7 +12,8 @@ readop() {
 		return r4;
 	}
 	for (;;) {
-		r1 = chartab[r4 = rch()];
+		r4 = rch();
+		r1 = chartab[r4];
 		if (r1 == -014 /* garb */)
 			error("g");
 		else if (r1 != -022)
