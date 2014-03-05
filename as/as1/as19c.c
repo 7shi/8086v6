@@ -57,27 +57,20 @@ setup(){
   int i;
 
   for(p_sym = symtab; p_sym < ebsymtab; p_sym =+ 12){
-    /* 1: */
-    key = 0;
-
-    /* 2: バイト反転しながら文字を加算してハッシュを算出 */
-    for(i = 0; i < 8 && (ch = p_sym[i]); ++i){
+    /* バイト反転しながら文字を加算してハッシュを算出 */
+    for(key = 0, i = 0; i < 8 && (ch = p_sym[i]); ++i){
       key =+ ch;
       key = (key << 8) + ((key >> 8) & 0377);
     }
   
-    /* 2: */
     quot = ldiv(0, key, hshsiz);
     idx = hshtab + lrem(0, key, hshsiz);
-
     do{
-      /* 4: */
       idx =- quot;
       if(hshtab >= idx){
         idx =+ hshsiz;
       }
   
-      /* 3: */
       /* 終端をオーバーフローしないように2[Byte]分減算する
        * 先頭をアンダーフローすることは無い（∵ ashcで2倍にしているから）*/
       --idx;
