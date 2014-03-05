@@ -305,7 +305,6 @@ main(argc, argv) int argc; char *argv[];{
 }
 
 /* for setup() */
-char *bsymtab, *memend, *symend;
 char **srchsym();
 
 /*
@@ -315,8 +314,6 @@ setup(){
   char ch, **p;
   int key, i;
 
-  bsymtab = memend = symend = sbrk(0);
-
   for(p = symtab; *p; p =+ 3){
     /* バイト反転しながら文字を加算してハッシュを算出 */
     for(key = 0, i = 0; i < 8 && (ch = p[0][i]); ++i){
@@ -324,6 +321,6 @@ setup(){
       key = (key << 8) + ((key >> 8) & 0377);
     }
 
-    *srchsym(key, p[0]) = addsym(p[0], p[1], p[2]);
+    *srchsym(key, p[0]) = p;
   }
 }

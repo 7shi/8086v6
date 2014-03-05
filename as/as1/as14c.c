@@ -4,8 +4,9 @@ int  ch;
 char *symbol;
 int hshsiz 1553;
 int hshtab[];
+char symtab[];
 char chartab[];
-char *bsymtab, *usymtab, *symend, *memend;
+char *usymtab, *symend, *memend;
 
 rname(r0)
 int r0;
@@ -49,11 +50,11 @@ int r0;
     /* 1: */
     if (r4 >= usymtab) {
         putw((r4 - usymtab) / 3 + 04000); /* user symbol */
-    } else {
-        putw((r4 - bsymtab) / 3 + 01000); /* builtin symbol */
+        return r4 + 8;
     }
 
-    return r4 + 8;
+    putw((r4 - symtab) * 2 / 3 + 01000); /* builtin symbol */
+    return r4 + 2;
 }
 
 char inbuf[512];

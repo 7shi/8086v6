@@ -17,7 +17,7 @@ char *name;
 	do{
 		idx =- quot + 1;
 		if(idx < hshtab) idx =+ hshsiz;
-	} while (*idx && strncmp(*idx, name, 8));
+	} while (*idx && cmpsym(*idx, name));
 	return idx;
 }
 
