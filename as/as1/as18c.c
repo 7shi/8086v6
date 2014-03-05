@@ -33,7 +33,6 @@ char curfbr[10];
 int hshtab[1553];
 char pof, wordf, fin, fbfil, fileflg, errflg;
 /* char ch; */
-char symbol[8];
 int line, inbfcnt;
 /* int ifflg; */
 int inbfp, nargs, curarg, opfound;

@@ -1,26 +1,26 @@
 /* translated from as14.s */
 
 int hshtab[], hshsiz;
-char symbol[], symtab[], chartab[];
+char symtab[], chartab[];
 char ch, *usymtab, *symend, *memend;
 
 rname(r0)
 int r0;
 {
     int r3;
-    char **r1p, *r4;
+    char **r1p, *r4, symbol[8];
     int i, key, tilde;
 
-    /* clearing symbol 8 chars */
+    /* symbol not for hash table */
+    if (tilde = r0 == '~') {
+        ch = 0;
+    }
+
+    /* シンボル名のバッファを初期化 */
     memset(symbol, 0, 8);
 
-    key = 0;
-    tilde = r0 == '~'; /* symbol not for hash table */
-
-    /*
-    retrieve source code by rch() while continuous normal characters
-    */
-    for (i = 0;; ++i) {
+    /* 通常の文字が続く限り rch() でシンボル名を読み取り */
+    for (key = 0, i = 0;; ++i) {
         r0 = rch();
         r3 = chartab[r0];
         if (r3 <= 0) break;
@@ -28,7 +28,6 @@ int r0;
         key = (key << 8) | ((key >> 8) & 255);
         if (i < 8) symbol[i] = r3;
     }
-
     ch = r0;
     
     if (tilde) {
@@ -114,7 +113,7 @@ rch() {
         */
         if (fin) {
             readnum = read(fin, inbuf, 512);
-        	if (readnum > 0) {
+            if (readnum > 0) {
                 inbfcnt = readnum;
                 inbfp = inbuf;
                 continue;
