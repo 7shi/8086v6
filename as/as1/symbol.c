@@ -6,26 +6,23 @@ char *usymtab, *symend, *memend;
 
 /* シンボルテーブルを検索 */
 char **
-srchsym(key, name)
+symget(key, name)
 char *name;
 {
-	int quot;
-	char ch, **idx;
-
+	int quot, *idx;
 	quot = ldiv(0, key, hshsiz);
 	idx = hshtab + lrem(0, key, hshsiz);
-	do{
+	do {
 		idx =- quot + 1;
 		if(idx < hshtab) idx =+ hshsiz;
-	} while (*idx && cmpsym(*idx, name));
+	} while (*idx && symcmp(*idx, name));
 	return idx;
 }
 
 struct { int ival; };
 
 /* シンボル名をチェック */
-cmpsym(idx, name)
-char *idx, *name;
+symcmp(idx, name)
 {
 	return strncmp(idx < usymtab ? idx->ival : idx, name, 8);
 }

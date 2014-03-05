@@ -38,7 +38,7 @@ int r0;
         r1p = 0;
         r4 = 0;
     } else {
-        r4 = *(r1p = srchsym(key, symbol));
+        r4 = *(r1p = symget(key, symbol));
     }
 
     /* 4: シンボルテーブルにシンボルを追加 */

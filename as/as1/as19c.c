@@ -305,7 +305,7 @@ main(argc, argv) int argc; char *argv[];{
 }
 
 /* for setup() */
-char **srchsym();
+char **symget();
 
 /*
  * void setup(void);
@@ -321,6 +321,6 @@ setup(){
       key = (key << 8) + ((key >> 8) & 0377);
     }
 
-    *srchsym(key, p[0]) = p;
+    *symget(key, p[0]) = p;
   }
 }
