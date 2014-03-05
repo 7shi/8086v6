@@ -46,7 +46,7 @@ int hshsiz;
 int hshtab[];
 
 /* シンボルテーブルを検索（独自関数） */
-char **srchsym(key){
+char **srchsym(key, name) char *name; {
   int quot;
   char ch, **idx;
 
@@ -55,7 +55,7 @@ char **srchsym(key){
   do{
     idx =- quot + 1;
     if(idx < hshtab) idx =+ hshsiz;
-  }while(*idx);
+  }while(*idx && strncmp(*idx, name, 8));
   return idx;
 }
 
@@ -73,6 +73,6 @@ setup(){
       key = (key << 8) + ((key >> 8) & 0377);
     }
 
-    *srchsym(key) = p;
+    *srchsym(key, p) = p;
   }
 }
