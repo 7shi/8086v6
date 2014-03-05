@@ -1,16 +1,9 @@
 /* translated from as13.s */
 
-struct opcode { char op0, op1; int op2; };
-
-char *savop;
-int ifflg;
-int line;
-int numval;
+char *savop, fbfil, curfbr[];
+int ifflg, line, numval, curfb[];
 int *dotrel, *dot;
-char fbfil;
-struct opcode nxtfb;
-char curfbr[];
-int curfb[];
+struct { char op0, op1; int op2; } nxtfb;
 
 assem() {
 	int r0, r1, r2, r3, r4, oldr4;

@@ -1,10 +1,8 @@
 /* translated from as17.s */
 
-char *curfbr;
-int *curfb;
-int opfound;
-char exsw2[];
-int numval;
+char curfbr[];
+int curfb[], opfound, numval;
+
 struct { char op0, op1; int op2; };
 
 /* 0 - 0140 | 0141 - 0152 | 0153 - 0177

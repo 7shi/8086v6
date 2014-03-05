@@ -1,9 +1,7 @@
 /* translated from as15.s */
 
-int savop;
-char chartab[];
-char ch;
-int numval;
+int savop, numval;
+char ch, chartab[];
 
 readop() {
 	int r0, oldr0, r1, r4;

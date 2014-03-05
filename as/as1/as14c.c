@@ -1,12 +1,8 @@
 /* translated from as14.s */
 
-int  ch;
-char *symbol;
-int hshsiz 1553;
-int hshtab[];
-char symtab[];
-char chartab[];
-char *usymtab, *symend, *memend;
+int hshtab[], hshsiz;
+char symbol[], symtab[], chartab[];
+char ch, *usymtab, *symend, *memend;
 
 rname(r0)
 int r0;

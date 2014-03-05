@@ -1,12 +1,8 @@
 /* translated from as11.s */
-char atmp1[];
-char atmp2[];
-char atmp3[];
 
-char errflg;
-char outbuf[];
-char pof;
-char fbfil;
+int outbuf[];
+char atmp1[], atmp2[], atmp3[];
+char errflg, pof, fbfil;
 char *usymtab, *symend, *memend;
 
 

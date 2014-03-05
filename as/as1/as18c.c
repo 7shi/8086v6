@@ -22,3 +22,20 @@ char chartab[256] {
 char atmp1[] "/tmp/atm1a";
 char atmp2[] "/tmp/atm2a";
 char atmp3[] "/tmp/atm3a";
+
+int curfb[] {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+int outbuf[256];
+int *obufp outbuf;
+int hshsiz 1553;
+
+char curfbr[10];
+/* char savdot[6]; */
+int hshtab[1553];
+char pof, wordf, fin, fbfil, fileflg, errflg;
+/* char ch; */
+char symbol[8];
+int line, inbfcnt;
+/* int ifflg; */
+int inbfp, nargs, curarg, opfound;
+/* int savop, numval; */
+struct { char op0, op1; int op2; } nxtfb;

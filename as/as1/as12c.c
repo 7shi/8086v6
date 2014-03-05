@@ -44,16 +44,14 @@ int *r5;
 	return r5[0] <= r0 && r0 <= r5[1];
 }
 
-int ifflg;
-int *obufp;
-char outbuf[512];
+int ifflg, *obufp, outbuf[];
 char pof;
 
 putw(r4)
 {
 	if (!ifflg || r4 == '\n') {
 		*(obufp++) = r4;
-		if (obufp >= &outbuf[512]) {
+		if (obufp >= &outbuf[256]) {
 			obufp = outbuf;
 			write(pof, outbuf, 512);
 		}
