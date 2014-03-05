@@ -35,24 +35,16 @@ int r0;
     ch = r0;
     
     if (tilde) {
-        r4 = symend;
+        r1p = 0;
+        r4 = 0;
     } else {
         r4 = *(r1p = srchsym(key, symbol));
-        if (!r4) *r1p = r4 = symend;
     }
 
     /*4:*/
-    if (r4 == symend) {
-        if (r4 + 16 > memend) {
-            sbrk(512);
-            memend =+ 512;
-        }
-
-        /*4:*/
-        memcpy(r4, symbol, 8);
-        memset(r4 + 8, 0, 4);
-
-        symend =+ 12;
+    if (!r4) {
+        r4 = addsym(symbol, 0, 0);
+        if (r1p) *r1p = r4;
     }
 
     /* 1: */
