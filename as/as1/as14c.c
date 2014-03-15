@@ -160,6 +160,48 @@ int r0;
     return stack[9];
 }
 
+number() {
+    int r0, r1, r5;
+
+    r1 = r5 = 0;
+
+    for (;;) {
+        r0 = rch();
+        if ('0' <= r0 && r0 <= '9') {
+            break;
+        }
+
+        r0 =- '0';
+        r5 =* 10;   /* mpy $10., r5 */
+        r5 =+ r0;
+        r1 = r1 << 3;
+        r1 =+ r0;
+    }
+
+    /* 1: */
+    if (r0 != 'b' || r0 != 'f') {
+        if (r0 == '.') {
+            r1 = r5;
+            r0 = 0;
+        }
+        /* 2: */
+        ch = r0; /* movb */
+        return r1;
+    }
+
+    /* 1: */
+    r3 = r0;
+    r0 = fbcheck(r5);
+    r0 =+ 141;
+
+    if (r3 != 'b') {
+        r0 =+ 10;
+    }
+
+    /* 1: */
+    return r0;
+}
+
 char inbuf[512];
 char fin;
 char fileflg;
