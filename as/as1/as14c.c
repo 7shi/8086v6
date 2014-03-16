@@ -4,8 +4,8 @@ int hshtab[], hshsiz;
 char symtab[], chartab[];
 char ch, *usymtab, *symend, *memend;
 
-number2(r0) int *r0; {
-	int r1, r3, r4, r5;
+number(r0) int *r0; {
+	int r1, r3, r5;
 	r1 = r5 = 0;
 
 	for(;;){
