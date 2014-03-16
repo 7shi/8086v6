@@ -25,6 +25,7 @@ number2(r0) int *r0; {
 			*r0 = 0;
 		}
 		ch = *r0;
+		*r0 = r1;
 		return 1;
 	}
 	
