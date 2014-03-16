@@ -49,6 +49,7 @@ readop() {
 		break;
 	case -004: /* rdnum */
 		r4 = number(&r0);
+		printf("r0=%d r4=%d\n",r0,r4);
 		break;
 	case -002: /* retread */
 		break;
@@ -63,6 +64,7 @@ readop() {
 		ch = r4;
 		if ('0' <= r1 && r1 <= '9') {
 			r4 = number(&r0);
+			printf("r0=%d r4=%d\n",r0,r4);
 			break;
 		}
 		return rname(r4);

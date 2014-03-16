@@ -4,6 +4,41 @@ int hshtab[], hshsiz;
 char symtab[], chartab[];
 char ch, *usymtab, *symend, *memend;
 
+number2(r0) int *r0; {
+	int r1, r3, r4, r5;
+	r1 = r5 = 0;
+
+	for(;;){
+		*r0 = rch();
+		if(*r0 < '0' || '9' < *r0) break;
+		
+		*r0 =- '0';
+		r5 = (r5 * 10);
+		r5 =+ *r0;
+		r1 = r1 << 3;
+		r1 =+ *r0;
+	}
+
+	if(*r0 != 'b' && *r0 != 'f'){
+		if(*r0 == '.'){
+			r1 = r5;
+			*r0 = 0;
+		}
+		ch = *r0;
+		return 1;
+	}
+	
+	r3 = *r0;
+	*r0 = fbcheck(r5);
+	*r0 =+ 97;
+	
+	if(r3 != 'b'){
+		*r0 =+ 10;
+	}
+	
+	return *r0;
+}
+
 rname(r0)
 int r0;
 {
