@@ -117,7 +117,7 @@ opl7:
     r4 = addres(r4, &r0);
 op2:
     if (r4 != ',') {
-        errora();
+        error("a");
         return r4;
     }
     r4 = readop();
@@ -129,7 +129,7 @@ opl15:
 opl31:
     r4 = expres(r4, &r2, &r3);
     if (r4 != ',') {
-        errora();
+        error("a");
     }
     r4 = readop();
 opl6:
@@ -308,7 +308,7 @@ int r3;
         }
     }
 
-    errora();
+    error("a");
     return ;
 }
 
@@ -321,16 +321,4 @@ int r4;
         error(")");
     }
     return r4;
-}
-
-errora()
-{
-    error("a");
-    return ;
-}
-
-errore()
-{
-    error("e");
-    return ;
 }
