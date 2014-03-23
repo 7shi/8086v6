@@ -29,12 +29,8 @@ int *obufp outbuf;
 int hshsiz 1553;
 
 char curfbr[10];
-/* char savdot[6]; */
+int savdot[3];
 int hshtab[1553];
-char pof, wordf, fin, fbfil, fileflg, errflg;
-/* char ch; */
-int line, inbfcnt;
-/* int ifflg; */
-int inbfp, nargs, curarg, opfound;
-/* int savop, numval; */
+char pof, wordf, fin, fbfil, fileflg, errflg, ch;
+int line, inbfcnt, ifflg, inbfp, nargs, curarg, opfound, savop, numval;
 struct { char op0, op1; int op2; } nxtfb;

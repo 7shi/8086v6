@@ -2,7 +2,7 @@
 
 int* dot;
 int* dotrel;
-int* savdot;
+int savdot[];
 int savop;
 int ifflg;
 int numval;
