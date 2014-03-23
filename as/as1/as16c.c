@@ -10,7 +10,7 @@ int numval;
 /* using for intptr_t */
 struct { char cval; };
 
-opline2(r4)
+opline(r4)
 int r4;
 {
     int r0, r2, r3, sp;
