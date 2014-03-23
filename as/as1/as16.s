@@ -261,23 +261,15 @@ astar:
 	rts	pc
 
 checkreg:
-	cmp	r2,$7
-	bhi	1f
-	cmp	r3,$1
-	beq	2f
-	cmp	r3,$4
-	bhi	2f
-1:
-	jsr	r5,error; 'a
-2:
-	rts	pc
+	mov r3, -(sp)
+	mov r2, -(sp)
+	jsr pc, _checkreg
+	cmp (sp)+, (sp)+
+	rts pc
 
 checkrp:
-	cmp	r4,$')
-	beq	1f
-	jsr	r5,error; ')
-	rts	pc
-1:
-	jsr	pc,readop
-	rts	pc
-
+	mov r4, -(sp)
+	jsr pc, _checkrp
+	tst (sp)+
+	mov r0, r4
+	rts pc
