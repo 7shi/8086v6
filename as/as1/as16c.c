@@ -1,7 +1,7 @@
 /* translated from as16.s */
 
-int dot;
-int dotrel;
+int* dot;
+int* dotrel;
 int* savdot;
 int savop;
 int ifflg;
@@ -13,17 +13,16 @@ struct { char cval; };
 opline2(r4)
 int r4;
 {
-    int r0, r1, r2, r3, sp;
+    int r0, r2, r3, sp;
 
     r0 = r4;
     if (0 <= r0 && r0 <= 0200) {
         if (r0 == '<') {
             goto opl17;
         }
-/* xpr: */
 xpr:
         r4 = expres(r4, &r2, &r3);
-        dot =+ 2;
+        *dot =+ 2;
         return r4;
     }
 
@@ -41,9 +40,6 @@ xpr:
     r4 = readop();
     r0 =<< 1;
  
-/*
-printf("opline-switch r0=%d, r4=%d\n", r0, r4);
-*/
     switch (r0-10) {
         case 0:
             goto opl13;
@@ -107,13 +103,13 @@ opl36:
         sp = 6;
     }
     r4 = expres(r4, &r2, &r3);
-    if (r3 == dotrel) {
-        r2 =- dot;
+    if (r3 == *dotrel) {
+        r2 =- *dot;
         if (r2 < 0 && r2 >= -0376) {
             sp = 2;
         }
     }
-    dot =+ sp;
+    *dot =+ sp;
     return r4;
 
 opl13:
@@ -127,26 +123,25 @@ op2:
     r4 = readop();
 opl15:
     r4 = addres(r4, &r0);
-    dot =+ 2;
+    *dot =+ 2;
     return r4;
 
 opl31:
     r4 = expres(r4, &r2, &r3);
     if (r4 != ',') {
         errora();
-    } else {
-        r4 = readop();
     }
+    r4 = readop();
 opl6:
 opl10:
 opl11:
     r4 = expres(r4, &r2, &r3);
-    dot =+ 2;
+    *dot =+ 2;
     return r4;
 
 opl16:
     r4 = expres(r4, &r2, &r3);
-    dot =+ 1;
+    *dot =+ 1;
     if (r4 == ',') {
         r4 = readop();
         goto opl16;
@@ -154,13 +149,13 @@ opl16:
     return r4;
 
 opl17:
-    dot =+ numval;
+    *dot =+ numval;
     r4 = readop();
     return r4;
 
 opl20:
-    dot =+ 1;
-    dot =& ~1;
+    *dot =+ 1;
+    *dot =& ~1;
     return r4;
 
 opl21:
@@ -193,19 +188,19 @@ opl27:
     r1 =<< 1;
     (r1+(savdot-4))->cval = dot;
     */
-    savdot[dotrel-2] = dot;
-    dot = savdot[(r0-42)/2];
+    savdot[*dotrel-2] = *dot;
+    *dot = savdot[(r0-42)/2];
 
     r0 =>> 1;
     r0 = r0 - (025-2);
-    dotrel = r0;
+    *dotrel = r0;
     return r4;
 
 opl32:
     if (r4 >= 0200) {
         r4->cval =| 040;
         r4 = readop();
-        if (r4 != ',') {
+        if (r4 == ',') {
             r4 = expres(readop(), &r2, &r3);
             return r4;
         }
@@ -234,8 +229,8 @@ int *r0;
 
 alp:
     r4 = expres(readop(), &r2, &r3);
-    checkreg(r2,r3);
     r4 = checkrp(r4);
+    checkreg(r2,r3);
     if (r4 == '+') {
         r4 = readop();
         *r0 = 0;
@@ -259,7 +254,7 @@ amin:
 
 adoll:
     r4 = expres(readop(), &r2, &r3);
-    dot =+ 2;
+    *dot =+ 2;
     *r0 = 0;
     return r4;
 
@@ -269,7 +264,7 @@ astar:
         error('*');
     }
     r4 = addres(r4, r0);
-    dot =+ *r0;
+    *dot =+ *r0;
     return r4;
 }
 
@@ -284,7 +279,7 @@ int* r0;
         r4 = expres(readop(), &r2, &r3);
         checkreg(r2, r3);
         r4 = checkrp(r4);
-        dot =+ 2;
+        *dot =+ 2;
         *r0 = 0;
         return r4;
     }
@@ -297,7 +292,7 @@ int* r0;
     }
 
     /* 1: */
-    dot =+ 2;
+    *dot =+ 2;
     *r0 = 0;
     return r4;
 }
