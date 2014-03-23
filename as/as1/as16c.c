@@ -302,7 +302,7 @@ checkreg(r2, r3)
 int r2;
 int r3;
 {
-    if (r2 < 7) {
+    if (r2 <= 7) {
         if (r3 == 1 || r3 > 4) {
             return ;
         }
