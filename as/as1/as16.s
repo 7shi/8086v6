@@ -82,7 +82,7 @@ opl7:
 op2:
 	cmp	r4,$',
 	beq	1f
-	jsr	pc,errora
+	jsr	r5,error; 'a
 	rts	pc
 1:
 	jsr	pc,readop
@@ -95,7 +95,7 @@ opl31:	/ sob
 	jsr	pc,expres
 	cmp	r4,$',
 	beq	1f
-	jsr	pc,errora
+	jsr	r5,error; 'a
 1:
 	jsr	pc,readop
 
@@ -260,10 +260,6 @@ astar:
 	add	r0,*_dot
 	rts	pc
 
-errora:
-	jsr	r5,error; 'a
-	rts	pc
-
 checkreg:
 	cmp	r2,$7
 	bhi	1f
@@ -272,12 +268,8 @@ checkreg:
 	cmp	r3,$4
 	bhi	2f
 1:
-	jsr	pc,errora
+	jsr	r5,error; 'a
 2:
-	rts	pc
-
-errore:
-	jsr	r5,error; 'e
 	rts	pc
 
 checkrp:
