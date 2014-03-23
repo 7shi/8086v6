@@ -3,7 +3,9 @@
 int dot;
 int dotrel;
 int savdot;
+int savop;
 int ifflg;
+int numval;
 
 struct { char cval; };
 
@@ -12,7 +14,7 @@ int r2;
 int r3;
 int r4;
 {
-    int r0, sp;
+    int r0, r1, sp;
 
     r0 = r4;
     if (0 <= r0 && r0 <= 0200) {
@@ -167,6 +169,7 @@ opl21:
     if (r2 == 0) {
         ifflg =+ 1;
     }
+opl22:
     return r4;
 
 opl23:
@@ -210,6 +213,8 @@ int r2;
 int r3;
 int r4;
 {
+    int r0;
+
     if (r4 == '(') {
         goto alp;
     } else if (r4 == '-') {
@@ -250,7 +255,7 @@ adoll:
     dot =+ 2;
     return ;
 
-aster:
+astar:
     r4 = readop();
     if (r4 == '*') {
         error('*');
@@ -267,7 +272,7 @@ int r4;
 {
     r4 = expres(r4, r2, r3);
     if (r4 == '(') {
-        r4 = expres(readop, r2, r3);
+        r4 = expres(readop(), r2, r3);
         checkreg(r2, r3);
         checkrp(r4);
         dot =+ 2;
