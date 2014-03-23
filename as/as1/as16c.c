@@ -161,7 +161,7 @@ opl20:
 opl21:
     r4 = expres(r4, &r2, &r3);
     if (r3 == 0) {
-        error('U');
+        error("U");
     }
     if (r2 == 0) {
         ifflg =+ 1;
@@ -205,7 +205,7 @@ opl32:
             return r4;
         }
     }
-    error('x');
+    error("x");
     return r4;
 }
 
@@ -261,7 +261,7 @@ adoll:
 astar:
     r4 = readop();
     if (r4 == '*') {
-        error('*');
+        error("*");
     }
     r4 = addres(r4, r0);
     *dot =+ *r0;
@@ -318,19 +318,19 @@ int r4;
     if (r4 == ')') {
         r4 = readop();
     } else {
-        error(')');
+        error(")");
     }
     return r4;
 }
 
 errora()
 {
-    error('a');
+    error("a");
     return ;
 }
 
 errore()
 {
-    error('e');
+    error("e");
     return ;
 }
