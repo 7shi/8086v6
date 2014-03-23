@@ -20,6 +20,11 @@ oset:
 
 putw:
 	mov	r1,-(sp)
+/    mov r0, -(sp)
+/	mov $1, -(sp)
+/	jsr pc, _showoct
+/	tst (sp)+
+/	mov (sp)+, r0
 	mov	r2,-(sp)
 	mov	(r5)+,r2
 	mov	(r2)+,r1	/ slot

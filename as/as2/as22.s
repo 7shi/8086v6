@@ -74,18 +74,51 @@ outw:
 	jsr	r5,error; 'x
 	rts	pc
 
-outb:
+_org_outb:
+/   test for r3 and dot-2
+/    mov r3, -(sp)    r3 -> 1
+/	mov $1, -(sp)
+/	jsr pc, _showoct
+/	cmp (sp)+, (sp)+
+/	mov dot-2, -(sp)  / dot-2 -> 3
+/	mov $1, -(sp)
+/	jsr pc, _showoct
+/	cmp (sp)+, (sp)+
+
 	cmp	dot-2,$4		/ test bss mode
 	beq	9b
 	cmp	r3,$1
 	blos	1f
 	jsr	r5,error; 'r
 1:
+/ test for passno
+/ passno is 0 or 1
+/    mov passno, -(sp)
+/	mov $1, -(sp)
+/	jsr pc, _showoct
+/	cmp (sp)+, (sp)+
+
+
 	tstb	passno
 	beq	2f
+	/ debug for dot
+/	mov dot, -(sp)
+/	mov $1, -(sp)
+/	jsr pc, _showoct
+/	cmp (sp)+, (sp)+
+	/ debug for dot
+
 	mov	r2,r0
 	bit	$1,dot
 	bne	1f
+
+    / branch check
+	mov $0, -(sp)
+	mov $1, -(sp)
+	jsr pc, _showoct
+	cmp (sp)+, (sp)+
+	/end of branch check
+
 	jsr	r5,putw; txtp
 	clr	r0
 	jsr	r5,putw; relp
@@ -93,13 +126,42 @@ outb:
 	add	$2,*tseekp
 	br	2f
 1:
+    / branch check
+	mov $11, -(sp)
+	mov $1, -(sp)
+	jsr pc, _showoct
+	cmp (sp)+, (sp)+
+	/end of branch check
+
 	mov	txtp,r0
 	movb	r2,-1(r0)
 2:
 	inc	dot
 	rts	pc
 
+
 / wrapper function
+
+.data
+
+.globl _putw
+_putw:
+	mov 2(sp), r0
+	mov 4(sp), 0f
+	jsr r5, putw; 0:.
+	rts pc
+
+.text
+
+outb:
+	mov r1, -(sp)
+	mov r3, -(sp)
+	mov r2, -(sp)
+	jsr pc, _outb
+	cmp (sp)+, (sp)+
+	mov (sp)+, r1
+	rts pc
+
 error:
 	mov r3, -(sp)
 	mov r2, -(sp)
@@ -127,4 +189,3 @@ betwen:
 	tst (sp)+
 	mov (sp)+, r1
 	rts r5
-

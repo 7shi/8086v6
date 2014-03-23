@@ -9,7 +9,8 @@ eae = 0
 .globl _symtab; _symtab: symtab:
 / special variables
 
-dotrel: 02; dot:000000 /.
+dotrel: 02; 
+.globl _dot; _dot: dot:000000 /.
  01; dotdot:000000 /..
 
 / register
