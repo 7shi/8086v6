@@ -481,7 +481,7 @@ astar:
 	jsr	pc,readop
 	jmp	4b
 
-errora:
+_org_errora:
 	jsr	r5,error; 'a
 	rts	pc
 
@@ -500,11 +500,11 @@ checkreg:
 	clr	r3
 	rts	pc
 
-errore:
+_org_errore:
 	jsr	r5,error; 'e
 	rts	pc
 
-checkrp:
+_org_checkrp:
 	cmp	r4,$')
 	beq	1f
 	jsr	r5,error; ')
@@ -557,3 +557,25 @@ getbr:
 	ash	(sp)+,r1
 	ror	r1		/ 0-bit into c-bit
 	rts	pc
+
+/ wrapper functions
+errore:
+	mov r1, -(sp)
+	jsr pc, _errore
+	mov (sp)+, r1
+	rts pc
+
+errora:
+	mov r1, -(sp)
+	jsr pc, _errora
+	mov (sp)+, r1
+	rts pc
+
+checkrp:
+	mov r1, -(sp)
+	mov r4, -(sp)
+	jsr pc, _checkrp
+	mov r0, r4
+	tst (sp)+
+	mov (sp)+, r1
+	rts pc
