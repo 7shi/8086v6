@@ -40,6 +40,117 @@ char *relp[];
 int *rseekp;
 int *tseekp;
 
+/* for outw */
+char usymtab[];
+int xsymbol;
+int dotdot;
+
+
+outw(r2, r3)
+int r2;
+int r3;
+{
+	char c_flg;
+	
+	if(dot[-1] == 4) {
+		error("x");
+		return;
+	}
+
+	if(dot[0] & 1) {
+		error("o");
+		outb(r2, 0);		
+		return;
+	}
+
+	dot[0] =+ 2;
+	
+	if(passno[0] == 0) {
+		return;
+	}
+
+	c_flg = (r3 >> 15) & 1;
+	r3 =<< 1;
+	r3 =>> 1;
+	
+	if(r3 != 040) goto label2;
+
+	/* outmodを666にする */
+	outmod = 0666;
+	r3 = xsymbol;
+	r3 =- &usymtab;
+	r3 =<< 1;
+	r3 =| 4;
+	goto label3;
+
+ label2:
+	/*showoct(1, 2);*/
+	r3 =& ~040;
+	if((r3 >= 0) && (r3 < 5)) {
+		goto label4;
+	} else if(r3 == 033) {
+		goto label6;
+	} else if(r3 != 034) {
+		goto label7;
+	}
+	
+ label6:
+	/*showoct(1, 6);*/
+	error("r");
+ label7:
+	/*showoct(1, 7);*/
+	r3 = 1;
+ label4:
+	/*showoct(1, 4);*/
+	if((r3 >= 0) && (r3 < 2)) {
+		goto label5;
+	} else if(r3 > 4) {
+		goto label5;
+	} else if(c_flg != 0) {
+		goto label44;
+	}
+	r2 =+ dotdot;
+	goto label44;
+
+ label5:
+	/*showoct(1, 5);*/
+
+	if(c_flg == 0) {
+		goto label44;
+	}
+	r2 =- dotdot;
+
+ label44:
+	/*showoct(1, 44);*/
+	r3--;
+	if(r3 >= 0) {
+		goto label3;
+	}
+	r3 = 0;
+	
+
+ label3:
+	/*showoct(1, 3);*/
+	r3 =<< 1;
+	r3 =| c_flg;
+	putw(r2, &txtp);
+	*tseekp =+ 2;
+	putw(0, &relp);
+	*rseekp =+ 2;
+
+ label8:
+	/*showoct(1, 8);*/
+	return;
+
+}
+
+
+
+
+
+
+
+
 outb(r2, r3)
 int r2;
 int r3;

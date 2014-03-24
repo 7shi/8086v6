@@ -3,7 +3,7 @@
 
 / a2 -- pdp-11 assembler pass 2
 
-outw:
+_orig_outw:
 	cmp	dot-2,$4
 	beq	9f
 	bit	$1,dot
@@ -152,6 +152,16 @@ _putw:
 	rts pc
 
 .text
+
+outw:
+	mov r1, -(sp)
+	mov r3, -(sp)
+	mov r2, -(sp)
+	jsr pc, _outw
+	cmp (sp)+, (sp)+
+	mov (sp)+, r1
+	rts pc
+
 
 outb:
 	mov r1, -(sp)

@@ -11,7 +11,8 @@ eae = 0
 
 dotrel: 02; 
 .globl _dot; _dot: dot:000000 /.
- 01; dotdot:000000 /..
+ 01; 
+.globl _dotdot; _dotdot: dotdot:000000 /..
 
 / register
 
