@@ -51,6 +51,7 @@ int r2;
 int r3;
 {
 	char c_flg;
+	char r3_flg;
 	
 	if(dot[-1] == 4) {
 		error("x");
@@ -63,6 +64,8 @@ int r3;
 		return;
 	}
 
+	r3_flg = 1;
+
 	dot[0] =+ 2;
 	
 	if(passno[0] == 0) {
@@ -73,64 +76,49 @@ int r3;
 	r3 =<< 1;
 	r3 =>> 1;
 	
-	if(r3 != 040) goto label2;
 
-	/* outmodを666にする */
-	outmod = 0666;
-	r3 = xsymbol;
-	r3 =- &usymtab;
-	r3 =<< 1;
-	r3 =| 4;
-	goto label3;
-
- label2:
-	/*showoct(1, 2);*/
-	r3 =& ~040;
-	if((r3 >= 0) && (r3 < 5)) {
-		goto label4;
-	} else if(r3 == 033) {
-		goto label6;
-	} else if(r3 != 034) {
-		goto label7;
+	if(r3 != 040) {
+		r3 =& ~040;
+		if((r3 >= 0) && (r3 < 5)) {
+			r3_flg = 0;
+		} else if(r3 == 033) {
+			error("r");
+			r3 = 1;
+			r3_flg = 0;
+		} else if(r3 != 034) {
+			r3 = 1;
+			r3_flg = 0;
+		}
 	}
-	
- label6:
-	/*showoct(1, 6);*/
-	error("r");
- label7:
-	/*showoct(1, 7);*/
-	r3 = 1;
- label4:
-	/*showoct(1, 4);*/
-	if((r3 >= 0) && (r3 < 2)) {
-		goto label5;
-	} else if(r3 > 4) {
-		goto label5;
-	} else if(c_flg != 0) {
-		goto label44;
+
+
+	if(r3_flg) {
+		outmod = 0666;
+		r3 = xsymbol;
+		r3 =- &usymtab;
+		r3 =<< 1;
+		r3 =| 4;
+
+		r3 =<< 1;
+		r3 =| c_flg;
+		putw(r2, &txtp);
+		*tseekp =+ 2;
+		putw(0, &relp);
+		*rseekp =+ 2;
+		return;
 	}
-	r2 =+ dotdot;
-	goto label44;
 
- label5:
-	/*showoct(1, 5);*/
-
-	if(c_flg == 0) {
-		goto label44;
+	if((r3 >= 0) && ((r3 != 2) || (r3 != 3))) {
+		if(c_flg != 0) {
+			r2 =- dotdot;
+		}
+	} else if(c_flg == 0) {
+		r2 =+ dotdot;
 	}
-	r2 =- dotdot;
 
- label44:
-	/*showoct(1, 44);*/
-	r3--;
-	if(r3 >= 0) {
-		goto label3;
-	}
-	r3 = 0;
-	
 
- label3:
-	/*showoct(1, 3);*/
+	r3 = (--r3 < 0) ? 0 : r3;
+
 	r3 =<< 1;
 	r3 =| c_flg;
 	putw(r2, &txtp);
@@ -138,8 +126,6 @@ int r3;
 	putw(0, &relp);
 	*rseekp =+ 2;
 
- label8:
-	/*showoct(1, 8);*/
 	return;
 
 }
