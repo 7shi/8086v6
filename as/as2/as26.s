@@ -485,7 +485,7 @@ _org_errora:
 	jsr	r5,error; 'a
 	rts	pc
 
-checkreg:
+_org_checkreg:
 	cmp	r2,$7
 	bhi	1f
 	cmp	r1,$1
@@ -579,3 +579,20 @@ checkrp:
 	tst (sp)+
 	mov (sp)+, r1
 	rts pc
+
+checkreg:
+	mov r1, -(sp)
+	mov r3, -(sp)
+	mov sp, r3
+	mov r2, -(sp)
+	mov sp, r2
+	mov r3, -(sp)
+	mov r2, -(sp)
+	mov r1, -(sp)
+	jsr pc, _checkreg
+	add $6, sp
+	mov (sp)+, r2
+	mov (sp)+, r3
+	mov (sp)+, r1
+    rts pc
+
