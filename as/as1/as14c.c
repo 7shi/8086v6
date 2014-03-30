@@ -34,7 +34,8 @@ number(r0) int *r0; {
 	*r0 =+ 97;
 	
 	if(r3 != 'b'){
-		*
+		*r0 =+ 10;
+	}
 	
 	return *r0;
 }

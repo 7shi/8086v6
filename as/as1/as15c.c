@@ -10,7 +10,7 @@ readop() {
 		return r4;
 	}
 	for (;;) {
-		r4 = rch(); // 0-127
+		r4 = rch(); /* 0-127 */
 		r1 = chartab[r4];
 		if (r1 == -12 /* garb */)
 			error("g");
