@@ -10,55 +10,55 @@ readop() {
 		return r4;
 	}
 	for (;;) {
-		r4 = rch();
+		r4 = rch(); // 0-127
 		r1 = chartab[r4];
-		if (r1 == -014 /* garb */)
+		if (r1 == -12 /* garb */)
 			error("g");
-		else if (r1 != -022)
+		else if (r1 != -18)
 			break;
 	}
 	switch (r1) {
-	case -026: /* fixor */
-		r4 = 037;
+	case -22: /* fixor | */
+		r4 = 31;
 		break;
-	case -024: /* escp */
+	case -20: /* escp \ */
 		switch (r4 = rch()) {
-		case '/': r4 = '/'; break;
-		case '<': r4 = 035; break;
-		case '>': r4 = 036; break;
-		case '%': r4 = 037; break;
+		case '/': r4 = '/'; break; /* \/ avoid comment */
+		case '<': r4 = 29; break;
+		case '>': r4 = 30; break;
+		case '%': r4 = 31; break;
 		}
 		break;
-	case -020: /* retread */
+	case -16: /* retread $%&... */
 		break;
-	case -016: /* dquote */
+	case -14: /* dquote " */
 		rsch(&oldr0);
 		rsch(&r0);
 		r0 =<< 8;
 		r0 =| oldr0;
 		r4 = 1;
 		break;
-	case -012: /* squote */
+	case -10: /* squote ' */
 		rsch(&r0);
 		r4 = 1;
 		break;
-	case -006: /* skip */
+	case -6: /* skip / comment */
 		do {
 			r4 = rch();
 		} while (r4 != 4/*EOT*/ && r4 != '\n');
 		break;
-	case -004: /* rdnum */
+	case -4: /* rdnum (not used?) */
 		r4 = number(&r0);
 		break;
-	case -002: /* retread */
+	case -2: /* retread */
 		break;
-	case  000: /* string */
+	case 0: /* string < */
 		putw('<');
 		for (numval = 0; !rsch(&r0); ++numval)
-			putw(r0 | 0400);
+			putw(r0 | 256);
 		putw(-1);
 		return '<';
-	case -010: /* rdname */
+	case -8: /* rdname (not used?) */
 	default:
 		ch = r4;
 		if ('0' <= r1 && r1 <= '9') {
@@ -69,7 +69,7 @@ readop() {
 	}
 	putw(r4);
 	if (r4 == 1) {
-		/* rdname(数字のとき), rdnum, squote, dquote */
+		/* rdname/default(数字のとき), rdnum, squote, dquote */
 		putw(numval = r0);
 	}
 	return r4;
@@ -84,13 +84,13 @@ int *r0;
 		aexit();
 	} else if (*r0 == '\\') {
 		switch (*r0 = rch()) {
-		case 'n': *r0 = 012; break;
-		case 't': *r0 = 011; break;
-		case 'e': *r0 = 004; break;
-		case '0': *r0 = 000; break;
-		case 'r': *r0 = 015; break;
-		case 'a': *r0 = 006; break;
-		case 'p': *r0 = 033; break;
+		case 'n': *r0 = 10; break;
+		case 't': *r0 =  9; break;
+		case 'e': *r0 =  4; break;
+		case '0': *r0 =  0; break;
+		case 'r': *r0 = 13; break;
+		case 'a': *r0 =  6; break;
+		case 'p': *r0 = 27; break;
 		}
 		return 0;
 	}

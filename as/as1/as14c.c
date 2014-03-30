@@ -34,8 +34,7 @@ number(r0) int *r0; {
 	*r0 =+ 97;
 	
 	if(r3 != 'b'){
-		*r0 =+ 10;
-	}
+		*
 	
 	return *r0;
 }
@@ -133,12 +132,10 @@ rch() {
 
     for (;;) {
         while (--inbfcnt >= 0) {
-            r0 = *inbfp & 0377;
+            r0 = *inbfp & 127;
             inbfp++;
-            if (r0 =& 0177) {
+            if (r0) {
                 return r0;
-            } else {
-                continue;
             }
         }
 
@@ -160,12 +157,11 @@ rch() {
         }
 
         if (--nargs <= 0) {
-            /*return "\e";*/
-            return 4;
+            return 4; /* \e: EOT */
         }
 
         if (ifflg != 0) {
-            error("i");
+            error("i"); /* if-endif nest */
             aexit();
         }
 

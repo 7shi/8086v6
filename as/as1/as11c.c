@@ -23,7 +23,7 @@ go()
 	write(fp, usymtab, symend - usymtab);
 	close(fp);
 
-	execl("/lib/as2", "/lib/as2", atmp1, atmp2, atmp3, "-g");
+	execl("/lib/as2", "/lib/as2", atmp1, atmp2, atmp3, "-g", 0);
 	filerr("lib/as2", "?\n");
 }
 
