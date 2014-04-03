@@ -45,8 +45,7 @@ char *s;
 {
 	int i;
 	char buf[7];
-	for (i = 0; s[i]; ++i);
-	write(2, s, i);
+	write(2, s, strlen(s));
 	for (i = 0; i < 6; ++i) {
 		buf[5 - i] = '0' + (v & 7);
 		v =>> 3;
@@ -62,8 +61,7 @@ char *s;
 {
 	int i;
 	char buf[5];
-	for (i = 0; s[i]; ++i);
-	write(2, s, i);
+	write(2, s, strlen(s));
 	for (i = 0; i < 4; ++i) {
 		buf[3 - i] = hexstr[v & 15];
 		v =>> 4;

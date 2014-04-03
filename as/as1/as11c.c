@@ -40,9 +40,7 @@ filerr(r0, r5)
 char *r0;
 char *r5;
 {
-	int i;
-	for(i = 0; r0[i] != 0; i++);
-	write(1, r0, i);
+	write(1, r0, strlen(r0));
 	write(1, r5, 2);
 }
 
