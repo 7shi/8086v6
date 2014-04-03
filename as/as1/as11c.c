@@ -36,12 +36,11 @@ aexit()
 	exit(errflg);
 }
 
-filerr(r0, r5)
-char *r0;
-char *r5;
+filerr(fname, msg)
+char *fname;
+char *msg;
 {
-	write(1, r0, strlen(r0));
-	write(1, r5, 2);
+	printf("%s%s", fname, msg);
 }
 
 fcreat(r4)
