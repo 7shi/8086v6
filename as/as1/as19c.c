@@ -267,7 +267,7 @@ int *dotdot &symtab[5];
 
 char pof;
 char fbfil;
-int unglob;
+char *unglob;
 char nargs;
 int curarg;
 char atmp1[];

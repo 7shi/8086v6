@@ -4,6 +4,7 @@ int outbuf[];
 char atmp1[], atmp2[], atmp3[];
 char errflg, pof, fbfil;
 char *usymtab, *symend, *memend;
+char *unglob "-g";
 
 go()
 {
@@ -23,7 +24,7 @@ go()
 	write(fp, usymtab, symend - usymtab);
 	close(fp);
 
-	execl("/lib/as2", "/lib/as2", atmp1, atmp2, atmp3, "-g", 0);
+	execl("/lib/as2", "/lib/as2", atmp1, atmp2, atmp3, unglob, 0);
 	filerr("lib/as2", "?\n");
 }
 
