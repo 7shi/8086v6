@@ -27,16 +27,16 @@ char *r5;
 	write(1, fxxxx, 7);
 }
 
-int ifflg, *obufp, outbuf[];
+int ifflg, obufi, outbuf[];
 char pof;
 
 putw(r4)
 {
 	if (!ifflg || r4 == '\n') {
-		*(obufp++) = r4;
-		if (obufp >= &outbuf[256]) {
-			obufp = outbuf;
+		outbuf[obufi++] = r4;
+		if (obufi >= 256) {
 			write(pof, outbuf, 512);
+			obufi = 0;
 		}
 	}
 }

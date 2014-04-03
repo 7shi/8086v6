@@ -25,7 +25,7 @@ char atmp3[] "/tmp/atm3a";
 
 int curfb[] {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 int outbuf[256];
-int *obufp outbuf;
+int obufi;
 int hshsiz 1553;
 
 char curfbr[10];
