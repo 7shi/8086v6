@@ -26,6 +26,7 @@ go()
 
 	execl("/lib/as2", "/lib/as2", atmp1, atmp2, atmp3, unglob, 0);
 	filerr("lib/as2", "?\n");
+	exit(1);
 }
 
 aexit()
