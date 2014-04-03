@@ -11,10 +11,10 @@ assem() {
 		r4 = readop();
 		if (!checkeos(r4)) {
 			if (ifflg) {
-				if (r4 > 0200) {
-					if (r4->op0 == 021/*if*/)
+				if (r4 >= 128) {
+					if (r4->op0 == 17/*if*/)
 						++ifflg;
-					else if (r4->op0 == 022/*endif*/)
+					else if (r4->op0 == 18/*endif*/)
 						--ifflg;
 				}
 				continue;
@@ -24,11 +24,11 @@ assem() {
 			if (r4 == '=') {
 				r4 = expres(readop(), &r2, &r3);
 				r1 = oldr4;
-				if (r1 < 0200)
+				if (r1 < 128)
 					error("x");
-				else if (r1 != dotrel || (r3 & ~040) == *dotrel) {
-					r3 =& 037;
-					r1->op0 =& ~037;
+				else if (r1 != dotrel || (r3 & ~32) == *dotrel) {
+					r3 =& 31;
+					r1->op0 =& ~31;
 					r1->op0 =| r3;
 					r1->op2 = r3 ? r2 : 0;
 				} else {
@@ -37,8 +37,8 @@ assem() {
 				}
 			} else if (r4 == ':') {
 				r4 = oldr4;
-				if (r4 >= 0200) {
-					if (r4->op0 & 037) error("m");
+				if (r4 >= 128) {
+					if (r4->op0 & 31) error("m");
 					r4->op0 =| *dotrel;
 					r4->op2 = *dot;
 				} else if (r4 == 1/*digit*/) {
