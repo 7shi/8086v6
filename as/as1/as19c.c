@@ -292,8 +292,6 @@ main(argc, argv) char *argv[];{
 
   nargs  = argc;
   curarg = argv;
-  pof    = fcreat(atmp1);
-  fbfil  = fcreat(atmp2);
 
   setup();
   go();

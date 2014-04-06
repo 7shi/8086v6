@@ -9,7 +9,11 @@ char *unglob "-g";
 go()
 {
 	int fp;
+
 	usymtab = symend = memend = sbrk(0);
+
+	pof   = fcreat(atmp1);
+	fbfil = fcreat(atmp2);
 	assem();
 	write(pof, outbuf, 512);
 	close(pof);
