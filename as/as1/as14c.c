@@ -4,40 +4,34 @@ int hshtab[], hshsiz;
 char symtab[], chartab[];
 char ch, *usymtab, *symend, *memend;
 
-number(r0) int *r0; {
-	int r1, r3, r5;
-	r1 = r5 = 0;
+number(retval)
+int *retval;
+{
+    int c, n10, n8;
 
-	for(;;){
-		*r0 = rch();
-		if(*r0 < '0' || '9' < *r0) break;
-		
-		*r0 =- '0';
-		r5 = (r5 * 10);
-		r5 =+ *r0;
-		r1 = r1 << 3;
-		r1 =+ *r0;
-	}
+    n8 = n10 = 0;
+    for (;;) {
+        c = rch();
+        if (c < '0' || '9' < c) break;
+        
+        c =- '0';
+        n10 = (n10 * 10) + c;
+        n8 = (n8 << 3) + c;
+    }
 
-	if(*r0 != 'b' && *r0 != 'f'){
-		if(*r0 == '.'){
-			r1 = r5;
-			*r0 = 0;
-		}
-		ch = *r0;
-		*r0 = r1;
-		return 1;
-	}
-	
-	r3 = *r0;
-	*r0 = fbcheck(r5);
-	*r0 =+ 97;
-	
-	if(r3 != 'b'){
-		*r0 =+ 10;
-	}
-	
-	return *r0;
+    if (c == 'b' || c == 'f') {
+        *retval = fbcheck(n10) + 'a';
+        if (c == 'f') *retval =+ 10;
+        return *retval;
+    }
+
+    if (c == '.') {
+        *retval = n10;
+    } else {
+        ch = c;
+        *retval = n8;
+    }
+    return 1;
 }
 
 rname(r0)
