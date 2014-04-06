@@ -19,6 +19,12 @@ let chartab = [|
 let keys = chartab |> Seq.sort |> Seq.distinct
 let data = chartab |> Seq.mapi (fun i v -> i, v)
 
+let convch v =
+    if v < 33 || 126 < v then
+        ""
+    else
+        (char v).ToString()
+
 for key in keys do
     let values =
        data
@@ -26,7 +32,22 @@ for key in keys do
     |> Seq.map fst
     |> Seq.toArray
     if not (values.Length = 1 && values.[0] = key) then
-        values
-        |> Seq.map (sprintf "%d")
+        let s1 =
+           values
+        |> Seq.map (fun v -> sprintf "%d%s" v (convch v))
         |> String.concat ", "
-        |> printfn "%3d: %s" key
+        let s2 = 
+           values
+        |> Seq.map convch
+        |> String.concat ""
+        printfn "%3d: %s; %s" key s1 s2
+
+printf " >0: "
+chartab |> Array.mapi (fun i v ->
+    if i = v then
+        let s = convch v
+        if s = "" then
+            printf "(%d)" i
+        else
+            printf "%s" s)
+printfn ""
