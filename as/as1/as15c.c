@@ -47,9 +47,6 @@ readop() {
 			r4 = rch();
 		} while (r4 != 4/*EOT*/ && r4 != '\n');
 		break;
-	case -4: /* rdnum (not used?) */
-		r4 = number(&r0);
-		break;
 	case -2: /* retread */
 		break;
 	case 0: /* string < */
@@ -58,8 +55,7 @@ readop() {
 			putw(r0 | 256);
 		putw(-1);
 		return '<';
-	case -8: /* rdname (not used?) */
-	default:
+	default: /* -18, -12, 自然数（ASCIIのまま） */
 		ch = r4;
 		if ('0' <= r1 && r1 <= '9') {
 			r4 = number(&r0);
@@ -69,7 +65,7 @@ readop() {
 	}
 	putw(r4);
 	if (r4 == 1) {
-		/* rdname/default(数字のとき), rdnum, squote, dquote */
+		/* default(数字のとき), squote, dquote */
 		putw(numval = r0);
 	}
 	return r4;
