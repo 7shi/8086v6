@@ -279,7 +279,7 @@ int aexit();
  * void main (int argc, char* argv[])
  */
 main(argc, argv) char *argv[];{
-  if (signal(2, 1) & 1 == 0) {
+  if (signal(2/*SIGINT*/, 1) & 1 == 0) {
     signal(2, aexit);
   }
 
