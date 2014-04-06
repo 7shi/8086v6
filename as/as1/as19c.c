@@ -275,63 +275,67 @@ char atmp2[];
 
 int aexit();
 
-/*
- * void main (int argc, char* argv[])
- */
-main(argc, argv) char *argv[];{
-  if (signal(2/*SIGINT*/, 1) & 1 == 0) {
-    signal(2, aexit);
-  }
+main(argc, argv)
+char *argv[];
+{
+	if (signal(2/*SIGINT*/, 1) & 1 == 0) {
+		signal(2, aexit);
+	}
 
-  nargs  = argc;
-  curarg = argv;
+	nargs  = argc;
+	curarg = argv;
 
-  if (argv[1][0] == '-') {
-    nargs--;
-    curarg++;
-  } else {
-    unglob = 0;
-  }
+	if (argv[1][0] == '-') {
+		nargs--;
+		curarg++;
+	} else {
+		unglob = 0;
+	}
 
-  setup();
-  go();
+	setup();
+	go();
 }
 
 int hshsiz;
 int hshtab[];
 
 /* シンボルテーブルを検索（独自関数） */
-char **symget(key, name) char *name;{
-  int quot, *idx;
-  quot = ldiv(0, key, hshsiz);
-  idx = hshtab + lrem(0, key, hshsiz);
-  do {
-    idx =- quot + 1;
-    if(idx < hshtab) idx =+ hshsiz;
-  } while (*idx && symcmp(*idx, name));
-  return idx;
+char **symget(key, name)
+char *name;
+{
+	int quot, *idx;
+	quot = ldiv(0, key, hshsiz);
+	idx = hshtab + lrem(0, key, hshsiz);
+	do {
+		idx =- quot + 1;
+		if(idx < hshtab) idx =+ hshsiz;
+	} while (*idx && symcmp(*idx, name));
+	return idx;
 }
 
 char *usymtab;
 
 /* シンボル名をチェック（独自関数） */
-symcmp(idx, name) int *idx;{
-  if (idx < usymtab) idx = *idx;
-  return strncmp(idx, name, 8);
+symcmp(idx, name)
+int *idx;
+{
+	if (idx < usymtab) idx = *idx;
+	return strncmp(idx, name, 8);
 }
 
 /* builtinシンボルをハッシュテーブルに追加 */
-setup(){
-  char ch, **p;
-  int key, i;
+setup()
+{
+	char ch, **p;
+	int key, i;
 
-  for(p = symtab; *p; p =+ 3){
-    /* バイト反転しながら文字を加算してハッシュを算出 */
-    for(key = 0, i = 0; i < 8 && (ch = p[0][i]); ++i){
-      key =+ ch;
-      key = (key << 8) + ((key >> 8) & 255);
-    }
+	for(p = symtab; *p; p =+ 3) {
+		/* バイト反転しながら文字を加算してハッシュを算出 */
+		for(key = 0, i = 0; i < 8 && (ch = p[0][i]); ++i) {
+			key =+ ch;
+			key = (key << 8) + ((key >> 8) & 255);
+		}
 
-    *symget(key, p[0]) = p;
-  }
+		*symget(key, p[0]) = p;
+	}
 }
