@@ -283,15 +283,15 @@ main(argc, argv) char *argv[];{
     signal(2, aexit);
   }
 
+  nargs  = argc;
+  curarg = argv;
+
   if (argv[1][0] == '-') {
-    argv++;
-    argc--;
+    nargs--;
+    curarg++;
   } else {
     unglob = 0;
   }
-
-  nargs  = argc;
-  curarg = argv;
 
   setup();
   go();
