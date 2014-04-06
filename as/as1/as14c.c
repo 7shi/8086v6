@@ -28,8 +28,8 @@ int *retval;
     if (c == '.') {
         *retval = n10;
     } else {
-        ch = c;
         *retval = n8;
+        ch = c;
     }
     return 1;
 }
