@@ -9,7 +9,7 @@ int *retval;
 {
     int c, n10, n8;
 
-    n8 = n10 = 0;
+    n10 = n8 = 0;
     for (;;) {
         c = rch();
         if (c < '0' || '9' < c) break;
