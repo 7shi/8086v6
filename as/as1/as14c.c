@@ -39,10 +39,11 @@ rname()
     char **hashp, *sym, symbol[8];
     int c, i, key, tilde;
 
+    c = rch();
     /* symbol not for hash table */
-    if (tilde = (ch == '~')) {
-        ch = 0;
-    }
+    tilde = (c == '~');
+    /* チルダ以外はバッファに戻す */
+    if (!tilde) ch = c;
 
     /* シンボル名のバッファを初期化 */
     memset(symbol, 0, 8);
