@@ -36,9 +36,8 @@ int *retval;
 
 rname()
 {
-    int r0, r3;
-    char **r1p, *r4, symbol[8];
-    int i, key, tilde;
+    char **hashp, *sym, symbol[8];
+    int c, i, key, tilde;
 
     /* symbol not for hash table */
     if (tilde = (ch == '~')) {
@@ -50,46 +49,47 @@ rname()
 
     /* 通常の文字が続く限り rch() でシンボル名を読み取り */
     for (key = 0, i = 0;; ++i) {
-        r0 = rch();
-        r3 = chartab[r0];
-        if (r3 <= 0) break;
-        key =+ r3;
+        c = rch();
+        if (chartab[c] <= 0) break;
+        key =+ c;
         key = (key << 8) | ((key >> 8) & 255);
-        if (i < 8) symbol[i] = r3;
+        if (i < 8) symbol[i] = c;
     }
-    ch = r0;
-    
+    ch = c;
+
     if (tilde) {
-        r1p = 0;
-        r4 = 0;
+        hashp = 0;
+        sym = 0;
     } else {
-        r4 = *(r1p = symget(key, symbol));
+        hashp = symget(key, symbol);
+        sym = *hashp;
     }
 
-    /* 4: シンボルがなければ追加 */
-    if (!r4) {
-        r4 = symend;
+    /* シンボルがなければ追加 */
+    if (!sym) {
+        sym = symend;
         symend =+ 12;
         /* メモリが足りなければ拡張 */
         if (symend > memend) {
             sbrk(512);
             memend =+ 512;
         }
-        /* 4: シンボルを初期化 */
-        memcpy(r4, symbol, 8);
-        memset(r4 + 8, 0, 4);
-        if (r1p) *r1p = r4;
+        /* シンボルを初期化 */
+        memcpy(sym, symbol, 8);
+        memset(sym + 8, 0, 4);
+        /* ハッシュテーブルからリンク */
+        if (hashp) *hashp = sym;
     }
 
-    /* 1: */
-    if (r4 >= usymtab) {
+    if (sym < usymtab) {
+        /* builtin symbol */
+        putw((sym - symtab) * 2 / 3 + 01000);
+        return sym + 2;
+    } else {
         /* user symbol */
-        putw((r4 - usymtab) / 3 + 04000);
-        return r4 + 8;
+        putw((sym - usymtab) / 3 + 04000);
+        return sym + 8;
     }
-    /* builtin symbol */
-    putw((r4 - symtab) * 2 / 3 + 01000);
-    return r4 + 2;
 }
 
 char inbuf[512];
