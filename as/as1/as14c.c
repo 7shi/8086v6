@@ -144,10 +144,11 @@ rch() {
             }
             close(fin);
             fin = 0;
-            if (ifflg != 0) {
-                error("i"); /* if-endif nest */
-                aexit();
-            }
+        }
+
+        if (ifflg != 0) {
+            error("i"); /* if-endif nest */
+            aexit();
         }
 
         if (--nargs <= 0) {
