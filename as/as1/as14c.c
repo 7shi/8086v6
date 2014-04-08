@@ -34,15 +34,14 @@ int *retval;
     return 1;
 }
 
-rname(r0)
-int r0;
+rname()
 {
-    int r3;
+    int r0, r3;
     char **r1p, *r4, symbol[8];
     int i, key, tilde;
 
     /* symbol not for hash table */
-    if (tilde = r0 == '~') {
+    if (tilde = (ch == '~')) {
         ch = 0;
     }
 

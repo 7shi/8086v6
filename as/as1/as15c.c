@@ -61,7 +61,7 @@ readop() {
 			r4 = number(&r0);
 			break;
 		}
-		return rname(r4);
+		return rname();
 	}
 	putw(r4);
 	if (r4 == 1) {
