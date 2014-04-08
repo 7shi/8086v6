@@ -112,26 +112,22 @@ int aexit();
 次にそのdescriptorからファイル内容を取得。
 以降は関数が呼ばれる度に、ファイル内容を1文字づつ返す。
 
--- ch > 0の場合
+-- ch != 0の場合
 chを0クリアし、関数実行時のchにあった値を返す
 */
 rch() {
-    int r0;
-    int n, readnum;
-    char *filename, prevflg;
+    int c, i, readnum;
 
-    if (r0 = ch) {
+    if (ch) {
+        c = ch;
         ch = 0;
-        return r0;
+        return c;
     }
 
     for (;;) {
         while (--inbfcnt >= 0) {
-            r0 = *inbfp & 127;
-            inbfp++;
-            if (r0) {
-                return r0;
-            }
+            c = *(inbfp++) & 127;
+            if (c) return c;
         }
 
         /*
@@ -146,40 +142,30 @@ rch() {
                 inbfp = inbuf;
                 continue;
             }
-
             close(fin);
             fin = 0;
+            if (ifflg != 0) {
+                error("i"); /* if-endif nest */
+                aexit();
+            }
         }
 
         if (--nargs <= 0) {
-            return 4; /* \e: EOT */
+            return 4; /* EOT */
         }
-
-        if (ifflg != 0) {
-            error("i"); /* if-endif nest */
+        ++curarg;
+        if (++fileflg < 0) {
+            filerr(*curarg, "?\n");
             aexit();
         }
 
-        filename = *++curarg;
-        prevflg = fileflg;
-        fileflg++;
-
-        fin = open(filename, 0);
-        if (fileflg < prevflg) {
-            filerr(filename, "?\n");
-            aexit();
-        }
-
+        fin = open(*curarg, 0);
         line = 1;
+
         putw(5);
-
-        n = 0;
-        while (filename[n]) {
-            putw(filename[n]);
-            n++;
+        for (i = 0; c = (*curarg)[i]; ++i) {
+            putw(c);
         }
-
         putw(-1);
     }
-
 }
