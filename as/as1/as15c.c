@@ -32,14 +32,14 @@ readop() {
 	case -16: /* retread $%&... */
 		break;
 	case -14: /* dquote " */
-		rsch(&oldr0);
-		rsch(&r0);
+		oldr0 = rsch(0);
+		r0    = rsch(0);
 		r0 =<< 8;
 		r0 =| oldr0;
 		r4 = 1;
 		break;
 	case -10: /* squote ' */
-		rsch(&r0);
+		r0 = rsch(0);
 		r4 = 1;
 		break;
 	case -6: /* skip / comment */
@@ -51,7 +51,7 @@ readop() {
 		break;
 	case 0: /* string < */
 		putw('<');
-		for (numval = 0; !rsch(&r0); ++numval)
+		for (numval = 0; (r0 = rsch(1)) >= 0; ++numval)
 			putw(r0 | 256);
 		putw(-1);
 		return '<';
@@ -71,24 +71,25 @@ readop() {
 	return r4;
 }
 
-rsch(r0)
-int *r0;
+rsch(isstr)
 {
-	*r0 = rch();
-	if (*r0 == 4/*EOT*/ || *r0 == '\n') {
+	int r0;
+	r0 = rch();
+	if (r0 == 4/*EOT*/ || r0 == '\n') {
 		error("<");
 		aexit();
-	} else if (*r0 == '\\') {
-		switch (*r0 = rch()) {
-		case 'n': *r0 = 10; break;
-		case 't': *r0 =  9; break;
-		case 'e': *r0 =  4; break;
-		case '0': *r0 =  0; break;
-		case 'r': *r0 = 13; break;
-		case 'a': *r0 =  6; break;
-		case 'p': *r0 = 27; break;
+	} else if (r0 == '\\') {
+		switch (r0 = rch()) {
+		case 'n': return 10;
+		case 't': return  9;
+		case 'e': return  4;
+		case '0': return  0;
+		case 'r': return 13;
+		case 'a': return  6;
+		case 'p': return 27;
 		}
-		return 0;
+		return r0;
 	}
-	return *r0 == '>';
+	if (isstr && r0 == '>') return -1;
+	return r0;
 }
