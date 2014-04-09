@@ -5,7 +5,7 @@ struct { int type, val; };
 
 opline(op)
 {
-    int r0, num, r3, sp;
+    int type, num, r3, len;
 
     if (op == '<') {
         *dot =+ numval;
@@ -16,16 +16,18 @@ opline(op)
         return readop();
     }
 
-    r0 = op->type;
-    if (r0 != 20 && 5 <= r0 && r0 <= 30) op = readop();
+    type = op->type;
+    if (type != 20/*register*/ && 5 <= type && type <= 30) {
+        op = readop();
+    }
 
-    switch (r0) {
+    switch (type) {
     case  5: /* map fop freg,fdst to double */
     case 10: /* map fld/fst to double */
-    case 11:
+    case 11: /* double operand (mov) */
     case 12: /* map fop fsrc,freg to double */
     case 24: /* map mul s,r to double */
-    case  7:
+    case  7: /* jsr */
         /* double */
         addres(op);
         if ((op = readop()) != ',') {
@@ -67,12 +69,12 @@ opline(op)
             op = readop();
         }
         return op;
-    case 21:
-    case 22:
-    case 23:
+    case 21: /* .text */
+    case 22: /* .data */
+    case 23: /* .bss */
         savdot[*dotrel-2] = *dot;
-        *dot = savdot[r0-21];
-        *dotrel = r0 - 19;
+        *dot = savdot[type-21];
+        *dotrel = type - 19;
         return op;
     case 25: /* sob */
         num = expres(op, &r3);
@@ -92,15 +94,15 @@ opline(op)
         return op;
     case 29: /* jbr */
     case 30: /* jeq, etc */
-        sp = r0 == 29 ? 4 : 6;
+        len = type == 29 ? 4 : 6;
         num = expres(op, &r3);
         if (r3 == *dotrel) {
             num =- *dot;
             if (-254 <= num && num < 0) {
-                sp = 2;
+                len = 2;
             }
         }
-        *dot =+ sp;
+        *dot =+ len;
         return readop();
     }
     num = expres(op, &r3);
@@ -108,27 +110,27 @@ opline(op)
     return readop();
 }
 
-addres(r4)
+addres(op)
 {
     int num, r3;
 
-    switch (r4) {
+    switch (op) {
     case '(':
         num = expres(readop(), &r3);
-        r4 = checkrp(readop());
+        op = checkrp();
         checkreg(num, r3);
-        if (r4 == '+') return 0;
-        savop = r4;
+        if (op == '+') return 0;
+        savop = op;
         return 2;
     case '-':
-        r4 = readop();
-        if (r4 == '(') {
+        op = readop();
+        if (op == '(') {
             num = expres(readop(), &r3);
-            r4 = checkrp(readop());
+            op = checkrp();
             checkreg(num, r3);
-            savop = r4;
+            savop = op;
         } else {
-            savop = r4;
+            savop = op;
             savop = getx('-');
         }
         return 0;
@@ -137,54 +139,52 @@ addres(r4)
         *dot =+ 2;
         return 0;
     case '*':
-        r4 = readop();
-        if (r4 == '*') {
+        op = readop();
+        if (op == '*') {
             error("*");
         }
-        num = addres(r4);
+        num = addres(op);
         *dot =+ num;
         return num;
     }
-    savop = getx(r4);
+    savop = getx(op);
     return 0;
 }
 
-getx(r4)
+getx(op)
 {
-    int r2, r3;
+    int r, r3;
 
-    r2 = expres(r4, &r3);
-    if ((r4 = readop()) == '(') {
-        r2 = expres(readop(), &r3);
-        checkreg(r2, r3);
-        r4 = checkrp(readop());
+    r = expres(op, &r3);
+    if ((op = readop()) == '(') {
+        r = expres(readop(), &r3);
+        checkreg(r, r3);
+        op = checkrp();
         *dot =+ 2;
     } else if (r3 == 20) {
         /* register type */
-        checkreg(r2, r3);
+        checkreg(r, r3);
     } else {
         *dot =+ 2;
     }
-    return r4;
+    return op;
 }
 
-checkreg(r2, r3)
+checkreg(r, r3)
 {
-    if (r2 <= 7) {
-        if (r3 == 1 || r3 > 4) {
-            return ;
-        }
+    if (r > 7 || (r3 != 1 && r3 <= 4)) {
+        error("a");
     }
-    error("a");
-    return ;
 }
 
-checkrp(r4)
+checkrp()
 {
-    if (r4 == ')') {
-        r4 = readop();
+    int op;
+    op = readop();
+    if (op == ')') {
+        op = readop();
     } else {
         error(")");
     }
-    return r4;
+    return op;
 }
