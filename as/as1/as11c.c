@@ -21,16 +21,17 @@ go()
 
 	/* 出力バッファをフラッシュ */
 	write(pof, outbuf, 512);
-	close(pof);
-	close(fbfil);
-
-	if(errflg != 0) {
-		aexit(); 
-	}
 
 	/* シンボルテーブルをダンプ */
 	write(fp, usymtab, symend - usymtab);
+
+	/* ファイルを閉じる */
 	close(fp);
+	close(fbfil);
+	close(pof);
+
+	/* エラーが発生していれば終了 */
+	if (errflg) aexit(); 
 
 	execl("/lib/as2", "/lib/as2", atmp1, atmp2, atmp3, unglob, 0);
 	filerr("lib/as2", "?\n");
