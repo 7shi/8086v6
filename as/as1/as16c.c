@@ -1,123 +1,114 @@
 /* translated from as16.s */
 
-int* dot;
-int* dotrel;
-int savdot[];
-int savop;
-int ifflg;
-int numval;
+int *dot, *dotrel, savdot[], savop, ifflg, numval;
+struct { int type, val; };
 
-/* using for intptr_t */
-struct { char cval; };
-
-opline(r4)
-int r4;
+opline(op)
 {
-    int r0, r2, r3, sp;
+    int r0, num, r3, sp;
 
-    if (r4 == '<') {
+    if (op == '<') {
         *dot =+ numval;
         return readop();
-    } else if (0 <= r4 && r4 < 128) {
-        r2 = expres(r4, &r3);
+    } else if (0 <= op && op < 128) {
+        num = expres(op, &r3);
         *dot =+ 2;
         return readop();
     }
 
-    r0 = r4->cval;
-    if (r0 != 20 && 5 <= r0 && r0 <= 30) r4 = readop();
+    r0 = op->type;
+    if (r0 != 20 && 5 <= r0 && r0 <= 30) op = readop();
 
     switch (r0) {
-    case 5: /* map fop freg,fdst to double */
+    case  5: /* map fop freg,fdst to double */
     case 10: /* map fld/fst to double */
     case 11:
     case 12: /* map fop fsrc,freg to double */
     case 24: /* map mul s,r to double */
-    case 7:
+    case  7:
         /* double */
-        r4 = addres(r4, &r0);
-        if (r4 != ',') {
+        op = addres(op, &r0);
+        if (op != ',') {
             error("a");
-            return r4;
+            return op;
         }
-        r4 = readop();
+        op = readop();
     case 13: /* single operand */
-        r4 = addres(r4, &r0);
+        op = addres(op, &r0);
         *dot =+ 2;
-        return r4;
+        return op;
     case 14: /* .byte */
         for (;;) {
-            r2 = expres(r4, &r3);
+            num = expres(op, &r3);
             *dot =+ 1;
-            if ((r4 = readop()) != ',') break;
-            r4 = readop();
+            if ((op = readop()) != ',') break;
+            op = readop();
         }
-        return r4;
+        return op;
     case 15: /* < (.ascii) */
         *dot =+ numval;
         return readop();
     case 16: /* .even */
         *dot =+ 1;
         *dot =& ~1;
-        return r4;
+        return op;
     case 17: /* .if */
-        r2 = expres(r4, &r3);
+        num = expres(op, &r3);
         if (r3 == 0) error("U");
-        if (r2 == 0) ifflg =+ 1;
+        if (num == 0) ifflg =+ 1;
         return readop();
     case 18: /* endif */
-        return r4;
+        return op;
     case 19: /* .globl */
-        while (r4 >= 128) {
-            r4->cval =| 32;
-            r4 = readop();
-            if (r4 != ',') break;
-            r4 = readop();
+        while (op >= 128) {
+            op->type =| 32;
+            op = readop();
+            if (op != ',') break;
+            op = readop();
         }
-        return r4;
+        return op;
     case 21:
     case 22:
     case 23:
         savdot[*dotrel-2] = *dot;
         *dot = savdot[r0-21];
         *dotrel = r0 - 19;
-        return r4;
+        return op;
     case 25: /* sob */
-        r2 = expres(r4, &r3);
-        if ((r4 = readop()) != ',') error("a");
-        r4 = readop();
+        num = expres(op, &r3);
+        if ((op = readop()) != ',') error("a");
+        op = readop();
         break;
     case 26: /* .common */
-        if (r4 >= 128) {
-            r4->cval =| 32;
-            r4 = readop();
-            if (r4 == ',') {
-                r2 = expres(readop(), &r3);
+        if (op >= 128) {
+            op->type =| 32;
+            op = readop();
+            if (op == ',') {
+                num = expres(readop(), &r3);
                 return readop();
             }
         }
         error("x");
-        return r4;
+        return op;
     case 29: /* jbr */
     case 30: /* jeq, etc */
         sp = r0 == 29 ? 4 : 6;
-        r2 = expres(r4, &r3);
+        num = expres(op, &r3);
         if (r3 == *dotrel) {
-            r2 =- *dot;
-            if (-254 <= r2 && r2 < 0) {
+            num =- *dot;
+            if (-254 <= num && num < 0) {
                 sp = 2;
             }
         }
         *dot =+ sp;
         return readop();
     }
-    r2 = expres(r4, &r3);
+    num = expres(op, &r3);
     *dot =+ 2;
     return readop();
 }
 
 addres(r4, r0)
-int r4;
 int *r0;
 {
     int r2, r3;
@@ -126,7 +117,7 @@ int *r0;
     case '(':
         r2 = expres(readop(), &r3);
         r4 = checkrp(readop());
-        checkreg(r2,r3);
+        checkreg(r2, r3);
         if (r4 == '+') {
             r4 = readop();
             *r0 = 0;
@@ -164,7 +155,6 @@ int *r0;
 }
 
 getx(r4)
-int r4;
 {
     int r2, r3;
 
@@ -184,21 +174,17 @@ int r4;
 }
 
 checkreg(r2, r3)
-int r2;
-int r3;
 {
     if (r2 <= 7) {
         if (r3 == 1 || r3 > 4) {
             return ;
         }
     }
-
     error("a");
     return ;
 }
 
 checkrp(r4)
-int r4;
 {
     if (r4 == ')') {
         r4 = readop();
