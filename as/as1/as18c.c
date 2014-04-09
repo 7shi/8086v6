@@ -47,4 +47,3 @@ int savdot[3];
 int hshtab[1553];
 char pof, wordf, fin, fbfil, fileflg, errflg, ch;
 int line, inbfcnt, ifflg, inbfp, nargs, curarg, opfound, savop, numval;
-struct { char op0, op1; int op2; } nxtfb;
