@@ -42,7 +42,7 @@ aexit()
 {
 	unlink(atmp1);
 	unlink(atmp2);
-	unlink(atmp3);	
+	unlink(atmp3);
 	exit(errflg);
 }
 
@@ -59,13 +59,9 @@ char *r4;
 	do {
 		if(stat(r4, outbuf) < 0) {
 			ret = creat(r4, 0444);
-			if(ret > 0) {
-				return ret;
-			}
+			if(ret > 0) return ret;
 		}
-		++r4[9];		
-	} while(r4[9] <= 'z');
-
+	} while (++r4[9] <= 'z');
 	filerr(r4, "?\n");
 	exit(1);
 }
