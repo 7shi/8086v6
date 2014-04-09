@@ -326,16 +326,15 @@ int *idx;
 /* builtinシンボルをハッシュテーブルに追加 */
 setup()
 {
-	char ch, **p;
-	int key, i;
+	int i, j, key;
+	char *name;
 
-	for(p = symtab; *p; p =+ 3) {
+	for (i = 0; name = symtab[i]; i =+ 3) {
 		/* バイト反転しながら文字を加算してハッシュを算出 */
-		for(key = 0, i = 0; i < 8 && (ch = p[0][i]); ++i) {
-			key =+ ch;
+		for(key = 0, j = 0; j < 8 && name[j]; ++j) {
+			key =+ name[j];
 			key = (key << 8) + ((key >> 8) & 255);
 		}
-
-		*symget(key, p[0]) = p;
+		*symget(key, name) = &symtab[i];
 	}
 }
