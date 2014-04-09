@@ -22,7 +22,7 @@ assem() {
 			}
 			op2 = readop();
 			if (op2 == '=') {
-				op2 = expres(readop(), &r2, &r3);
+				r2 = expres(readop(), &r3);
 				if (op < 128) {
 					error("x");
 				} else if (op != dotrel || (r3 & ~32) == *dotrel) {
@@ -33,7 +33,7 @@ assem() {
 					error(".");
 					*dotrel = 2;
 				}
-				op = op2;
+			    op = readop();
 			} else if (op2 == ':') {
 				if (op >= 128) {
 					if (op->type & 31) error("m");

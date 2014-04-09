@@ -1,20 +1,20 @@
 /* translated from as17.s */
 
 char curfbr[];
-int curfb[], opfound, numval;
+int curfb[], opfound, numval, savop;
 struct { int type, val; };
 
 /* 0 - 96 | 97 - 106 | 107 - 127 */
 
-expres(op, r2, r3)
-int *r2, *r3;
+expres(op, r3)
+int *r3;
 {
-    int type, val;
+    int ret, type, val;
     char opr;
 
     opr = '+';
     opfound = 0;
-    *r2 = 0;
+    ret = 0;
     *r3 = 1; 
 
     /* sbrtn: */
@@ -24,11 +24,11 @@ int *r2, *r3;
             val  = op->val;
         } else if (op >= 107) { /* 0f-9f */
             type = op;
-            *r2 = *r3 = 0;
+            ret = *r3 = 0;
         } else if (op >= 97) { /* 0b-9b */
             type = curfbr[op - 97];
-            *r2  = curfb [op - 97];
-            if (*r2 < 0) error("f");
+            ret  = curfb [op - 97];
+            if (ret < 0) error("f");
         } else {
             switch (op) {
                 case 29: /* \< */
@@ -50,10 +50,8 @@ int *r2, *r3;
 
                 case '[':
                     /* brack: */
-                    val  = r2;
-                    type = r3;
-                    op = expres(readop(), &val, &type);
-                    if (op != ']') error("f");
+                    val = expres(readop(), &type);
+                    if ((op = readop()) != ']') error("f");
                     break;
 
                 case 1:
@@ -64,7 +62,8 @@ int *r2, *r3;
 
                 default:
                     if (opfound == 0) error("e");
-                    return op; /* finish: */
+                    savop = op;
+                    return ret; /* finish: */
             }
         }
 
@@ -74,52 +73,52 @@ int *r2, *r3;
         switch (opr) {
             case '+': /* exadd: */
                 *r3 = combin(type, *r3, 0);
-                *r2 =+ val;
+                ret =+ val;
                 break;
 
             case '-': /* exsub: */
                 *r3 = combin(type, *r3, 1);
-                *r2 =- val;
+                ret =- val;
                 break;
 
             case '*': /* exmul: */
                 *r3 = combin(type, *r3, 0);
-                *r2 =* val;
+                ret =* val;
                 break;
 
             case '/': /* exdiv: */
                 *r3 = combin(type, *r3, 0);
-                *r2 =/ val;
+                ret =/ val;
                 break;
 
             case 31: /* exor: |, \% */
                 *r3 = combin(type, *r3, 0);
-                *r2 =| val;
+                ret =| val;
                 break;
 
             case '&': /* exand: */
                 *r3 = combin(type, *r3, 0);
-                *r2 =& val;
+                ret =& val;
                 break;
 
             case 29: /* exlsh: \< */
                 *r3 = combin(type, *r3, 0);
-                *r2 =<< val;
+                ret =<< val;
                 break;
 
             case 30: /* exrsh: \> */
                 *r3 = combin(type, *r3, 0);
-                *r2 =>> val;
+                ret =>> val;
                 break;
 
             case '%': /* exmod: */
                 *r3 = combin(type, *r3, 0);
-                *r2 =% val;
+                ret =% val;
                 break;
 
             case '!': /* exnot: */
                 *r3 = combin(type, *r3, 0);
-                *r2 =+ ~val;
+                ret =+ ~val;
                 break;
 
             case '^': /* excmbin: */

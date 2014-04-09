@@ -19,9 +19,9 @@ int r4;
         *dot =+ numval;
         return readop();
     } else if (0 <= r4 && r4 < 128) {
-        r4 = expres(r4, &r2, &r3);
+        r2 = expres(r4, &r3);
         *dot =+ 2;
-        return r4;
+        return readop();
     }
 
     r0 = r4->cval;
@@ -47,9 +47,9 @@ int r4;
             return r4;
         case 14: /* .byte */
             for (;;) {
-                r4 = expres(r4, &r2, &r3);
+                r2 = expres(r4, &r3);
                 *dot =+ 1;
-                if (r4 != ',') break;
+                if ((r4 = readop()) != ',') break;
                 r4 = readop();
             }
             return r4;
@@ -61,10 +61,10 @@ int r4;
             *dot =& ~1;
             return r4;
         case 17: /* .if */
-            r4 = expres(r4, &r2, &r3);
+            r2 = expres(r4, &r3);
             if (r3 == 0) error("U");
             if (r2 == 0) ifflg =+ 1;
-            return r4;
+            return readop();
         case 18: /* endif */
             return r4;
         case 19: /* .globl */
@@ -83,8 +83,8 @@ int r4;
             *dotrel = r0 - 19;
             return r4;
         case 25: /* sob */
-            r4 = expres(r4, &r2, &r3);
-            if (r4 != ',') error("a");
+            r2 = expres(r4, &r3);
+            if ((r4 = readop()) != ',') error("a");
             r4 = readop();
             break;
         case 26: /* .common */
@@ -92,8 +92,8 @@ int r4;
                 r4->cval =| 32;
                 r4 = readop();
                 if (r4 == ',') {
-                    r4 = expres(readop(), &r2, &r3);
-                    return r4;
+                    r2 = expres(readop(), &r3);
+                    return readop();
                 }
             }
             error("x");
@@ -101,7 +101,7 @@ int r4;
         case 29: /* jbr */
         case 30: /* jeq, etc */
             sp = r0 == 29 ? 4 : 6;
-            r4 = expres(r4, &r2, &r3);
+            r2 = expres(r4, &r3);
             if (r3 == *dotrel) {
                 r2 =- *dot;
                 if (-254 <= r2 && r2 < 0) {
@@ -109,11 +109,11 @@ int r4;
                 }
             }
             *dot =+ sp;
-            return r4;
+            return readop();
     }
-    r4 = expres(r4, &r2, &r3);
+    r2 = expres(r4, &r3);
     *dot =+ 2;
-    return r4;
+    return readop();
 }
 
 addres(r4, r0)
@@ -124,8 +124,8 @@ int *r0;
 
     switch (r4) {
     case '(':
-        r4 = expres(readop(), &r2, &r3);
-        r4 = checkrp(r4);
+        r2 = expres(readop(), &r3);
+        r4 = checkrp(readop());
         checkreg(r2,r3);
         if (r4 == '+') {
             r4 = readop();
@@ -141,16 +141,16 @@ int *r0;
             r4 = '-';
             return getx(r4);
         }
-        r4 = expres(readop(), &r2, &r3);
-        r4 = checkrp(r4);
+        r2 = expres(readop(), &r3);
+        r4 = checkrp(readop());
         checkreg(r2, r3);
         *r0 = 0;
         return r4;
     case '$':
-        r4 = expres(readop(), &r2, &r3);
+        r2 = expres(readop(), &r3);
         *dot =+ 2;
         *r0 = 0;
-        return r4;
+        return readop();
     case '*':
         r4 = readop();
         if (r4 == '*') {
@@ -168,11 +168,11 @@ int r4;
 {
     int r2, r3;
 
-    r4 = expres(r4, &r2, &r3);
-    if (r4 == '(') {
-        r4 = expres(readop(), &r2, &r3);
+    r2 = expres(r4, &r3);
+    if ((r4 = readop()) == '(') {
+        r2 = expres(readop(), &r3);
         checkreg(r2, r3);
-        r4 = checkrp(r4);
+        r4 = checkrp(readop());
         *dot =+ 2;
     } else if (r3 == 20) {
         /* register type */
