@@ -12,9 +12,14 @@ go()
 
 	usymtab = symend = memend = sbrk(0);
 
+	/* as2へ引き継ぐ一時ファイルを作成 */
 	pof   = fcreat(atmp1);
 	fbfil = fcreat(atmp2);
+	fp    = fcreat(atmp3);
+
 	assem();
+
+	/* 出力バッファをフラッシュ */
 	write(pof, outbuf, 512);
 	close(pof);
 	close(fbfil);
@@ -24,7 +29,6 @@ go()
 	}
 
 	/* シンボルテーブルをダンプ */
-	fp = fcreat(atmp3);
 	write(fp, usymtab, symend - usymtab);
 	close(fp);
 
