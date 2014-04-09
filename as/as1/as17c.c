@@ -31,39 +31,39 @@ int *r3;
             if (ret < 0) error("f");
         } else {
             switch (op) {
-                case 29: /* \< */
-                case 30: /* \> */
-                case 31: /* |, \% */
-                case '+':
-                case '-':
-                case '*':
-                case '/':
-                case '&':
-                case '%':
-                case '^':
-                case '!':
-                    /* binop: */
-                    if (opr != '+') error("e");
-                    opr = op;
-                    op = readop();
-                    continue;
+            case 29: /* \< */
+            case 30: /* \> */
+            case 31: /* |, \% */
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+            case '&':
+            case '%':
+            case '^':
+            case '!':
+                /* binop: */
+                if (opr != '+') error("e");
+                opr = op;
+                op = readop();
+                continue;
 
-                case '[':
-                    /* brack: */
-                    val = expres(readop(), &type);
-                    if ((op = readop()) != ']') error("f");
-                    break;
+            case '[':
+                /* brack: */
+                val = expres(readop(), &type);
+                if ((op = readop()) != ']') error("f");
+                break;
 
-                case 1:
-                    /* exnum: */
-                    type = 1;
-                    val  = numval;
-                    break;
+            case 1:
+                /* exnum: */
+                type = 1;
+                val  = numval;
+                break;
 
-                default:
-                    if (opfound == 0) error("e");
-                    savop = op;
-                    return ret; /* finish: */
+            default:
+                if (opfound == 0) error("e");
+                savop = op;
+                return ret; /* finish: */
             }
         }
 
@@ -71,59 +71,59 @@ int *r3;
         opfound =+ 1;
 
         switch (opr) {
-            case '+': /* exadd: */
-                *r3 = combin(type, *r3, 0);
-                ret =+ val;
-                break;
+        case '+': /* exadd: */
+            *r3 = combin(type, *r3, 0);
+            ret =+ val;
+            break;
 
-            case '-': /* exsub: */
-                *r3 = combin(type, *r3, 1);
-                ret =- val;
-                break;
+        case '-': /* exsub: */
+            *r3 = combin(type, *r3, 1);
+            ret =- val;
+            break;
 
-            case '*': /* exmul: */
-                *r3 = combin(type, *r3, 0);
-                ret =* val;
-                break;
+        case '*': /* exmul: */
+            *r3 = combin(type, *r3, 0);
+            ret =* val;
+            break;
 
-            case '/': /* exdiv: */
-                *r3 = combin(type, *r3, 0);
-                ret =/ val;
-                break;
+        case '/': /* exdiv: */
+            *r3 = combin(type, *r3, 0);
+            ret =/ val;
+            break;
 
-            case 31: /* exor: |, \% */
-                *r3 = combin(type, *r3, 0);
-                ret =| val;
-                break;
+        case 31: /* exor: |, \% */
+            *r3 = combin(type, *r3, 0);
+            ret =| val;
+            break;
 
-            case '&': /* exand: */
-                *r3 = combin(type, *r3, 0);
-                ret =& val;
-                break;
+        case '&': /* exand: */
+            *r3 = combin(type, *r3, 0);
+            ret =& val;
+            break;
 
-            case 29: /* exlsh: \< */
-                *r3 = combin(type, *r3, 0);
-                ret =<< val;
-                break;
+        case 29: /* exlsh: \< */
+            *r3 = combin(type, *r3, 0);
+            ret =<< val;
+            break;
 
-            case 30: /* exrsh: \> */
-                *r3 = combin(type, *r3, 0);
-                ret =>> val;
-                break;
+        case 30: /* exrsh: \> */
+            *r3 = combin(type, *r3, 0);
+            ret =>> val;
+            break;
 
-            case '%': /* exmod: */
-                *r3 = combin(type, *r3, 0);
-                ret =% val;
-                break;
+        case '%': /* exmod: */
+            *r3 = combin(type, *r3, 0);
+            ret =% val;
+            break;
 
-            case '!': /* exnot: */
-                *r3 = combin(type, *r3, 0);
-                ret =+ ~val;
-                break;
+        case '!': /* exnot: */
+            *r3 = combin(type, *r3, 0);
+            ret =+ ~val;
+            break;
 
-            case '^': /* excmbin: */
-                *r3 = type; /* give left flag of right */
-                break;
+        case '^': /* excmbin: */
+            *r3 = type; /* give left flag of right */
+            break;
         }
 
         opr = '+'; /* eoprnd: */
