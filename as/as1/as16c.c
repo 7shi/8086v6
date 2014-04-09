@@ -18,7 +18,7 @@ int r4;
     if (r4 == '<') {
         *dot =+ numval;
         return readop();
-    } else if (0 <= r4 && r4 <= 0200) {
+    } else if (0 <= r4 && r4 < 128) {
         r4 = expres(r4, &r2, &r3);
         *dot =+ 2;
         return r4;
@@ -68,8 +68,8 @@ int r4;
         case 18: /* endif */
             return r4;
         case 19: /* .globl */
-            while (r4 >= 0200) {
-                r4->cval =| 040;
+            while (r4 >= 128) {
+                r4->cval =| 32;
                 r4 = readop();
                 if (r4 != ',') break;
                 r4 = readop();
@@ -88,8 +88,8 @@ int r4;
             r4 = readop();
             break;
         case 26: /* .common */
-            if (r4 >= 0200) {
-                r4->cval =| 040;
+            if (r4 >= 128) {
+                r4->cval =| 32;
                 r4 = readop();
                 if (r4 == ',') {
                     r4 = expres(readop(), &r2, &r3);
@@ -104,7 +104,7 @@ int r4;
             r4 = expres(r4, &r2, &r3);
             if (r3 == *dotrel) {
                 r2 =- *dot;
-                if (r2 < 0 && r2 >= -0376) {
+                if (-254 <= r2 && r2 < 0) {
                     sp = 2;
                 }
             }
