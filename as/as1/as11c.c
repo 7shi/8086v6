@@ -12,25 +12,25 @@ go()
 
 	usymtab = symend = memend = sbrk(0);
 
-	/* as2‚Öˆø‚«Œp‚®ˆêƒtƒ@ƒCƒ‹‚ğì¬ */
+	/* as2ã¸å¼•ãç¶™ãä¸€æ™‚ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆ */
 	pof   = fcreat(atmp1);
 	fbfil = fcreat(atmp2);
 	fp    = fcreat(atmp3);
 
 	assem();
 
-	/* o—Íƒoƒbƒtƒ@‚ğƒtƒ‰ƒbƒVƒ… */
+	/* å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ã‚’ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ */
 	write(pof, outbuf, 512);
 
-	/* ƒVƒ“ƒ{ƒ‹ƒe[ƒuƒ‹‚ğƒ_ƒ“ƒv */
+	/* ã‚·ãƒ³ãƒœãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ãƒ€ãƒ³ãƒ— */
 	write(fp, usymtab, symend - usymtab);
 
-	/* ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é */
+	/* ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹ */
 	close(fp);
 	close(fbfil);
 	close(pof);
 
-	/* ƒGƒ‰[‚ª”­¶‚µ‚Ä‚¢‚ê‚ÎI—¹ */
+	/* ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¦ã„ã‚Œã°çµ‚äº† */
 	if (errflg) aexit(); 
 
 	execl("/lib/as2", "/lib/as2", atmp1, atmp2, atmp3, unglob, 0);
