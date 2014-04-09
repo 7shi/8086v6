@@ -47,8 +47,7 @@ aexit()
 }
 
 filerr(fname, msg)
-char *fname;
-char *msg;
+char *fname, *msg;
 {
 	printf("%s%s", fname, msg);
 }
