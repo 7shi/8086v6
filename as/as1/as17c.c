@@ -7,10 +7,10 @@ struct { int type, val; };
 /* 0 - 96 | 97 - 106 | 107 - 127 */
 
 int* expres(r4, r2, r3) int r4, *r2, *r3;{
-  int r0, r1, tmp;
-  char sp, sp1, sp2;
+  int r0, r1;
+  char opr;
 
-  sp = '+';
+  opr = '+';
   opfound = 0;
   *r2 = 0;
   *r3 = 1; 
@@ -42,28 +42,20 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
         case '^':
         case '!':
           /* binop: */
-          if(sp != '+'){
-            error("e");
-          }
-          sp = r4;
+          if(opr != '+') error("e");
+          opr = r4;
           r4 = readop();
           continue;
 
         case '[':
           /* brack: */
-          sp1 = *r2;
-          sp2 = *r3;
-          r4 = expres(readop(), r2, r3);
-          if(r4 != ']'){
-            error("f");
-          }
-          r0 = *r3;
-          r1 = *r2;
-          *r3 = sp2;
-          *r2 = sp1; 
+          r1 = r2;
+          r0 = r3;
+          r4 = expres(readop(), &r1, &r0);
+          if(r4 != ']') error("f");
           break;
 
-        case 1:        
+        case 1:
           /* exnum: */
           r1 = numval;
           r0 = 1;
@@ -79,7 +71,7 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
     /* oprand: */
     opfound =+ 1;
    
-    switch(sp){
+    switch(opr){
       case '+': /* exadd: */
         *r3 = combin(r0, *r3, 0);
         *r2 =+ r1;
@@ -135,7 +127,7 @@ int* expres(r4, r2, r3) int r4, *r2, *r3;{
         break;
     }
 
-    sp = '+'; /* eoprnd: */
+    opr = '+'; /* eoprnd: */
     r4 = readop(); /* advanc: */
   }
 }
