@@ -6,7 +6,7 @@ int *dotrel, *dot;
 struct { int type, val; };
 
 assem() {
-	int num, r2, r3, op, op2;
+	int num, r3, op, op2;
 	for (;;) {
 		op = readop();
 		if (!checkeos(op)) {
@@ -22,13 +22,13 @@ assem() {
 			}
 			op2 = readop();
 			if (op2 == '=') {
-				r2 = expres(readop(), &r3);
+				num = expres(readop(), &r3);
 				if (op < 128) {
 					error("x");
 				} else if (op != dotrel || (r3 & ~32) == *dotrel) {
 					r3 =& 31;
 					op->type = (op->type & ~31) | r3;
-					op->val = r3 ? r2 : 0;
+					op->val = r3 ? num : 0;
 				} else {
 					error(".");
 					*dotrel = 2;
