@@ -27,16 +27,16 @@ opline(op)
     case 24: /* map mul s,r to double */
     case  7:
         /* double */
-        op = addres(op, &r0);
-        if (op != ',') {
+        addres(op);
+        if ((op = readop()) != ',') {
             error("a");
             return op;
         }
         op = readop();
     case 13: /* single operand */
-        op = addres(op, &r0);
+        addres(op);
         *dot =+ 2;
-        return op;
+        return readop();
     case 14: /* .byte */
         for (;;) {
             num = expres(op, &r3);
@@ -108,50 +108,45 @@ opline(op)
     return readop();
 }
 
-addres(r4, r0)
-int *r0;
+addres(r4)
 {
-    int r2, r3;
+    int num, r3;
 
     switch (r4) {
     case '(':
-        r2 = expres(readop(), &r3);
+        num = expres(readop(), &r3);
         r4 = checkrp(readop());
-        checkreg(r2, r3);
-        if (r4 == '+') {
-            r4 = readop();
-            *r0 = 0;
-            return r4;
-        }
-        *r0 = 2;
-        return r4;
+        checkreg(num, r3);
+        if (r4 == '+') return 0;
+        savop = r4;
+        return 2;
     case '-':
         r4 = readop();
-        if (r4 != '(') {
+        if (r4 == '(') {
+            num = expres(readop(), &r3);
+            r4 = checkrp(readop());
+            checkreg(num, r3);
             savop = r4;
-            r4 = '-';
-            return getx(r4);
+        } else {
+            savop = r4;
+            savop = getx('-');
         }
-        r2 = expres(readop(), &r3);
-        r4 = checkrp(readop());
-        checkreg(r2, r3);
-        *r0 = 0;
-        return r4;
+        return 0;
     case '$':
-        r2 = expres(readop(), &r3);
+        num = expres(readop(), &r3);
         *dot =+ 2;
-        *r0 = 0;
-        return readop();
+        return 0;
     case '*':
         r4 = readop();
         if (r4 == '*') {
             error("*");
         }
-        r4 = addres(r4, r0);
-        *dot =+ *r0;
-        return r4;
+        num = addres(r4);
+        *dot =+ num;
+        return num;
     }
-    return getx(r4);
+    savop = getx(r4);
+    return 0;
 }
 
 getx(r4)
