@@ -33,7 +33,7 @@ assem() {
 					error(".");
 					*dotrel = 2;
 				}
-			    op = readop();
+				op = readop();
 			} else if (op2 == ':') {
 				if (op >= 128) {
 					if (op->type & 31) error("m");
