@@ -13,7 +13,6 @@ int *retval;
     for (;;) {
         c = rch();
         if (c < '0' || '9' < c) break;
-        
         c =- '0';
         n10 = (n10 * 10) + c;
         n8 = (n8 << 3) + c;
