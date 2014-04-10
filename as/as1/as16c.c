@@ -12,7 +12,7 @@ opline(op)
     if (op == '<') {
         *dot =+ numval;
         return;
-    } else if (0 <= op && op < 128) {
+    } else if (op < 128) {
         expres(&x, op);
         *dot =+ 2;
         return;

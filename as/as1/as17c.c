@@ -19,7 +19,7 @@ struct Op *this;
 
     /* sbrtn: */
     for (;;) {
-        if (op < 0 || 127 < op) {
+        if (op >= 128) {
             x.type  = op->type;
             x.value = op->value;
         } else if ('a' <= op && op <= 'j') { /* 0b-9b */
