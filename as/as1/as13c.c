@@ -1,12 +1,15 @@
 /* translated from as13.s */
 
+struct Op { int type, value; };
+
 char *savop, fbfil, curfbr[];
 int ifflg, line, numval, curfb[];
 int *dotrel, *dot;
-struct { int type, val; };
 
 assem() {
-    int num, r3, op, op2;
+    struct Op x;
+    int op, op2, num;
+
     for (;;) {
         op = readop();
         if (!checkeos(op)) {
@@ -22,13 +25,13 @@ assem() {
             }
             op2 = readop();
             if (op2 == '=') {
-                num = expres(readop(), &r3);
+                expres(&x, readop());
                 if (op < 128) {
                     error("x");
-                } else if (op != dotrel || (r3 & ~32) == *dotrel) {
-                    r3 =& 31;
-                    op->type = (op->type & ~31) | r3;
-                    op->val = r3 ? num : 0;
+                } else if (op != dotrel || (x.type & ~32) == *dotrel) {
+                    x.type =& 31;
+                    op->type = (op->type & ~31) | x.type;
+                    op->value = x.type ? x.value : 0;
                 } else {
                     error(".");
                     *dotrel = 2;
@@ -37,15 +40,15 @@ assem() {
                 if (op >= 128) {
                     if (op->type & 31) error("m");
                     op->type =| *dotrel;
-                    op->val = *dot;
+                    op->value = *dot;
                 } else if (op == 1/*digit*/) {
                     num = fbcheck(numval);
                     curfbr[num] = *dotrel;
-                    curfb[num] = *dot;
+                    curfb [num] = *dot;
                     num =<< 1;
                     write(fbfil, dotrel, 1);
-                    write(fbfil, &num, 1);
-                    write(fbfil, dot, 2);
+                    write(fbfil, &num  , 1);
+                    write(fbfil, dot   , 2);
                 } else {
                     error("x");
                 }

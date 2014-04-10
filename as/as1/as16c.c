@@ -1,17 +1,19 @@
 /* translated from as16.s */
 
+struct Op { int type, value; };
+
 int *dot, *dotrel, savdot[], savop, ifflg, numval;
-struct { int type, val; };
 
 opline(op)
 {
-    int num, type, len;
+    struct Op x;
+    int len;
 
     if (op == '<') {
         *dot =+ numval;
         return;
     } else if (0 <= op && op < 128) {
-        expres(op, &type);
+        expres(&x, op);
         *dot =+ 2;
         return;
     }
@@ -35,7 +37,7 @@ opline(op)
         break;
     case 14: /* .byte */
         do {
-            expres(readop(), &type);
+            expres(&x, readop());
             *dot =+ 1;
         } while (checkop(','));
         break;
@@ -47,9 +49,9 @@ opline(op)
         *dot = (*dot + 1) & ~1;
         break;
     case 17: /* .if */
-        num = expres(readop(), &type);
-        if (type == 0) error("U");
-        if (num == 0) ifflg =+ 1;
+        expres(&x, readop());
+        if (x.type  == 0) error("U");
+        if (x.value == 0) ifflg =+ 1;
         break;
     case 18: /* endif */
         break;
@@ -70,12 +72,12 @@ opline(op)
         *dotrel = op->type - 19;
         break;
     case 25: /* sob */
-        expres(readop(), &type);
+        expres(&x, readop());
         if (!checkop(',')) {
             error("a");
             break;
         }
-        expres(readop(), &type);
+        expres(&x, readop());
         *dot =+ 2;
         break;
     case 26: /* .common */
@@ -84,15 +86,15 @@ opline(op)
             break;
         }
         op->type =| 32;
-        expres(readop(), &type);
+        expres(&x, readop());
         break;
     case 29: /* jbr */
     case 30: /* jeq, etc */
         len = op->type == 29 ? 4 : 6;
-        num = expres(readop(), &type);
-        if (type == *dotrel) {
-            num =- *dot;
-            if (-254 <= num && num < 0) {
+        expres(&x, readop());
+        if (x.type == *dotrel) {
+            x.value =- *dot;
+            if (-254 <= x.value && x.value < 0) {
                 len = 2;
             }
         }
@@ -105,7 +107,7 @@ opline(op)
     case 28: /* estimated data */
         op = readop();
     default:
-        expres(op, &type);
+        expres(&x, op);
         *dot =+ 2;
         break;
     }
@@ -113,20 +115,21 @@ opline(op)
 
 addres(op)
 {
-    int num, type;
+    struct Op x;
+    int num;
 
     switch (op) {
     case '(':
-        num = expres(readop(), &type);
-        checkreg(num, type);
+        expres(&x, readop());
+        checkreg(&x);
         if (!checkop(')')) error(")");
         if ((op = readop()) == '+') return 0;
         savop = op;
         return 2;
     case '-':
         if ((op = readop()) == '(') {
-            num = expres(readop(), &type);
-            checkreg(num, type);
+            expres(&x, readop());
+            checkreg(&x);
             if (!checkop(')')) error(")");
         } else {
             savop = op;
@@ -134,7 +137,7 @@ addres(op)
         }
         return 0;
     case '$':
-        expres(readop(), &type);
+        expres(&x, readop());
         *dot =+ 2;
         return 0;
     case '*':
@@ -151,26 +154,28 @@ addres(op)
 
 getx(op)
 {
-    int r, type;
-    r = expres(op, &type);
+    struct Op x;
+
+    expres(&x, op);
     if ((op = readop()) == '(') {
-        r = expres(readop(), &type);
-        checkreg(r, type);
+        expres(&x, readop());
+        checkreg(&x);
         if (!checkop(')')) error(")");
         op = readop();
         *dot =+ 2;
-    } else if (type == 20) {
+    } else if (x.type == 20) {
         /* register type */
-        checkreg(r, type);
+        checkreg(&x);
     } else {
         *dot =+ 2;
     }
     return op;
 }
 
-checkreg(r, type)
+checkreg(this)
+struct Op *this;
 {
-    if (r > 7 || (type != 1 && type <= 4)) {
+    if (this->value > 7 || (this->type != 1 && this->type <= 4)) {
         error("a");
     }
 }
