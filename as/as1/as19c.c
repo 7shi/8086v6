@@ -265,13 +265,8 @@ int *dotrel &symtab[1];
 int *dot    &symtab[2];
 int *dotdot &symtab[5];
 
-char pof;
-char fbfil;
-char *unglob;
-char nargs;
+char *unglob, nargs;
 int curarg;
-char atmp1[];
-char atmp2[];
 
 int aexit();
 
