@@ -9,7 +9,6 @@ expres(this, op)
 struct Op *this;
 {
     struct Op x;
-    int isglobl;
     char opr;
 
     this->type  = 1; /* absolute */
@@ -68,19 +67,7 @@ struct Op *this;
             /* give left flag of right */
             this->type = x.type;
         } else {
-            /* combin: */
-            isglobl = (x.type | this->type) & 32;
-            x.type =& 31;
-            this->type =& 31;
-            if (x.type == 0 || this->type == 0) {
-                this->type = isglobl;
-            } else if (opr == '-' && x.type == this->type) {
-                this->type = isglobl | 1;
-            } else if (x.type > this->type) {
-                this->type = isglobl | x.type;
-            } else {
-                this->type = isglobl | this->type;
-            }
+            combin(this, &x, opr);
             switch (opr) {
             case '+': this->value =+  x.value; break;
             case '-': this->value =-  x.value; break;
@@ -96,5 +83,23 @@ struct Op *this;
         }
         opr = '+'; /* eoprnd: */
         op = readop(); /* advanc: */
+    }
+}
+
+combin(this, x, opr)
+struct Op *this, *x;
+{
+    int globl;
+    globl = (this->type | x->type) & 32;
+    this->type =& 31;
+    x   ->type =& 31;
+    if (this->type == 0 || x->type == 0) {
+        this->type = globl;
+    } else if (opr == '-' && this->type == x->type) {
+        this->type = globl | 1;
+    } else if (this->type >= x->type) {
+        this->type = globl | this->type;
+    } else {
+        this->type = globl | x->type;
     }
 }
