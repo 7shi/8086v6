@@ -48,7 +48,7 @@ struct Op *this;
                 continue;
             case '[':
                 expres(&x, readop());
-                if ((op = readop()) != ']') error("f");
+                if (!checkop(']')) error("]");
                 break;
             case 1:
                 x.type  = 1;
