@@ -45,5 +45,5 @@ int hshsiz 1553;
 char curfbr[10];
 int savdot[3];
 int hshtab[1553];
-char pof, wordf, fin, fbfil, fileflg, errflg, ch;
-int line, inbfcnt, ifflg, inbfp, nargs, curarg, opfound, savop, numval;
+char pof, wordf, fin, fbfil, fileflg, errflg, ch, **curarg;
+int line, inbfcnt, ifflg, inbfp, nargs, opfound, savop, numval;

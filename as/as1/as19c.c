@@ -265,8 +265,8 @@ int *dotrel &symtab[1];
 int *dot    &symtab[2];
 int *dotdot &symtab[5];
 
-char *unglob, nargs;
-int curarg;
+int nargs;
+char **curarg, *unglob;
 
 int aexit();
 
