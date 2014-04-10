@@ -75,18 +75,18 @@ opline(op)
         expres(&x, readop());
         if (!checkop(',')) {
             error("a");
-            break;
+        } else {
+            expres(&x, readop());
+            *dot =+ 2;
         }
-        expres(&x, readop());
-        *dot =+ 2;
         break;
     case 26: /* .common */
         if ((op = readop()) < 128 || !checkop(',')) {
             error("x");
-            break;
+        } else {
+            op->type =| 32;
+            expres(&x, readop());
         }
-        op->type =| 32;
-        expres(&x, readop());
         break;
     case 29: /* jbr */
     case 30: /* jeq, etc */
