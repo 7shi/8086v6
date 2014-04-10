@@ -47,7 +47,7 @@ struct Op *this;
                 op = readop();
                 continue;
             case '[':
-                value = expres(readop(), &type);
+                value = expres(this, readop());
                 if ((op = readop()) != ']') error("f");
                 break;
             case 1:
