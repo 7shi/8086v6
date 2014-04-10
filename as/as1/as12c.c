@@ -2,29 +2,29 @@
 
 char errflg;
 char **curarg;
-char fxxxx[] "f xxxx\n";
 int line;
 
-error(r5)
-char *r5;
+error(e)
+char *e;
 {
     int i, ln;
-    char *p;
+    char buf[5];
+
     ++errflg;
     if (*curarg) {
         filerr(*curarg, "\n");
         *curarg = 0;
     }
-    fxxxx[0] = *r5;
-    ln = line;
 
-    /* lineの値を10進数で表示する */
-    p = &fxxxx[6];
+    /* lineの値を10進数で文字列化する */
+    ln = line;
     for (i = 0; i < 4; i++) {
-        *(--p) = '0' + (ln % 10);
+        buf[3 - i] = '0' + (ln % 10);
         ln =/ 10;
     }
-    write(1, fxxxx, 7);
+    buf[4] = 0;
+
+    printf("%s %s\n", e, buf);
 }
 
 int ifflg, obufi, outbuf[];
