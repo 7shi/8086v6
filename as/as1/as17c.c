@@ -11,10 +11,11 @@ struct Op *this;
     int type, value, isglobl;
     char opr;
 
-    opr = '+';
-    opfound = 0;
     this->type  = 1; /* absolute */
     this->value = 0;
+
+    opr = '+';
+    opfound = 0;
 
     /* sbrtn: */
     for (;;) {
