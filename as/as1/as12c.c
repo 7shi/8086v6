@@ -30,10 +30,10 @@ char *e;
 int ifflg, obufi, outbuf[];
 char pof;
 
-putw(r4)
+putw(w)
 {
-    if (!ifflg || r4 == '\n') {
-        outbuf[obufi++] = r4;
+    if (!ifflg || w == '\n') {
+        outbuf[obufi++] = w;
         if (obufi >= 256) {
             write(pof, outbuf, 512);
             obufi = 0;

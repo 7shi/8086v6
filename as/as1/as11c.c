@@ -52,16 +52,16 @@ char *fname, *msg;
     printf("%s%s", fname, msg);
 }
 
-fcreat(r4)
-char *r4;
+fcreat(atmp)
+char *atmp;
 {
     int ret;
     do {
-        if(stat(r4, outbuf) < 0) {
-            ret = creat(r4, 0444);
+        if(stat(atmp, outbuf) < 0) {
+            ret = creat(atmp, 0444);
             if(ret > 0) return ret;
         }
-    } while (++r4[9] <= 'z');
-    filerr(r4, "?\n");
+    } while (++atmp[9] <= 'z');
+    filerr(atmp, "?\n");
     exit(1);
 }
