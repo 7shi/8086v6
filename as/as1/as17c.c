@@ -39,8 +39,8 @@ struct Op *this;
             case '/':
             case '&':
             case '%':
-            case '^':
             case '!':
+            case '^':
                 if (opr != '+') error("e");
                 opr = op;
                 op = readop();
@@ -67,14 +67,14 @@ struct Op *this;
         } else {
             combin(this, &x, opr);
             switch (opr) {
+            case  29: this->value =<< x.value; break; /* \< */
+            case  30: this->value =>> x.value; break; /* \> */
+            case  31: this->value =|  x.value; break; /* |, \% */
             case '+': this->value =+  x.value; break;
             case '-': this->value =-  x.value; break;
             case '*': this->value =*  x.value; break;
             case '/': this->value =/  x.value; break;
-            case  31: this->value =|  x.value; break; /* |, \% */
             case '&': this->value =&  x.value; break;
-            case  29: this->value =<< x.value; break; /* \< */
-            case  30: this->value =>> x.value; break; /* \> */
             case '%': this->value =%  x.value; break;
             case '!': this->value =+ ~x.value; break;
             }
