@@ -5,8 +5,6 @@ struct Op { int type, value; };
 char curfbr[];
 int curfb[], opfound, numval, savop;
 
-/* 0 - 96 | 97 - 106 | 107 - 127 */
-
 expres(this, op)
 struct Op *this;
 {
@@ -23,10 +21,10 @@ struct Op *this;
         if (op < 0 || 127 < op) {
             type = op->type;
             value  = op->value;
-        } else if (op >= 107) { /* 0f-9f */
+        } else if ('k' <= op && op <= 't') { /* 0f-9f */
             type = op;
             this->value = this->type = 0;
-        } else if (op >= 97) { /* 0b-9b */
+        } else if ('a' <= op && op <= 'j') { /* 0b-9b */
             type = curfbr[op - 97];
             this->value  = curfb [op - 97];
             if (this->value < 0) error("f");
