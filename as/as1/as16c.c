@@ -26,13 +26,13 @@ opline(op)
     case 24: /* map mul s,r to double */
     case  7: /* jsr */
         /* double */
-        addres(readop());
+        addres();
         if (!checkop(',')) {
             error("a");
             break;
         }
     case 13: /* single operand */
-        addres(readop());
+        addres();
         *dot =+ 2;
         break;
     case 14: /* .byte */
@@ -113,27 +113,25 @@ opline(op)
     }
 }
 
-addres(op)
+addres()
 {
     struct Op x;
-    int num;
+    int op, num;
 
-    switch (op) {
+    switch (op = readop()) {
     case '(':
         expres(&x, readop());
         checkreg(&x);
         if (!checkop(')')) error(")");
-        if ((op = readop()) == '+') return 0;
-        savop = op;
-        return 2;
+        if (!checkop('+')) return 2;
+        return 0;
     case '-':
-        if ((op = readop()) == '(') {
+        if (checkop('(')) {
             expres(&x, readop());
             checkreg(&x);
             if (!checkop(')')) error(")");
         } else {
-            savop = op;
-            savop = getx('-');
+            getx(op);
         }
         return 0;
     case '$':
@@ -141,14 +139,12 @@ addres(op)
         *dot =+ 2;
         return 0;
     case '*':
-        if ((op = readop()) == '*') {
-            error("*");
-        }
-        num = addres(op);
+        if (checkop('*')) error("*");
+        num = addres();
         *dot =+ num;
         return num;
     }
-    savop = getx(op);
+    getx(op);
     return 0;
 }
 
@@ -157,11 +153,10 @@ getx(op)
     struct Op x;
 
     expres(&x, op);
-    if ((op = readop()) == '(') {
+    if (checkop('(')) {
         expres(&x, readop());
         checkreg(&x);
         if (!checkop(')')) error(")");
-        op = readop();
         *dot =+ 2;
     } else if (x.type == 20) {
         /* register type */
@@ -169,7 +164,6 @@ getx(op)
     } else {
         *dot =+ 2;
     }
-    return op;
 }
 
 checkreg(this)
