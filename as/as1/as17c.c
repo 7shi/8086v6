@@ -17,7 +17,6 @@ struct Op *this;
     opr = '+';
     opfound = 0;
 
-    /* sbrtn: */
     for (;;) {
         if (op >= 128) {
             x.type  = op->type;
@@ -61,7 +60,6 @@ struct Op *this;
             }
         }
 
-        /* oprand: */
         opfound =+ 1;
         if (opr == '^') {
             /* give left flag of right */
@@ -81,8 +79,8 @@ struct Op *this;
             case '!': this->value =+ ~x.value; break;
             }
         }
-        opr = '+'; /* eoprnd: */
-        op = readop(); /* advanc: */
+        opr = '+';
+        op = readop();
     }
 }
 
