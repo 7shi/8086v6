@@ -33,7 +33,6 @@ assem() {
                     error(".");
                     *dotrel = 2;
                 }
-                op = readop();
             } else if (op2 == ':') {
                 if (op >= 128) {
                     if (op->type & 31) error("m");
@@ -53,8 +52,9 @@ assem() {
                 continue;
             } else {
                 savop = op2;
-                op = opline(op);
+                opline(op);
             }
+            op = readop();
         }
         if (op == 4/*EOT*/) {
             if (ifflg) error("x");

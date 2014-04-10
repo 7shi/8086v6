@@ -5,23 +5,18 @@ struct { int type, val; };
 
 opline(op)
 {
-    int type, num, r3, len;
+    int num, type, len;
 
     if (op == '<') {
         *dot =+ numval;
-        return readop();
+        return;
     } else if (0 <= op && op < 128) {
-        num = expres(op, &r3);
+        expres(op, &type);
         *dot =+ 2;
-        return readop();
+        return;
     }
 
-    type = op->type;
-    if (type != 20/*register*/ && 5 <= type && type <= 30) {
-        op = readop();
-    }
-
-    switch (type) {
+    switch (op->type) {
     case  5: /* map fop freg,fdst to double */
     case 10: /* map fld/fst to double */
     case 11: /* double operand (mov) */
@@ -29,118 +24,121 @@ opline(op)
     case 24: /* map mul s,r to double */
     case  7: /* jsr */
         /* double */
-        addres(op);
-        if ((op = readop()) != ',') {
+        addres(readop());
+        if (!checkop(',')) {
             error("a");
-            return op;
+            break;
         }
-        op = readop();
     case 13: /* single operand */
-        addres(op);
+        addres(readop());
         *dot =+ 2;
-        return readop();
+        break;
     case 14: /* .byte */
-        for (;;) {
-            num = expres(op, &r3);
+        do {
+            expres(readop(), &type);
             *dot =+ 1;
-            if ((op = readop()) != ',') break;
-            op = readop();
-        }
-        return op;
+        } while (checkop(','));
+        break;
     case 15: /* < (.ascii) */
+        readop();
         *dot =+ numval;
-        return readop();
+        break;
     case 16: /* .even */
-        *dot =+ 1;
-        *dot =& ~1;
-        return op;
+        *dot = (*dot + 1) & ~1;
+        break;
     case 17: /* .if */
-        num = expres(op, &r3);
-        if (r3 == 0) error("U");
+        num = expres(readop(), &type);
+        if (type == 0) error("U");
         if (num == 0) ifflg =+ 1;
-        return readop();
+        break;
     case 18: /* endif */
-        return op;
+        break;
     case 19: /* .globl */
-        while (op >= 128) {
+        do {
+            if ((op = readop()) < 128) {
+                savop = op;
+                break;
+            }
             op->type =| 32;
-            op = readop();
-            if (op != ',') break;
-            op = readop();
-        }
-        return op;
+        } while (checkop(','));
+        break;
     case 21: /* .text */
     case 22: /* .data */
     case 23: /* .bss */
-        savdot[*dotrel-2] = *dot;
-        *dot = savdot[type-21];
-        *dotrel = type - 19;
-        return op;
+        savdot[*dotrel - 2] = *dot;
+        *dot = savdot[op->type - 21];
+        *dotrel = op->type - 19;
+        break;
     case 25: /* sob */
-        num = expres(op, &r3);
-        if ((op = readop()) != ',') error("a");
-        op = readop();
+        expres(readop(), &type);
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
+        expres(readop(), &type);
+        *dot =+ 2;
         break;
     case 26: /* .common */
-        if (op >= 128) {
-            op->type =| 32;
-            op = readop();
-            if (op == ',') {
-                num = expres(readop(), &r3);
-                return readop();
-            }
+        if ((op = readop()) < 128 || !checkop(',')) {
+            error("x");
+            break;
         }
-        error("x");
-        return op;
+        op->type =| 32;
+        expres(readop(), &type);
+        break;
     case 29: /* jbr */
     case 30: /* jeq, etc */
-        len = type == 29 ? 4 : 6;
-        num = expres(op, &r3);
-        if (r3 == *dotrel) {
+        len = op->type == 29 ? 4 : 6;
+        num = expres(readop(), &type);
+        if (type == *dotrel) {
             num =- *dot;
             if (-254 <= num && num < 0) {
                 len = 2;
             }
         }
         *dot =+ len;
-        return readop();
+        break;
+    case  6: /* branch */
+    case  8: /* rts */
+    case  9: /* sys */
+    case 27: /* estimated text */
+    case 28: /* estimated data */
+        op = readop();
+    default:
+        expres(op, &type);
+        *dot =+ 2;
+        break;
     }
-    num = expres(op, &r3);
-    *dot =+ 2;
-    return readop();
 }
 
 addres(op)
 {
-    int num, r3;
+    int num, type;
 
     switch (op) {
     case '(':
-        num = expres(readop(), &r3);
-        op = checkrp();
-        checkreg(num, r3);
-        if (op == '+') return 0;
+        num = expres(readop(), &type);
+        checkreg(num, type);
+        if (!checkop(')')) error(")");
+        if ((op = readop()) == '+') return 0;
         savop = op;
         return 2;
     case '-':
-        op = readop();
-        if (op == '(') {
-            num = expres(readop(), &r3);
-            op = checkrp();
-            checkreg(num, r3);
-            savop = op;
+        if ((op = readop()) == '(') {
+            num = expres(readop(), &type);
+            checkreg(num, type);
+            if (!checkop(')')) error(")");
         } else {
             savop = op;
             savop = getx('-');
         }
         return 0;
     case '$':
-        num = expres(readop(), &r3);
+        expres(readop(), &type);
         *dot =+ 2;
         return 0;
     case '*':
-        op = readop();
-        if (op == '*') {
+        if ((op = readop()) == '*') {
             error("*");
         }
         num = addres(op);
@@ -153,38 +151,34 @@ addres(op)
 
 getx(op)
 {
-    int r, r3;
-
-    r = expres(op, &r3);
+    int r, type;
+    r = expres(op, &type);
     if ((op = readop()) == '(') {
-        r = expres(readop(), &r3);
-        checkreg(r, r3);
-        op = checkrp();
+        r = expres(readop(), &type);
+        checkreg(r, type);
+        if (!checkop(')')) error(")");
+        op = readop();
         *dot =+ 2;
-    } else if (r3 == 20) {
+    } else if (type == 20) {
         /* register type */
-        checkreg(r, r3);
+        checkreg(r, type);
     } else {
         *dot =+ 2;
     }
     return op;
 }
 
-checkreg(r, r3)
+checkreg(r, type)
 {
-    if (r > 7 || (r3 != 1 && r3 <= 4)) {
+    if (r > 7 || (type != 1 && type <= 4)) {
         error("a");
     }
 }
 
-checkrp()
+checkop(ch)
 {
     int op;
-    op = readop();
-    if (op == ')') {
-        op = readop();
-    } else {
-        error(")");
-    }
-    return op;
+    if ((op = readop()) == ch) return 1;
+    savop = op;
+    return 0;
 }

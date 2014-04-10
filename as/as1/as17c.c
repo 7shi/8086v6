@@ -6,29 +6,30 @@ struct { int type, val; };
 
 /* 0 - 96 | 97 - 106 | 107 - 127 */
 
-expres(op, r3)
-int *r3;
+expres(op, type)
+int *type;
 {
-    int ret, type, val;
+    /* (ltype,lval) + (rtype,rval) */
+    int ltype, lval, rtype, rval, isglobl;
     char opr;
 
     opr = '+';
     opfound = 0;
-    ret = 0;
-    *r3 = 1; 
+    ltype = 1; /* absolute */
+    lval  = 0;
 
     /* sbrtn: */
     for (;;) {
         if (op < 0 || 127 < op) {
-            type = op->type;
-            val  = op->val;
+            rtype = op->type;
+            rval  = op->val;
         } else if (op >= 107) { /* 0f-9f */
-            type = op;
-            ret = *r3 = 0;
+            rtype = op;
+            lval = ltype = 0;
         } else if (op >= 97) { /* 0b-9b */
-            type = curfbr[op - 97];
-            ret  = curfb [op - 97];
-            if (ret < 0) error("f");
+            rtype = curfbr[op - 97];
+            lval  = curfb [op - 97];
+            if (lval < 0) error("f");
         } else {
             switch (op) {
             case 29: /* \< */
@@ -50,96 +51,57 @@ int *r3;
 
             case '[':
                 /* brack: */
-                val = expres(readop(), &type);
+                rval = expres(readop(), &rtype);
                 if ((op = readop()) != ']') error("f");
                 break;
 
             case 1:
                 /* exnum: */
-                type = 1;
-                val  = numval;
+                rtype = 1;
+                rval  = numval;
                 break;
 
             default:
                 if (opfound == 0) error("e");
                 savop = op;
-                return ret; /* finish: */
+                *type = ltype;
+                return lval; /* finish: */
             }
         }
 
         /* oprand: */
         opfound =+ 1;
-
-        switch (opr) {
-        case '+': /* exadd: */
-            *r3 = combin(type, *r3, 0);
-            ret =+ val;
-            break;
-
-        case '-': /* exsub: */
-            *r3 = combin(type, *r3, 1);
-            ret =- val;
-            break;
-
-        case '*': /* exmul: */
-            *r3 = combin(type, *r3, 0);
-            ret =* val;
-            break;
-
-        case '/': /* exdiv: */
-            *r3 = combin(type, *r3, 0);
-            ret =/ val;
-            break;
-
-        case 31: /* exor: |, \% */
-            *r3 = combin(type, *r3, 0);
-            ret =| val;
-            break;
-
-        case '&': /* exand: */
-            *r3 = combin(type, *r3, 0);
-            ret =& val;
-            break;
-
-        case 29: /* exlsh: \< */
-            *r3 = combin(type, *r3, 0);
-            ret =<< val;
-            break;
-
-        case 30: /* exrsh: \> */
-            *r3 = combin(type, *r3, 0);
-            ret =>> val;
-            break;
-
-        case '%': /* exmod: */
-            *r3 = combin(type, *r3, 0);
-            ret =% val;
-            break;
-
-        case '!': /* exnot: */
-            *r3 = combin(type, *r3, 0);
-            ret =+ ~val;
-            break;
-
-        case '^': /* excmbin: */
-            *r3 = type; /* give left flag of right */
-            break;
+        if (opr == '^') {
+            /* give left flag of right */
+            ltype = rtype;
+        } else {
+            /* combin: */
+            isglobl = (rtype | ltype) & 32;
+            rtype =& 31;
+            ltype =& 31;
+            if (rtype == 0 || ltype == 0) {
+                ltype = isglobl;
+            } else if (opr == '-' && rtype == ltype) {
+                ltype = isglobl | 1;
+            } else if (rtype > ltype) {
+                ltype = isglobl | rtype;
+            } else {
+                ltype = isglobl | ltype;
+            }
+            switch (opr) {
+            case '+': lval =+  rval; break;
+            case '-': lval =-  rval; break;
+            case '*': lval =*  rval; break;
+            case '/': lval =/  rval; break;
+            case  31: lval =|  rval; break; /* |, \% */
+            case '&': lval =&  rval; break;
+            case  29: lval =<< rval; break; /* \< */
+            case  30: lval =>> rval; break; /* \> */
+            case '%': lval =%  rval; break;
+            case '!': lval =+ ~rval; break;
+            }
         }
-
         opr = '+'; /* eoprnd: */
         op = readop(); /* advanc: */
     }
-}
-
-combin(type, r3, r5) {
-    int v;
-
-    v  = (type | r3) & 32;
-    type =& 31;
-    r3 =& 31;
-
-    if (type == 0 || r3 == 0) return v;
-    if (r5 && type == r3) return v | 1;
-    if (type > r3) return v | type;
-    return v | r3;
 }
