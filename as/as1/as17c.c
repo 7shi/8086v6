@@ -23,12 +23,12 @@ struct Op *this;
             x.type  = op->type;
             x.value = op->value;
         } else if ('a' <= op && op <= 'j') { /* 0b-9b */
-            x.type = curfbr[op - 97];
-            this->value  = curfb [op - 97];
-            if (this->value < 0) error("f");
+            x.type  = curfbr[op - 97];
+            x.value = curfb [op - 97];
+            if (x.value < 0) error("f");
         } else if ('k' <= op && op <= 't') { /* 0f-9f */
-            x.type = op;
-            this->value = this->type = 0;
+            x.type  = op;
+            x.value = 0;
         } else {
             switch (op) {
             case 29: /* \< */
