@@ -93,8 +93,8 @@ rname()
     }
 }
 
-char fin, inbuf[], *inbfp, fileflg, **curarg;
-int line, nargs, inbfcnt, ifflg;
+char fin, inbuf[], fileflg, **curarg;
+int line, nargs, inbfi, inbfcnt, ifflg;
 
 /*
 -- ch == 0の場合
@@ -107,7 +107,7 @@ int line, nargs, inbfcnt, ifflg;
 chを0クリアし、関数実行時のchにあった値を返す
 */
 rch() {
-    int c, i, readnum;
+    int c, i;
 
     if (ch) {
         c = ch;
@@ -116,8 +116,8 @@ rch() {
     }
 
     for (;;) {
-        while (--inbfcnt >= 0) {
-            c = *(inbfp++) & 127;
+        while (inbfi < inbfcnt) {
+            c = inbuf[inbfi++] & 127;
             if (c) return c;
         }
 
@@ -127,10 +127,9 @@ rch() {
         which opening the file that names were given by argv[](=curarg).
         */
         if (fin) {
-            readnum = read(fin, inbuf, 512);
-            if (readnum > 0) {
-                inbfcnt = readnum;
-                inbfp = inbuf;
+            inbfcnt = read(fin, inbuf, 512);
+            if (inbfcnt > 0) {
+                inbfi = 0;
                 continue;
             }
             close(fin);

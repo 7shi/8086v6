@@ -45,8 +45,8 @@ int outbuf[256], obufi;
 char fbfil;
 
 /* input */
-char fin, inbuf[512], *inbfp;
-int inbfcnt;
+char fin, inbuf[512];
+int inbfi, inbfcnt;
 
 /* 0: .. 9: */
 int curfbr[10];
