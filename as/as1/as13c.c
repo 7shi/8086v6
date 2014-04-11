@@ -28,13 +28,13 @@ assem() {
                 expres(&x, readop());
                 if (op < 128) {
                     error("x");
-                } else if (op != dotrel || (x.type & ~32) == *dotrel) {
-                    x.type =& 31;
-                    op->type = (op->type & ~31) | x.type;
-                    op->value = x.type ? x.value : 0;
-                } else {
+                } else if (op == dotrel && (x.type & 31) != *dotrel) {
                     error(".");
                     *dotrel = 2;
+                } else {
+                    x.type =& 31;
+                    op->type = (op->type & 32) | x.type;
+                    op->value = x.type ? x.value : 0;
                 }
             } else if (op2 == ':') {
                 if (op >= 128) {
