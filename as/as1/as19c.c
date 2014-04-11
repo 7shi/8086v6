@@ -327,7 +327,7 @@ setup()
     char *name;
 
     for (i = 0; name = symtab[i]; i =+ 3) {
-        /* バイト反転しながら文字を加算してハッシュを算出 */
+        /* 文字を加算してバイト反転しながらハッシュ値を算出 */
         for(key = 0, j = 0; j < 8 && name[j]; ++j) {
             key =+ name[j];
             key = (key << 8) + ((key >> 8) & 255);
