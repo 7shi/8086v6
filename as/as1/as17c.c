@@ -30,9 +30,10 @@ struct Op *this;
             x.value = 0;
         } else {
             switch (op) {
-            case 29: /* \< */
-            case 30: /* \> */
-            case 31: /* |, \% */
+            case '^':
+            case  29: /* \< */
+            case  30: /* \> */
+            case  31: /* |, \% */
             case '+':
             case '-':
             case '*':
@@ -40,7 +41,6 @@ struct Op *this;
             case '&':
             case '%':
             case '!':
-            case '^':
                 if (opr != '+') error("e");
                 opr = op;
                 op = readop();
