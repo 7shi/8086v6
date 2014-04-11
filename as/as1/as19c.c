@@ -281,10 +281,9 @@ char *argv[];
     curarg = argv;
 
     if (argv[1][0] == '-') {
+        unglob = "-g";
         nargs--;
         curarg++;
-    } else {
-        unglob = 0;
     }
 
     setup();

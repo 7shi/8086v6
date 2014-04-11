@@ -4,7 +4,7 @@ int outbuf[];
 char atmp1[], atmp2[], atmp3[];
 char errflg, pof, fbfil;
 char *usymtab, *symend, *memend;
-char *unglob "-g";
+char *unglob;
 
 go()
 {
