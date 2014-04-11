@@ -21,10 +21,12 @@ dest: $(TARGET)
 
 test: $(TARGET)
 	$(MAKE) orig -C ..
-	$(RUN) -r $(V6ROOT) as1 ../as1.orig/as1?.s
+	cd ../as1.orig && $(RUN) -r $(V6ROOT) ../as1/as1 as1?.s
+	mv ../as1.orig/a.out .
 	$(LD) a.out
 	cmp a.out ../as1.orig/as1
-	$(RUN) -r $(V6ROOT) as1 ../as2.orig/as2?.s
+	cd ../as2.orig && $(RUN) -r $(V6ROOT) ../as1/as1 as2?.s
+	mv ../as2.orig/a.out .
 	$(LD) a.out
 	cmp a.out ../as2.orig/as2
 

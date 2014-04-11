@@ -1,161 +1,103 @@
 /* translated from as17.s */
 
+struct Op { int type, value; };
+
 char curfbr[];
-int curfb[], opfound, numval;
+int curfb[], opfound, numval, savop;
 
-struct { char op0, op1; int op2; };
+expres(this, op)
+struct Op *this;
+{
+    struct Op x;
+    char opr;
 
-/* 0 - 0140 | 0141 - 0152 | 0153 - 0177
- *     0x60 | 0x61   0x6a | 0x6b   0x7f
- */
+    this->type  = 1; /* absolute */
+    this->value = 0;
 
-int* expres(r4, r2, r3) int r4, *r2, *r3;{
-  int r0, r1, tmp;
-  char sp, sp1, sp2;
+    opr = '+';
+    opfound = 0;
 
-  sp = '+';
-  opfound = 0;
-  *r2 = 0;
-  *r3 = 1; 
+    for (;;) {
+        if (op >= 128) {
+            x.type  = op->type;
+            x.value = op->value;
+        } else if ('a' <= op && op <= 'j') { /* 0b-9b */
+            x.type  = curfbr[op - 97];
+            x.value = curfb [op - 97];
+            if (x.value < 0) error("f");
+        } else if ('k' <= op && op <= 't') { /* 0f-9f */
+            x.type  = op;
+            x.value = 0;
+        } else {
+            switch (op) {
+            case '^':
+            case  29: /* \< */
+            case  30: /* \> */
+            case  31: /* |, \% */
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+            case '&':
+            case '%':
+            case '!':
+                if (opr != '+') error("e");
+                opr = op;
+                op = readop();
+                continue;
+            case '[':
+                expres(&x, readop());
+                if (!checkop(']')) error("]");
+                break;
+            case 1:
+                x.type  = 1;
+                x.value = numval;
+                break;
+            default:
+                if (opfound == 0) error("e");
+                savop = op;
+                return;
+            }
+        }
 
-  /* sbrtn: */
-  for(;;){
-    if(r4 < 0 || 0177 < r4){
-      r0 = r4->op0;
-      r1 = r4->op2;
-    }else if(r4 >= 0141+10){ /* dic:107*/
-      r0 = r4;
-      *r2 = *r3 = 0;
-    }else if(r4 >= 0141){ /* dic:97 */
-      r0  = curfbr[r4 - 0141];
-      *r2 = curfb [r4 - 0141];
-      if(*r2 < 0) error("f");
-    }else{
-      /* mov $esw1,r1 */
-      switch(r4){
-        case 035:
-        case 036:
-        case 037:
-        case '+': /*43*/
-        case '-': /*45*/
-        case '*': /*42*/
-        case '/': /*47*/
-        case '&': /*38*/
-        case '%': /*37*/ 
-        case '^': /*94*/ 
-        case '!': /*33*/ 
-          /* binop: */
-          if(sp != '+'){
-            error("e");
-          }
-          sp = r4;
-          r4 = readop();
-          continue;
-
-        case '[': /*91*/ 
-          /* brack: */
-          sp1 = *r2;
-          sp2 = *r3;
-          r4 = expres(readop(), r2, r3);
-          if(r4 != ']'){
-            error("f");
-          }
-          r0 = *r3;
-          r1 = *r2;
-          *r3 = sp2;
-          *r2 = sp1; 
-          break;
-
-        case   1:        
-          /* exnum: */
-          r1 = numval;
-          r0 = 1;
-          break;
-
-        case   0:
-        default:
-          if(opfound == 0) error("e");
-          return r4; /* finish: */
-      }
+        opfound =+ 1;
+        if (opr == '^') {
+            /* give left flag of right */
+            this->type = x.type;
+        } else {
+            combin(this, &x, opr);
+            switch (opr) {
+            case  29: this->value =<< x.value; break; /* \< */
+            case  30: this->value =>> x.value; break; /* \> */
+            case  31: this->value =|  x.value; break; /* |, \% */
+            case '+': this->value =+  x.value; break;
+            case '-': this->value =-  x.value; break;
+            case '*': this->value =*  x.value; break;
+            case '/': this->value =/  x.value; break;
+            case '&': this->value =&  x.value; break;
+            case '%': this->value =%  x.value; break;
+            case '!': this->value =+ ~x.value; break;
+            }
+        }
+        opr = '+';
+        op = readop();
     }
-
-    /* oprand: */
-    opfound =+ 1;
-   
-    switch(sp){
-      case '+': /* exadd: */
-        *r3 = combin(r0, *r3, 0);
-        *r2 =+ r1;
-        break;
-
-      case '-': /* exsub: */
-        *r3 = combin(r0, *r3, 1);
-        *r2 =- r1;
-        break;
-
-      case '*': /* exmul: */
-        *r3 = combin(r0, *r3, 0);
-        *r2 =* r1;
-        break;
-
-      case '/': /* exdiv: */
-        *r3 = combin(r0, *r3, 0);
-        *r2 =/ r1;
-        break;
-
-      case 037: /* exor: */
-        *r3 = combin(r0, *r3, 0);
-        *r2 =| r1;
-        break;
-
-      case '&': /* exand: */
-        *r3 = combin(r0, *r3, 0);
-        *r2 =& r1;
-        break;
-
-      case 035: /* exlsh: */
-        *r3 = combin(r0, *r3, 0);
-        *r2 =<< r1;
-        break;
-
-      case 036: /* exrsh: */
-        *r3 = combin(r0, *r3, 0);
-        *r2 =>> r1;
-        break;
-
-      case '%': /* exmod: */
-        *r3 = combin(r0, *r3, 0);
-        *r2 =% r1;
-        break;
-
-      case '!': /* exnot: */
-        *r3 = combin(r0, *r3, 0);
-        *r2 =+ ~r1;
-        break;
-
-      case '^': /* excmbin: */
-        *r3 = r0; /* give left flag of right */
-        break;
-    }
-
-    sp = '+'; /* eoprnd: */
-    r4 = readop(); /* advanc: */
-  }
 }
 
- /* void _combin(r0:in, r3:out, r5:in)
-  *  value : r0, r3  (r3 == pc)
-  *  bool  : r5
-  */
-combin(r0, r3, r5) {
-  int v;
-
-  v  = 040 & (r0 | r3);
-  r0 = 037 & r0;
-  r3 = 037 & r3;
-
-  if(r0 == 0 || r3 == 0) return v;
-  if(r5 && r0 == r3) return v | 1;
-  if(r0 > r3) return v | r0;
-  return v | r3;
+combin(this, x, opr)
+struct Op *this, *x;
+{
+    int globl;
+    globl = (this->type | x->type) & 32;
+    this->type =& 31;
+    x   ->type =& 31;
+    if (this->type == 0 || x->type == 0) {
+        this->type = globl;
+    } else if (opr == '-' && this->type == x->type) {
+        this->type = globl | 1;
+    } else if (this->type >= x->type) {
+        this->type = globl | this->type;
+    } else {
+        this->type = globl | x->type;
+    }
 }

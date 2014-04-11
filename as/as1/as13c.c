@@ -1,82 +1,84 @@
 /* translated from as13.s */
 
+struct Op { int type, value; };
+
 char *savop, fbfil, curfbr[];
 int ifflg, line, numval, curfb[];
 int *dotrel, *dot;
-struct { char op0, op1; int op2; } nxtfb;
 
 assem() {
-	int r0, r1, r2, r3, r4, oldr4;
-	for (;;) {
-		r4 = readop();
-		if (!checkeos(r4)) {
-			if (ifflg) {
-				if (r4 > 0200) {
-					if (r4->op0 == 021/*if*/)
-						++ifflg;
-					else if (r4->op0 == 022/*endif*/)
-						--ifflg;
-				}
-				continue;
-			}
-			oldr4 = r4;
-			r4 = readop();
-			if (r4 == '=') {
-				r4 = expres(readop(), &r2, &r3);
-				r1 = oldr4;
-				if (r1 < 0200)
-					error("x");
-				else if (r1 != dotrel || (r3 & ~040) == *dotrel) {
-					r3 =& 037;
-					r1->op0 =& ~037;
-					r1->op0 =| r3;
-					r1->op2 = r3 ? r2 : 0;
-				} else {
-					error(".");
-					*dotrel = 2;
-				}
-			} else if (r4 == ':') {
-				r4 = oldr4;
-				if (r4 >= 0200) {
-					if (r4->op0 & 037) error("m");
-					r4->op0 =| *dotrel;
-					r4->op2 = *dot;
-				} else if (r4 == 1/*digit*/) {
-					r0 = fbcheck(numval);
-					curfbr[r0] = *dotrel;
-					curfb[r0] = *dot;
-					nxtfb.op0 = *dotrel;
-					nxtfb.op1 = r0 << 1;
-					nxtfb.op2 = *dot;
-					write(fbfil, &nxtfb, 4);
-				} else
-					error("x");
-				continue;
-			} else {
-				savop = r4;
-				r4 = opline(oldr4);
-			}
-		}
-		if (r4 == 4/*EOT*/) {
-			if (ifflg) error("x");
-			break;
-		} else if (r4 == '\n') {
-			++line;
-		} else if (r4 != ';') {
-			error("x");
-			while (!checkeos(r4)) {
-				r4 = readop();
-			}
-		}
-	}
+    struct Op x;
+    int op, op2, num;
+
+    for (;;) {
+        op = readop();
+        if (!checkeos(op)) {
+            if (ifflg) {
+                if (op >= 128) {
+                    if (op->type == 17/*if*/) {
+                        ++ifflg;
+                    } else if (op->type == 18/*endif*/) {
+                        --ifflg;
+                    }
+                }
+                continue;
+            }
+            op2 = readop();
+            if (op2 == '=') {
+                expres(&x, readop());
+                if (op < 128) {
+                    error("x");
+                } else if (op != dotrel || (x.type & ~32) == *dotrel) {
+                    x.type =& 31;
+                    op->type = (op->type & ~31) | x.type;
+                    op->value = x.type ? x.value : 0;
+                } else {
+                    error(".");
+                    *dotrel = 2;
+                }
+            } else if (op2 == ':') {
+                if (op >= 128) {
+                    if (op->type & 31) error("m");
+                    op->type =| *dotrel;
+                    op->value = *dot;
+                } else if (op == 1/*digit*/) {
+                    num = fbcheck(numval);
+                    curfbr[num] = *dotrel;
+                    curfb [num] = *dot;
+                    num =<< 1;
+                    write(fbfil, dotrel, 1);
+                    write(fbfil, &num  , 1);
+                    write(fbfil, dot   , 2);
+                } else {
+                    error("x");
+                }
+                continue;
+            } else {
+                savop = op2;
+                opline(op);
+            }
+            op = readop();
+        }
+        if (op == 4/*EOT*/) {
+            if (ifflg) error("x");
+            break;
+        } else if (op == '\n') {
+            ++line;
+        } else if (op != ';') {
+            error("x");
+            while (!checkeos(op)) {
+                op = readop();
+            }
+        }
+    }
 }
 
-fbcheck(r0) {
-	if (r0 <= 9) return r0;
-	error("f");
-	return 0;
+fbcheck(n) {
+    if (n <= 9) return n;
+    error("f");
+    return 0;
 }
 
-checkeos(r4) {
-	return r4 == '\n' || r4 == ';' || r4 == 4/*EOT*/;
+checkeos(op) {
+    return op == '\n' || op == ';' || op == 4/*EOT*/;
 }

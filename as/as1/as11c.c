@@ -4,61 +4,64 @@ int outbuf[];
 char atmp1[], atmp2[], atmp3[];
 char errflg, pof, fbfil;
 char *usymtab, *symend, *memend;
+char *unglob;
 
 go()
 {
-	int fp;
-	usymtab = symend = memend = sbrk(0);
-	assem();
-	write(pof, outbuf, 512);
-	close(pof);
-	close(fbfil);
+    int fp;
 
-	if(errflg != 0) {
-		aexit(); 
-	}
+    usymtab = symend = memend = sbrk(0);
 
-	/* �V���{���e�[�u�����_���v */
-	fp = fcreat(atmp3);
-	write(fp, usymtab, symend - usymtab);
-	close(fp);
+    /* as2へ引き継ぐ一時ファイルを作成 */
+    pof   = fcreat(atmp1);
+    fbfil = fcreat(atmp2);
+    fp    = fcreat(atmp3);
 
-	execl("/lib/as2", "/lib/as2", atmp1, atmp2, atmp3, "-g");
-	filerr("lib/as2", "?\n");
+    assem();
+
+    /* 出力バッファをフラッシュ */
+    write(pof, outbuf, 512);
+
+    /* シンボルテーブルをダンプ */
+    write(fp, usymtab, symend - usymtab);
+
+    /* ファイルを閉じる */
+    close(fp);
+    close(fbfil);
+    close(pof);
+
+    /* エラーが発生していれば終了 */
+    if (errflg) aexit(); 
+
+    execl("/lib/as2", "/lib/as2", atmp1, atmp2, atmp3, unglob, 0);
+    filerr("lib/as2", "?\n");
+    exit(1);
 }
 
 aexit()
 {
-	unlink(atmp1);
-	unlink(atmp2);
-	unlink(atmp3);	
-	exit(errflg);
+    unlink(atmp1);
+    unlink(atmp2);
+    unlink(atmp3);
+    exit(errflg);
 }
 
-filerr(r0, r5)
-char *r0;
-char *r5;
+filerr(fname, msg)
+char *fname, *msg;
 {
-	int i;
-	for(i = 0; r0[i] != 0; i++);
-	write(1, r0, i);
-	write(1, r5, 2);
+    printf("%s%s", fname, msg);
 }
 
-fcreat(r4)
-char *r4;
+fcreat(atmp)
+char *atmp;
 {
-	int ret;
-	do {
-		if(stat(r4, outbuf) < 0) {
-			ret = creat(r4, 0444);
-			if(ret > 0) {
-				return ret;
-			}
-		}
-		++r4[9];		
-	} while(r4[9] <= 'z');
-
-	filerr(r4, "?\n");
-	exit(1);
+    int ret;
+    do {
+        if(stat(atmp, outbuf) < 0) {
+            ret = creat(atmp, 0444);
+            if(ret > 0) return ret;
+        }
+    } while (++atmp[9] <= 'z');
+    filerr(atmp, "?\n");
+    exit(1);
 }
