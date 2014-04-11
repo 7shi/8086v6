@@ -37,13 +37,14 @@ char atmp1[] "/tmp/atm1a";
 char atmp2[] "/tmp/atm2a";
 char atmp3[] "/tmp/atm3a";
 
-int curfb[] {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-int outbuf[256];
-int obufi;
-int hshsiz 1553;
+int outbuf[256], obufi;
 
+int curfb[] {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 char curfbr[10];
+
+int hshsiz 1553;
+char *hshtab[1553];
+
 int savdot[3];
-int hshtab[1553];
 char pof, wordf, fin, fbfil, fileflg, errflg, ch, **curarg;
 int line, inbfcnt, ifflg, inbfp, nargs, opfound, savop, numval;

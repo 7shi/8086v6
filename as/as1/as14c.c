@@ -1,8 +1,6 @@
 /* translated from as14.s */
 
-int hshtab[], hshsiz;
-char symtab[], chartab[];
-char ch, *usymtab, *symend, *memend;
+char ch;
 
 number(retval)
 int *retval;
@@ -33,10 +31,13 @@ int *retval;
     return 1;
 }
 
+char *hshtab[], symtab[], chartab[];
+char *usymtab, *symend, *memend;
+
 rname()
 {
-    char **hashp, *sym, symbol[8];
-    int c, i, key, tilde;
+    char *sym, symbol[8];
+    int c, i, key, tilde, idx;
 
     c = rch();
     /* symbol not for hash table */
@@ -58,11 +59,11 @@ rname()
     ch = c;
 
     if (tilde) {
-        hashp = 0;
+        idx = -1;
         sym = 0;
     } else {
-        hashp = symget(key, symbol);
-        sym = *hashp;
+        idx = symget(key, symbol);
+        sym = hshtab[idx];
     }
 
     /* シンボルがなければ追加 */
@@ -78,7 +79,7 @@ rname()
         memcpy(sym, symbol, 8);
         memset(sym + 8, 0, 4);
         /* ハッシュテーブルからリンク */
-        if (hashp) *hashp = sym;
+        if (idx >= 0) hshtab[idx] = sym;
     }
 
     if (sym < usymtab) {

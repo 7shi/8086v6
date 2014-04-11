@@ -292,19 +292,19 @@ char *argv[];
 }
 
 int hshsiz;
-int hshtab[];
+char *hshtab[];
 
 /* シンボルテーブルを検索（独自関数） */
-char **symget(key, name)
+symget(key, name)
 char *name;
 {
-    int quot, *idx;
-    quot = ldiv(0, key, hshsiz);
-    idx = hshtab + lrem(0, key, hshsiz);
+    int quot, idx;
+    quot = ldiv(0, key, hshsiz); /* unsigned: key / hshsiz */
+    idx  = lrem(0, key, hshsiz); /* unsigned: key % hshsiz */
     do {
         idx =- quot + 1;
-        if(idx < hshtab) idx =+ hshsiz;
-    } while (*idx && symcmp(*idx, name));
+        if (idx < 0) idx =+ hshsiz;
+    } while (symcmp(idx, name));
     return idx;
 }
 
@@ -312,16 +312,19 @@ char *usymtab;
 
 /* シンボル名をチェック（独自関数） */
 symcmp(idx, name)
-int *idx;
 {
-    if (idx < usymtab) idx = *idx;
-    return strncmp(idx, name, 8);
+    struct { char *cptr; };
+    char *p;
+    p = hshtab[idx];
+    if (!p) return 0;
+    if (!usymtab || p < usymtab) p = p->cptr;
+    return strncmp(p, name, 8);
 }
 
 /* builtinシンボルをハッシュテーブルに追加 */
 setup()
 {
-    int i, j, key;
+    int i, j, key, idx;
     char *name;
 
     for (i = 0; name = symtab[i]; i =+ 3) {
@@ -330,6 +333,7 @@ setup()
             key =+ name[j];
             key = (key << 8) + ((key >> 8) & 255);
         }
-        *symget(key, name) = &symtab[i];
+        idx = symget(key, name);
+        hshtab[idx] = &symtab[i];
     }
 }
