@@ -62,4 +62,4 @@ int nargs;
 char **curarg;
 
 char fileflg, errflg, ch;
-int line, ifflg, opfound, savop, numval;
+int line, ifflg, savop, numval;

@@ -3,13 +3,14 @@
 struct Op { int type, value; };
 
 char curfbr[];
-int curfb[], opfound, numval, savop;
+int curfb[], numval, savop;
 
 expres(this, op)
 struct Op *this;
 {
     struct Op x;
     char opr;
+    int opfound;
 
     this->type  = 1; /* absolute */
     this->value = 0;
