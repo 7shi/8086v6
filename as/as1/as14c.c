@@ -93,17 +93,8 @@ rname()
     }
 }
 
-char inbuf[512];
-char fin;
-char fileflg;
-char **curarg;
-int nargs;
-int inbfcnt;
-char *inbfp;
-int ifflg;
-int line;
-
-int aexit();
+char fin, inbuf[], *inbfp, fileflg, **curarg;
+int line, nargs, inbfcnt, ifflg;
 
 /*
 -- ch == 0の場合
