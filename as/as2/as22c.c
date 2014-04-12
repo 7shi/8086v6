@@ -30,16 +30,15 @@ outw(r2, r3)
 
 	c_flg = (r3 >> 15) & 1;
 	r3 =<< 1;
-	r3 =>> 1;
-	
+	r3 =>> 1;	/* get relative pc bit */
 
 	if(r3 != 040) {
-		r3 =& ~040;
+		r3 =& ~040;	/* clear any ext bits */
 		if((r3 >= 0) && (r3 < 5)) {
 			r3_flg = 0;
-		} else if(r3 == 033) {
+		} else if(r3 == 033) {	/* est. text, data */
 			error("r");
-			r3 = 1;
+			r3 = 1;	/* make absolute */
 			r3_flg = 0;
 		} else if(r3 != 034) {
 			r3 = 1;
@@ -49,11 +48,12 @@ outw(r2, r3)
 
 
 	if(r3_flg) {
-		outmod = 0666;
+		/* external references */
+		outmod = 0666;	/* make nonexecutable */
 		r3 = xsymbol;
 		r3 =- &usymtab;
 		r3 =<< 1;
-		r3 =| 4;
+		r3 =| 4;	/* external relocation */
 
 		r3 =<< 1;
 		r3 =| c_flg;
@@ -94,7 +94,7 @@ outb(r2, r3)
 	/* passno[0] は0か1*/
 	/* r2は1 */
 
-	if(dot[-1] == 4) { 
+	if(dot[-1] == 4) {	/* test bss mode */
 		error("x");
 		return;
 	}
@@ -125,7 +125,7 @@ char *r5;
 	int i, ln;
 	char *p;
 
-	/* outmodを666にする */
+	/* make nonexecutable */
 	outmod = 0666;
 
 	/* argbの内容を書き出し，終了を0を書き込む */
