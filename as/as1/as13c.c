@@ -14,7 +14,7 @@ assem() {
         op = readop();
         if (!checkeos(op)) {
             if (ifflg) {
-                if (op >= 128) {
+                if (issym(op)) {
                     if (op->type == 17/*if*/) {
                         ++ifflg;
                     } else if (op->type == 18/*endif*/) {
@@ -26,7 +26,7 @@ assem() {
             op2 = readop();
             if (op2 == '=') {
                 expres(&x, readop());
-                if (op < 128) {
+                if (!issym(op)) {
                     error("x");
                 } else if (op == dotrel && (x.type & 31) != *dotrel) {
                     error(".");
@@ -37,7 +37,7 @@ assem() {
                     op->value = x.type ? x.value : 0;
                 }
             } else if (op2 == ':') {
-                if (op >= 128) {
+                if (issym(op)) {
                     if (op->type & 31) error("m");
                     op->type =| *dotrel;
                     op->value = *dot;

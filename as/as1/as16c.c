@@ -12,7 +12,7 @@ opline(op)
     if (op == '<') {
         *dot =+ numval;
         return;
-    } else if (op < 128) {
+    } else if (!issym(op)) {
         expres(&x, op);
         *dot =+ 2;
         return;
@@ -57,7 +57,7 @@ opline(op)
         break;
     case 19: /* .globl */
         do {
-            if ((op = readop()) < 128) {
+            if (!issym(op = readop())) {
                 savop = op;
                 break;
             }
@@ -81,7 +81,7 @@ opline(op)
         }
         break;
     case 26: /* .common */
-        if ((op = readop()) < 128 || !checkop(',')) {
+        if (!issym(op = readop()) || !checkop(',')) {
             error("x");
         } else {
             op->type =| 32;
@@ -180,4 +180,10 @@ checkop(ch)
     if ((op = readop()) == ch) return 1;
     savop = op;
     return 0;
+}
+
+/* トークンがシンボルかどうかを判定（独自関数） */
+issym(op)
+{
+    return op < 0 || 127 < op;
 }

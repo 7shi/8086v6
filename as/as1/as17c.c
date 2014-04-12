@@ -19,7 +19,7 @@ struct Op *this;
     opfound = 0;
 
     for (;;) {
-        if (op >= 128) {
+        if (issym(op)) {
             x.type  = op->type;
             x.value = op->value;
         } else if ('a' <= op && op <= 'j') { /* 0b-9b */
