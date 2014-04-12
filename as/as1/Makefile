@@ -15,6 +15,8 @@ $(TARGET): $(COBJS)
 .c.o:
 	$(CC) -c $<
 
+utils.o: ../utils.c
+
 dest: $(TARGET)
 	mkdir -p $(DESTDIR)/bin
 	cp $< $(DESTDIR)/bin/as
