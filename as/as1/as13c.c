@@ -15,9 +15,9 @@ assem() {
         if (!checkeos(op)) {
             if (ifflg) {
                 if (issym(op)) {
-                    if (op->type == 17/*if*/) {
+                    if (op->type == 17/*.if*/) {
                         ++ifflg;
-                    } else if (op->type == 18/*endif*/) {
+                    } else if (op->type == 18/*.endif*/) {
                         --ifflg;
                     }
                 }
