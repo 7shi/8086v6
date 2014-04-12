@@ -41,11 +41,15 @@ char *d;
 }
 
 debug8(s, v)
-char *s;
 {
     int i;
     char buf[7];
-    write(2, s, strlen(s));
+    if (s < 0 || 127 <= s) {
+        write(2, s, strlen(s));
+    } else if (32 <= s) {
+        s =| ' ' << 8;
+        write(2, &s, 2);
+    }
     for (i = 0; i < 6; ++i) {
         buf[5 - i] = '0' + (v & (i < 5 ? 7 : 1));
         v =>> 3;
@@ -54,14 +58,17 @@ char *s;
     write(2, buf, 7);
 }
 
-char hexstr[] "0123456789abcdef";
-
 debug16(s, v)
-char *s;
 {
     int i;
-    char buf[5];
-    write(2, s, strlen(s));
+    char buf[5], *hexstr;
+    hexstr = "0123456789abcdef";
+    if (s < 0 || 127 <= s) {
+        write(2, s, strlen(s));
+    } else if (32 <= s) {
+        s =| ' ' << 8;
+        write(2, &s, 2);
+    }
     for (i = 0; i < 4; ++i) {
         buf[3 - i] = hexstr[v & 15];
         v =>> 4;
