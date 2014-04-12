@@ -20,9 +20,9 @@ oset:
 
 putw:
 	mov	r1,-(sp)
-/    mov r0, -(sp)
-/	mov $1, -(sp)
-/	jsr pc, _showoct
+/	mov r0, -(sp)
+/	mov $'0, -(sp)
+/	jsr pc, _debug8
 /	tst (sp)+
 /	mov (sp)+, r0
 	mov	r2,-(sp)

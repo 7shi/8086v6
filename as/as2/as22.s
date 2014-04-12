@@ -76,13 +76,13 @@ _orig_outw:
 
 _org_outb:
 /   test for r3 and dot-2
-/    mov r3, -(sp)    r3 -> 1
-/	mov $1, -(sp)
-/	jsr pc, _showoct
+/	mov r3, -(sp)    r3 -> 1
+/	mov $'3, -(sp)
+/	jsr pc, _debug8
 /	cmp (sp)+, (sp)+
 /	mov dot-2, -(sp)  / dot-2 -> 3
-/	mov $1, -(sp)
-/	jsr pc, _showoct
+/	mov $'2, -(sp)
+/	jsr pc, _debug8
 /	cmp (sp)+, (sp)+
 
 	cmp	dot-2,$4		/ test bss mode
@@ -93,9 +93,9 @@ _org_outb:
 1:
 / test for passno
 / passno is 0 or 1
-/    mov passno, -(sp)
-/	mov $1, -(sp)
-/	jsr pc, _showoct
+/	mov passno, -(sp)
+/	mov $'p, -(sp)
+/	jsr pc, _debug8
 /	cmp (sp)+, (sp)+
 
 
@@ -103,8 +103,8 @@ _org_outb:
 	beq	2f
 	/ debug for dot
 /	mov dot, -(sp)
-/	mov $1, -(sp)
-/	jsr pc, _showoct
+/	mov $'d, -(sp)
+/	jsr pc, _debug8
 /	cmp (sp)+, (sp)+
 	/ debug for dot
 
@@ -114,8 +114,8 @@ _org_outb:
 
     / branch check
 	mov $0, -(sp)
-	mov $1, -(sp)
-	jsr pc, _showoct
+	mov $0, -(sp)
+	jsr pc, _debug8
 	cmp (sp)+, (sp)+
 	/end of branch check
 
@@ -128,8 +128,8 @@ _org_outb:
 1:
     / branch check
 	mov $11, -(sp)
-	mov $1, -(sp)
-	jsr pc, _showoct
+	mov $0, -(sp)
+	jsr pc, _debug8
 	cmp (sp)+, (sp)+
 	/end of branch check
 

@@ -1,32 +1,5 @@
 /* translated from as22.s */
 
-
-/* for debug */
-char buf[8]  " 000000\n";
-showoct(cal, val)
-int cal;
-{
-        register int c;
-        char *p;        
-        int i;
-        /*      c = 65535;*/
-        c = val;
-
-        p = &buf[7];
-        for(i = 0; i < 6; i++) {
-                if(i == 5) {
-                        *(--p) = '0' + (c & 1); 
-                } else {
-                        *(--p) = '0' + (c & 7);
-                }
-                c =>> 3;
-        }
-        
-        write(1, buf, 8);
-}
-
-
-
 int outmod;
 char argb[];
 char fxxxx[] "f xxxx\n";
