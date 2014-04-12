@@ -25,7 +25,7 @@ struct Op *this;
         } else if ('a' <= op && op <= 'j') { /* 0b-9b */
             x.type  = curfbr[op - 97];
             x.value = curfb [op - 97];
-            if (x.value < 0) error("f");
+            if (x.value == -1) error("f");
         } else if ('k' <= op && op <= 't') { /* 0f-9f */
             x.type  = op;
             x.value = 0;
