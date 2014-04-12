@@ -1,27 +1,10 @@
 /* translated from as22.s */
 
-int outmod;
-char argb[];
-char fxxxx[] "f xxxx\n";
-int line;
-
-/* for outb */
-int dot[];
-char passno[];
-char *txtp[];
-char *relp[];
-int *rseekp;
-int *tseekp;
-
-/* for outw */
-char usymtab[];
-int xsymbol;
-int dotdot;
-
+int outmod, dot[], xsymbol, dotdot;
+int *rseekp, *tseekp;
+char passno[], usymtab[], *txtp[], *relp[];
 
 outw(r2, r3)
-int r2;
-int r3;
 {
 	char c_flg;
 	char r3_flg;
@@ -33,7 +16,7 @@ int r3;
 
 	if(dot[0] & 1) {
 		error("o");
-		outb(r2, 0);		
+		outb(r2, 0);
 		return;
 	}
 
@@ -103,16 +86,7 @@ int r3;
 
 }
 
-
-
-
-
-
-
-
 outb(r2, r3)
-int r2;
-int r3;
 {
 	char *txtpp;
 	/* r3は1でOK */
@@ -141,8 +115,9 @@ int r3;
 	++dot[0];  /* inc dot, rts pc */
 }
 
-
-
+char argb[];
+char fxxxx[] "f xxxx\n";
+int line;
 
 error(r5)
 char *r5;
