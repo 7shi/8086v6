@@ -20,11 +20,11 @@ opline(op)
 
     switch (op->type) {
     case  5: /* map fop freg,fdst to double */
+    case  7: /* jsr */
     case 10: /* map fld/fst to double */
     case 11: /* double operand (mov) */
     case 12: /* map fop fsrc,freg to double */
     case 24: /* map mul s,r to double */
-    case  7: /* jsr */
         /* double */
         addres();
         if (!checkop(',')) {
