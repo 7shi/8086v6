@@ -6,6 +6,8 @@ char errflg, pof, fbfil;
 char *usymtab, *symend, *memend;
 char *unglob;
 
+int aexit();
+
 go()
 {
     int fp;
@@ -16,6 +18,11 @@ go()
     pof   = fcreat(atmp1);
     fbfil = fcreat(atmp2);
     fp    = fcreat(atmp3);
+
+    /* SIGINTが無視されていなければ、中断時に後片付け */
+    if (signal(2/*SIGINT*/, 1) & 1 == 0) {
+        signal(2, aexit);
+    }
 
     assem();
 

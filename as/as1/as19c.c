@@ -268,15 +268,9 @@ int *dotdot &symtab[5];
 int nargs;
 char **curarg, *unglob;
 
-int aexit();
-
 main(argc, argv)
 char *argv[];
 {
-    if (signal(2/*SIGINT*/, 1) & 1 == 0) {
-        signal(2, aexit);
-    }
-
     nargs  = argc;
     curarg = argv;
 
