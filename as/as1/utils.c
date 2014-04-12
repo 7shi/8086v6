@@ -47,7 +47,7 @@ char *s;
     char buf[7];
     write(2, s, strlen(s));
     for (i = 0; i < 6; ++i) {
-        buf[5 - i] = '0' + (v & 7);
+        buf[5 - i] = '0' + (v & (i < 5 ? 7 : 1));
         v =>> 3;
     }
     buf[6] = '\n';
