@@ -257,12 +257,5 @@ dotrel: 02;
 	jsr r5, ofile; 0: ..
 	rts pc
 
-.globl _filerr; _filerr:
-	mov sp, r0
-	tst (r0)+
-	mov r0, 0f
-	jsr r5, filerr; 0: ..
-	rts pc
-
 .text
 .globl _go; _go: jmp go

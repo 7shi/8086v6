@@ -168,17 +168,8 @@ aexit:
 	jmp _aexit
 
 filerr:
-	mov	*(r5),r5
-1:
-	movb	(r5)+,ch
-	beq	1f
-	mov	$1,r0
-	sys	write; ch; 1
-	br	1b
-1:
-	mov	$1,r0
-	sys	write; qnl; 2
-	jmp	aexit
+	mov *(r5), -(sp)
+	jmp _filerr
 
 doreloc:
 	movb	(r1),r0

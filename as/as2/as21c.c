@@ -12,3 +12,15 @@ aexit()
     chmod(aout, outmod);
     exit(errflg);
 }
+
+char ch;
+int qnl;
+
+filerr(r5)
+char *r5;
+{
+    if (!errflg) ++errflg;
+    write(1, r5, strlen(r5));
+    write(1, &qnl, 2);
+    aexit();
+}
