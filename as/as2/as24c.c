@@ -27,7 +27,8 @@ putw(r0, r5)
 
 int fout;
 
-flush(r5) {
+flush(r5)
+{
     int r1, *r2, next;
     r2 = r5;
     next = r5 + 6;
