@@ -66,7 +66,7 @@ go:
 	jsr	pc,assem
 
 / prepare for pass 2
-	cmp	outmod,$777
+	cmp	_outmod,$777
 	beq	1f
 	jmp	aexit
 1:
@@ -165,17 +165,7 @@ go:
 	jmp	aexit
 
 aexit:
-	mov	a.tmp1,0f
-	sys	unlink; 0:..
-	mov	a.tmp2,0f
-	sys	unlink; 0:..
-	mov	a.tmp3,0f
-	sys	unlink; 0:..
-	sys indir; 0f
-	.data
-0:	sys	chmod; a.out; .globl _outmod; _outmod: outmod: 777
-	.text
-	sys	exit
+	jmp _aexit
 
 filerr:
 	mov	*(r5),r5

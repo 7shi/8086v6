@@ -265,5 +265,4 @@ dotrel: 02;
 	rts pc
 
 .text
-.globl _aexit; _aexit: jmp aexit
 .globl _go; _go: jmp go
