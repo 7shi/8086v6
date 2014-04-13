@@ -1,4 +1,17 @@
 /* translated from as24.s */
+
+oset(r0, r5)
+{
+    int *r1;
+    r1 = r5;
+    /* next slot */
+    r1[0] = (r0 & 0777) + r5 + 6;
+    /* buf max */
+    r1[1] = r5 + 01006;
+    /* seek addr */
+    r1[2] = r0;
+}
+
 int savop;
 int ibufc;
 int *ibufp;
@@ -6,28 +19,6 @@ int fin;
 int inbuf[256];
 char symtab[];
 char usymtab[];
-
-int
-oset(r0, r1, r2)
-{
-	int *ptr;
-
-	ptr = r1;
-	r0 = r0 & 0777;
-	r0 = r0 + r1;
-	r0 = r0 + 6;
-
-	*ptr = r0;
-	ptr++;
-	r0 = ptr;
-	r0 = r0 + 01004;
-	*ptr = r0;
-	ptr++;
-	*ptr = r2;
-	ptr++;
-
-	return ptr;
-}
 
 int
 readop()

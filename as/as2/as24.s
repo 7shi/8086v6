@@ -4,19 +4,11 @@
 / a4 -- pdp-11 assembler pass 2
 
 oset:
-	mov	r2,-(sp)
-	mov	(r5)+,r1
-	mov	r0,r2
-	mov r2,-(sp)
-	mov r1,-(sp)
-	mov r0,-(sp)
+	mov (r5)+, -(sp)
+	mov r0, -(sp)
 	jsr pc, _oset
-	tst (sp)+
-	tst (sp)+
-	mov (sp)+,r2
-	mov r0, r1
-	mov	(sp)+,r2
-	rts	r5
+	cmp (sp)+, (sp)+
+	rts r5
 
 putw:
 	mov	r1,-(sp)
