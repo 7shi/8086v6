@@ -9,7 +9,7 @@ eae = 0
 .globl _symtab; _symtab: symtab:
 / special variables
 
-dotrel: 02; 
+.globl _dotrel; _dotrel: dotrel: 02; 
 .globl _dot; _dot: dot:000000 /.
  01; 
 .globl _dotdot; _dotdot: dotdot:000000 /..
