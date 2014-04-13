@@ -2,12 +2,13 @@
 
 oset(r0, r5)
 {
-    int *r1;
+    int *r1, next;
     r1 = r5;
+    next = r5 + 6;
     /* next slot */
-    r1[0] = (r0 & 0777) + r5 + 6;
+    r1[0] = next + (r0 & 0777);
     /* buf max */
-    r1[1] = r5 + 01006;
+    r1[1] = next + 01000;
     /* seek addr */
     r1[2] = r0;
 }
@@ -15,22 +16,15 @@ oset(r0, r5)
 int fout;
 
 flush(r5) {
-    int r0, r1, *r2, a, b;
-    r2 = r5 + 4;
-    r1 = *(r2++); /* seek address */
+    int r1, *r2, next;
+    r2 = r5;
+    next = r5 + 6;
+    r1 = r2[2]; /* seek address */
     seek(fout, r1, 0);
-    r1 =& 0777;
-    r0 = r2;
-    r1 =+ r0; /* write address */
-    a = r1;
-    *(--r2) =| 0777;
-    ++*r2; /* new seek addr */
-    r2 =- 2;
-    r1 =- *r2;
-    r1 = -r1;
-    b = r1; /* count */
-    *r2 = r0; /* new next slot */
-    write(fout, a, b);
+    r2[2] = (r1 | 0777) + 1; /* new seek addr */
+    r1 = next + (r1 & 0777); /* write address */
+    write(fout, r1, r2[0] - r1);
+    r2[0] = next; /* new next slot */
 }
 
 int savop;
