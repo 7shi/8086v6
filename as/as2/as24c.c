@@ -25,7 +25,7 @@ putw(r0, r5)
     ++r2[0];
 }
 
-int fout;
+char fout;
 
 flush(r5)
 {
@@ -60,7 +60,8 @@ readop()
     return r4;
 }
 
-int inbuf[256], *ibufp, ibufc, fin;
+int inbuf[256], *ibufp, ibufc;
+char fin;
 
 getw(r4)
 int *r4;
