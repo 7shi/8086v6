@@ -41,79 +41,44 @@ flush(r5)
 }
 
 int savop;
-int ibufc;
-int *ibufp;
-int fin;
-int inbuf[256];
-char symtab[];
-char usymtab[];
+char symtab[], usymtab[];
 
-int
 readop()
 {
-	int r4;
-	int head;
-
-	r4 = savop;
-	if( r4 != 0 ){
-		savop = 0;
-		return r4;
-	}
-
-	getw1(&r4);
-	if( r4 < 0200 ){
-		return r4;
-	}
-
-	if( r4 < 04000 ){
-		head = &symtab[0];
-		r4 = r4 + (head - 01000);
-		return r4;
-	}
-	head = &usymtab[0];
-	r4 = r4 + (head - 04000);
-	return r4;
+    int r4;
+    if (savop) {
+        r4 = savop;
+        savop = 0;
+        return r4;
+    }
+    getw(&r4);
+    if (r4 >= 04000) {
+        return usymtab + (r4 - 04000);
+    } else if (r4 >= 01000) {
+        return  symtab + (r4 - 01000);
+    }
+    return r4;
 }
 
-int 
+int inbuf[256], *ibufp, ibufc, fin;
+
 getw(r4)
 int *r4;
 {
-	*r4 = savop;
-	if( *r4 == 0 ){
-		return getw1(r4);
-	}
-	savop = 0;
-	return 0;
+    int r0;
+    if (savop) {
+        *r4 = savop;
+        savop = 0;
+        return 0;
+    }
+    if (--ibufc <= 0) {
+        r0 = read(fin, inbuf, 512);
+        if (r0 < 0 || (ibufc = r0 >> 1) == 0) {
+            *r4 = 4;
+            return 1;
+        }
+        ibufp = inbuf;
+    }
+    *r4 = *(ibufp++);
+    return 0;
 }
-
-int
-getw1(r4)
-int *r4;
-{
-	int r0;
-
-	ibufc--;
-	if( ibufc > 0 ){
-		goto label1;
-	}
-
-	r0 = read(fin,inbuf,512);
-	if( r0 < 0 ){
-		*r4 = 4;
-		return 1;
-	}
-
-	r0 = r0 >> 1;
-	ibufc = r0;
-	if( r0 == 0 ){
-		*r4 = 4;
-		return 1;
-	}
-	ibufp = &inbuf[0];
-label1:
-	*r4 = *ibufp;
-	ibufp++;
-	return 0;
-}
-
