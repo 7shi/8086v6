@@ -184,20 +184,7 @@ setbrk:
 	rts pc
 
 setup:
-	mov	$curfb,r4
-1:
-	clr	(r4)+
-	cmp	r4,$curfb+40.
-	blo	1b
-	mov	txtfil,fin
-	clr	ibufc
-	clr	r4
-1:
-	jsr	pc,fbadv
-	tstb	(r4)+
-	cmp	r4,$10.
-	blt	1b
-	rts	pc
+	jmp _setup
 
 ofile:
 	mov	*(r5),0f
@@ -210,3 +197,8 @@ ofile:
 	rts	r5
 1:
 	jmp	filerr
+
+.globl _fbadv
+_fbadv:
+	mov 2(sp), r4
+	jmp fbadv

@@ -51,3 +51,17 @@ char *r1;
         brk(memend);
     }
 }
+
+int curfb[], ibufc;
+char txtfil, fin;
+
+setup()
+{
+    int i;
+    memset(curfb, 0, 40);
+    fin = txtfil;
+    ibufc = 0;
+    for (i = 0; i < 10; ++i) {
+        fbadv(i);
+    }
+}
