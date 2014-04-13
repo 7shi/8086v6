@@ -5,17 +5,6 @@
 
 / wrapper functions
 
-.data
-
-.globl _putw
-_putw:
-	mov 2(sp), r0
-	mov 4(sp), 0f
-	jsr r5, putw; 0:.
-	rts pc
-
-.text
-
 outw:
 	mov r1, -(sp)
 	mov r3, -(sp)

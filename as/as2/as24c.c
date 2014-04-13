@@ -13,6 +13,18 @@ oset(r0, r5)
     r1[2] = r0;
 }
 
+putw(r0, r5)
+{
+    int **r2;
+    r2 = r5;
+    if (r2[0] >= r2[1]) {
+        /* buf max */
+        flush(r2);
+    }
+    *r2[0] = r0;
+    ++r2[0];
+}
+
 int fout;
 
 flush(r5) {
