@@ -12,6 +12,27 @@ oset(r0, r5)
     r1[2] = r0;
 }
 
+int fout;
+
+flush(r5) {
+    int r0, r1, *r2, a, b;
+    r2 = r5 + 4;
+    r1 = *(r2++); /* seek address */
+    seek(fout, r1, 0);
+    r1 =& 0777;
+    r0 = r2;
+    r1 =+ r0; /* write address */
+    a = r1;
+    *(--r2) =| 0777;
+    ++*r2; /* new seek addr */
+    r2 =- 2;
+    r1 =- *r2;
+    r1 = -r1;
+    b = r1; /* count */
+    *r2 = r0; /* new next slot */
+    write(fout, a, b);
+}
+
 int savop;
 int ibufc;
 int *ibufp;

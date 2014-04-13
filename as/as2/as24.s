@@ -38,6 +38,12 @@ putw:
 	rts	r5
 
 flush:
+	mov (r5)+, -(sp)
+	jsr pc, _flush
+	tst (sp)+
+	rts r5
+
+flush_:
 	mov	(r5)+,r2
 	cmp	(r2)+,(r2)+
 flush1:
@@ -49,9 +55,9 @@ flush1:
 9:	sys	seek; 0:..; 0
 	.text
 	bic	$!777,r1
-	add	r2,r1		/ write address
-	mov	r1,0f
 	mov	r2,r0
+	add	r0,r1		/ write address
+	mov	r1,0f
 	bis	$777,-(r2)
 	inc	(r2)		/ new seek addr
 	cmp	-(r2),-(r2)
