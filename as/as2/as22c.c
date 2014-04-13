@@ -1,8 +1,8 @@
 /* translated from as22.s */
 
-int outmod, dotrel, dot, xsymbol, dotdot;
+int outmod, dotrel, dot, dotdot, xsymbol, passno;
 int *rseekp, *tseekp;
-char passno[], usymtab[], *txtp[], *relp[];
+char usymtab[], *txtp[], *relp[];
 
 outw(r2, r3)
 {
@@ -24,7 +24,7 @@ outw(r2, r3)
 
 	dot =+ 2;
 	
-	if(passno[0] == 0) {
+	if(passno == 0) {
 		return;
 	}
 
@@ -91,7 +91,7 @@ outb(r2, r3)
 	char *txtpp;
 	/* r3は1でOK */
 	/* dotrelは3でOK */
-	/* passno[0] は0か1*/
+	/* passnoは0か1*/
 	/* r2は1 */
 
 	if(dotrel == 4) {	/* test bss mode */
@@ -100,7 +100,7 @@ outb(r2, r3)
 	}
 	if(!(r3 <= 1)) error("r");
 
-	if(passno[0] != 0) {
+	if(passno != 0) {
 		if(dot & 1) {
 			txtpp = txtp[0]; 
 			*(--txtpp) = r2 & 0377;
