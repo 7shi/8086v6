@@ -250,12 +250,5 @@ dotrel: 02;
 32;000000 /.comm
 
 
-.globl _ofile; _ofile:
-	mov sp, r0
-	tst (r0)+
-	mov r0, 0f
-	jsr r5, ofile; 0: ..
-	rts pc
-
 .text
 .globl _go; _go: jmp go

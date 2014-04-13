@@ -65,3 +65,11 @@ setup()
         fbadv(i);
     }
 }
+
+ofile(r5)
+char *r5;
+{
+    int r0;
+    if ((r0 = open(r5, 0)) < 0) filerr(r5);
+    return r0;
+}

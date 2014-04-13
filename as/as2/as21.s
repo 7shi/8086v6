@@ -187,16 +187,10 @@ setup:
 	jmp _setup
 
 ofile:
-	mov	*(r5),0f
-	sys	indir; 9f
-	.data
-9:	sys	open; 0:..; 0
-	.text
-	bes	1f
-	tst	(r5)+
-	rts	r5
-1:
-	jmp	filerr
+	mov *(r5)+, -(sp)
+	jsr pc, _ofile
+	tst (sp)+
+	rts r5
 
 .globl _fbadv
 _fbadv:
