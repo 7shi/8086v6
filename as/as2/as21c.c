@@ -24,3 +24,18 @@ char *r5;
     write(1, &qnl, 2);
     aexit();
 }
+
+int defund, datbase, bssbase;
+
+doreloc(r1)
+int *r1;
+{
+    int r0;
+    if (!(r0 = r1[0])) r1[0] =| defund;
+    r0 =& 31;
+    if (r0 == 3) {
+        r1[1] =+ datbase;
+    } else if (r0 == 4) {
+        r1[1] =+ bssbase;
+    }
+}

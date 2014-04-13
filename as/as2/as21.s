@@ -172,22 +172,10 @@ filerr:
 	jmp _filerr
 
 doreloc:
-	movb	(r1),r0
-	bne	1f
-	bisb	defund,(r1)
-1:
-	bic	$!37,r0
-	cmp	r0,$5
-	bhis	1f
-	cmp	r0,$3
-	blo	1f
-	beq	2f
-	add	bssbase,2(r1)
-	rts	pc
-2:
-	add	datbase,2(r1)
-1:
-	rts	pc
+	mov r1, -(sp)
+	jsr pc, _doreloc
+	mov (sp)+, r1
+	rts pc
 
 setbrk:
 	mov	r1,-(sp)
