@@ -117,13 +117,15 @@ outb(r2, r3)
 
 char argb[];
 char fxxxx[] "f xxxx\n";
-int line;
+int line, errflg;
 
 error(r5)
 char *r5;
 {
 	int i, ln;
 	char *p;
+
+	++errflg;
 
 	/* make nonexecutable */
 	outmod = 0666;
