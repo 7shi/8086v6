@@ -178,18 +178,10 @@ doreloc:
 	rts pc
 
 setbrk:
-	mov	r1,-(sp)
-	add	$20,r1
-	cmp	r1,0f
-	blo	1f
-	add	$512.,0f
-	sys	indir; 9f
-	.data
-9:	sys	break; 0: end
-	.text
-1:
-	mov	(sp)+,r1
-	rts	pc
+	mov r1, -(sp)
+	jsr pc, _setbrk
+	mov (sp)+, r1
+	rts pc
 
 setup:
 	mov	$curfb,r4

@@ -39,3 +39,15 @@ int *r1;
         r1[1] =+ bssbase;
     }
 }
+
+char end[];
+char *memend end;
+
+setbrk(r1)
+char *r1;
+{
+    if (r1 + 16 >= memend) {
+        memend =+ 512;
+        brk(memend);
+    }
+}
