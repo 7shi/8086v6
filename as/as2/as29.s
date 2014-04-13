@@ -248,7 +248,3 @@ eae = 0
 26;000000 /.data
 27;000000 /.bss
 32;000000 /.comm
-
-
-.text
-.globl _go; _go: jmp go

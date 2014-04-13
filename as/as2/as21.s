@@ -91,6 +91,10 @@ go:
 	inc	r2
 	bic	$1,r2
 	mov	r2,datsiz
+.globl _go_
+_go_:
+mov txtsiz, r1
+mov datsiz, r2
 	mov	r1,r3
 	mov	r3,datbase	/ txtsiz
 	mov	r3,savdot+2
@@ -191,6 +195,10 @@ ofile:
 	jsr pc, _ofile
 	tst (sp)+
 	rts r5
+
+.globl _assem
+_assem:
+	jmp assem
 
 .globl _fbadv
 _fbadv:
