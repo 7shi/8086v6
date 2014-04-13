@@ -57,9 +57,9 @@ outw(r2, r3)
 
 		r3 =<< 1;
 		r3 =| c_flg;
-		putw(r2, &txtp);
+		putw(r2, txtp);
 		*tseekp =+ 2;
-		putw(0, &relp);
+		putw(0, relp);
 		*rseekp =+ 2;
 		return;
 	}
@@ -77,9 +77,9 @@ outw(r2, r3)
 
 	r3 =<< 1;
 	r3 =| c_flg;
-	putw(r2, &txtp);
+	putw(r2, txtp);
 	*tseekp =+ 2;
-	putw(0, &relp);
+	putw(0, relp);
 	*rseekp =+ 2;
 
 	return;
@@ -105,8 +105,8 @@ outb(r2, r3)
 			txtpp = txtp[0]; 
 			*(--txtpp) = r2 & 0377;
 		} else {
-			putw(r2, &txtp);
-			putw(0, &relp);
+			putw(r2, txtp);
+			putw(0, relp);
 			*rseekp =+ 2;
 			*tseekp =+ 2;
 
