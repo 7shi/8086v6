@@ -79,8 +79,3 @@ ofile:
 .globl _assem
 _assem:
 	jmp assem
-
-.globl _fbadv
-_fbadv:
-	mov 2(sp), r4
-	jmp fbadv

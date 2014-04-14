@@ -145,21 +145,7 @@ checkeos:
 	rts	pc
 
 fbadv:
-	asl	r4
-	mov	nxtfb(r4),r1
-	mov	r1,curfb(r4)
-	bne	1f
-	mov	fbbufp,r1
-	br	2f
-1:
-	add	$4,r1
-2:
-	cmpb	1(r1),r4
-	beq	1f
-	tst	(r1)
-	bpl	1b
-1:
-	mov	r1,nxtfb(r4)
-	asr	r4
-	rts	pc
-
+	mov r4, -(sp)
+	jsr pc, _fbadv
+	tst (sp)+
+	rts pc
