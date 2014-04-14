@@ -71,7 +71,4 @@
 .globl _rlimit; _rlimit: rlimit:	.=.+2
 .globl _passno; _passno: passno:	.=.+2
 .globl _endtable; _endtable: endtable:.=.+2
-.globl _usymtab; _usymtab: usymtab:.=.+20.
-end:
-
-.text
+.globl _usymtab; _usymtab: usymtab:.=.+2.

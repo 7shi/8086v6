@@ -28,7 +28,7 @@ _go_:
 	mov	r3,trelseek	/ txtsiz+datsiz+20
 	sub	r2,r3
 	mov	r3,datseek	/ txtsiz+20
-	mov	$usymtab,r1
+	mov	usymtab,r1
 1:
 	jsr	pc,doreloc
 	add	$4,r1

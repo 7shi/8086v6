@@ -41,7 +41,7 @@ flush(r5)
 }
 
 int savop;
-char symtab[], usymtab[];
+char symtab[], *usymtab;
 
 readop()
 {

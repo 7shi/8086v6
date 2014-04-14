@@ -1,19 +1,20 @@
 /* translated from as21.s */
 
 int outmod 0777;
-int usymtab[], savdot[];
-int txtmagic, symsiz, ibufc, *fbbufp, *endtable;
+int savdot[], txtmagic, symsiz, ibufc, *fbbufp, *endtable;
 int dot, dotrel, dotdot, brtabp, passno;
 int datbase, bssbase, txtsiz, datsiz, bsssiz;
 int symseek, drelseek, trelseek, datseek;
 char symf, fbfil, fin, *txtp[], *relp[], *atmp1;
+char *usymtab, *memend;
 
 /* set up sizes and origins */
 go()
 {
     /* read in symbol table */
     int r0, r1, *r1p, r2, r3, r4;
-    r1p = usymtab;
+    r1p = usymtab = memend = sbrk(0);
+    setbrk(r1p);
     while (getw() != 4/*EOT*/) {
         symsiz =+ 12; /* count symbols */
         getw();
@@ -163,9 +164,6 @@ int *r1;
         r1[1] =+ bssbase;
     }
 }
-
-char end[];
-char *memend end;
 
 setbrk(r1)
 char *r1;

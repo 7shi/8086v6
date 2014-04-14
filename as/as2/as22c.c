@@ -2,7 +2,7 @@
 
 int outmod, dotrel, dot, dotdot, xsymbol, passno;
 int *rseekp, *tseekp;
-char usymtab[], *txtp[], *relp[];
+char *usymtab, *txtp[], *relp[];
 
 outw(r2, r3)
 {
@@ -51,7 +51,7 @@ outw(r2, r3)
 		/* external references */
 		outmod = 0666;	/* make nonexecutable */
 		r3 = xsymbol;
-		r3 =- &usymtab;
+		r3 =- usymtab;
 		r3 =<< 1;
 		r3 =| 4;	/* external relocation */
 
