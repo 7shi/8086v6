@@ -67,7 +67,6 @@ go()
     ++passno;
     ++bsssiz;
     bsssiz =& ~1;
-go_();
     r1 = (txtsiz + 1) & ~1;
     txtsiz = r1;
     r2 = (datsiz + 1) & ~1;
@@ -97,11 +96,6 @@ go_();
         putw(*(r1p++), txtp);
     }
     assem();
-}
-
-go__()
-{
-    int *r1p, r4;
 
     /* polish off text and relocation */
     flush(txtp);
