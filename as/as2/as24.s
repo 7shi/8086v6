@@ -34,15 +34,7 @@ readop:
 
 getw:
 	mov r1, -(sp)
-	tst -(sp)
-	mov sp, r0
-	mov r0, -(sp)
 	jsr pc, _getw
-	tst (sp)+
-	mov (sp)+, r4
+	mov r0, r4
 	mov (sp)+, r1
-	tst r0
-	beq 0f
-	sev
-0:
 	rts pc

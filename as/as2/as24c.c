@@ -51,7 +51,7 @@ readop()
         savop = 0;
         return r4;
     }
-    getw(&r4);
+    r4 = getw();
     if (r4 >= 04000) {
         return usymtab + (r4 - 04000);
     } else if (r4 >= 01000) {
@@ -63,23 +63,20 @@ readop()
 int inbuf[256], *ibufp, ibufc;
 char fin;
 
-getw(r4)
-int *r4;
+getw()
 {
     int r0;
     if (savop) {
-        *r4 = savop;
+        r0 = savop;
         savop = 0;
-        return 0;
+        return r0;
     }
     if (--ibufc <= 0) {
         r0 = read(fin, inbuf, 512);
         if (r0 < 0 || (ibufc = r0 >> 1) == 0) {
-            *r4 = 4;
-            return 1;
+            return 4/*EOT*/;
         }
         ibufp = inbuf;
     }
-    *r4 = *(ibufp++);
-    return 0;
+    return *(ibufp++);
 }
