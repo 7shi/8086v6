@@ -1,107 +1,88 @@
 /* translated from as23.s */
 
+struct Op { int type, value; };
+struct { char cval; };
+
 int line, savop, passno, dot, dotrel, brdelt, numval, txtsiz[];
 int curfb[];
 char symtab[];
-struct { char cval; };
-struct { int ival; };
 
 assem()
 {
-    int r0, r1, r2, r3, r4, sp;
-assem0:
-    r4 = readop();
-    if (r4 != 5 && r4 != '<') {
-        if (checkeos(r4)) goto ealoop;
-        sp = r4;
-        if (r4 == 1) {
-            sp = 2;
-            r4 = getw();
-            numval = r4;
-        }
+    int r0, r1, r2, r3, r4, oldr4, i;
+    do {
         r4 = readop();
-        if (r4 == '=') goto assem4;
-        if (r4 == ':') goto assem1;
-        savop = r4;
-        r4 = sp;
-    }
-    opline(r4);
-dotmax:
-    if (passno) goto ealoop;
-    r0 = dotrel;
-    if (txtsiz[r0 - 2] < dot) {
-        txtsiz[r0 - 2] = dot;
-    }
-    goto ealoop;
-assem1:
-    r4 = sp;
-    if (r4 < 128) {
-        if (r4 == 2) goto assem3;
-        error("x");
-        goto assem0;
-    }
-    if (!passno) {
-        r0 = r4->cval;
-        r0 =& 31;
-        if (r0 != 0 && r0 != 27 && r0 != 28) {
-            error("m");
-        }
-        r4->ival =& ~31;
-        r4->ival =| dotrel;
-        brdelt = (r4 + 2)->ival;
-        brdelt =- dot;
-        (r4 + 2)->ival = dot;
-        goto assem0;
-    }
-    if ((r4 + 2)->ival == dot) goto assem0;
-    error("p");
-    goto assem0;
-assem3:
-    r4 = numval;
-    fbadv(r4);
-    r0 = curfb[r4];
-    r0->cval = dotrel;
-    brdelt = (r0 + 2)->ival;
-    brdelt =- dot;
-    (r0 + 2)->ival = dot;
-    goto assem0;
-assem4:
-    r4 = readop();
-    r4 = expres(r4, &r2, &r3);
-    r1 = sp;
-    if (r1 == symtab) { /* test for dot */
-        r3 =& ~32;
-        if (r3 == dotrel) { /* can't change relocation */
-            if (r3 == 4) { /* bss */
-                dot = r2;
-                goto dotmax;
+        if (r4 == 5 || r4 == '<') {
+            opline(r4);
+        } else if (!checkeos(r4)) {
+            oldr4 = r4;
+            if (r4 == 1) {
+                oldr4 = 2;
+                numval = getw();
             }
-            r2 =- dot;
-            if (r2 >= 0) {
-                sp = r2;
-                while (--sp >= 0) {
-                    outb(0, 1);
+            r4 = readop();
+            if (r4 == '=') {
+                r4 = expres(readop(), &r2, &r3);
+                r1 = oldr4;
+                if (r1 == symtab) { /* test for dot */
+                    r3 =& ~32;
+                    if (r3 != dotrel) {
+                        /* can't change relocation */
+                        error(".");
+                    } else if (r3 == 4) { /* bss */
+                        dot = r2;
+                    } else if (dot <= r2) {
+                        for (i = dot; i < r2; ++i) {
+                            outb(0, 1);
+                        }
+                    } else {
+                        error(".");
+                    }
+                } else {
+                    if (r3 == 32) error("r");
+                    r3 =& 31;
+                    if (r3 == 0) r2 = 0;
+                    r1->type =& ~31;
+                    r1->type =| r3;
+                    r1->value = r2;
                 }
-                goto dotmax;
+            } else if (r4 == ':') {
+                r4 = oldr4;
+                if (r4 < 128) {
+                    if (r4 == 2) {
+                        fbadv(numval);
+                        r0 = curfb[numval];
+                        r0->cval = dotrel;
+                        brdelt = r0->value - dot;
+                        r0->value = dot;
+                    } else {
+                        error("x");
+                    }
+                } else if (!passno) {
+                    r0 = r4->type & 31;
+                    if (r0 != 0 && r0 != 27 && r0 != 28) {
+                        error("m");
+                    }
+                    r4->type =& ~31;
+                    r4->type =| dotrel;
+                    brdelt = r4->value - dot;
+                    r4->value = dot;
+                } else if (r4->value != dot) {
+                    error("p");
+                }
+            } else {
+                savop = r4;
+                r4 = oldr4;
+                opline(r4);
             }
         }
-        error(".");
-        goto ealoop;
-    }
-    if (r3 == 32) error("r");
-    r1->ival =& ~31;
-    r3 =& 31;
-    if (r3 == 0) r2 = 0;
-    r1->cval =| r3;
-    (r1 + 2)->ival = r2;
-
-ealoop:
-    if (r4 == '\n') {
-        ++line;
-        goto assem0;
-    } else if (r4 != 4/*EOT*/) {
-        goto assem0;
-    }
+        if (!passno) {
+            if (txtsiz[dotrel - 2] < dot) {
+                txtsiz[dotrel - 2] = dot;
+            }
+        }
+        if (r4 == '\n') ++line;
+    } while (r4 != 4/*EOT*/);
 }
 
 checkeos(r4)
