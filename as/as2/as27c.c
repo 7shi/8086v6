@@ -1,5 +1,16 @@
 /* translated from as27.s */
 
+int maxtyp;
+
+maprel(r0)
+{
+    if (r0 == 32) return 5;
+    r0 =& 31;
+    if (maxtyp < r0) maxtyp = r0;
+    if (r0 > 5) return 1;
+    return r0;
+}
+
 /* X = -2, M = -1 */
 
 char reltp2[] {

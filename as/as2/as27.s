@@ -250,18 +250,9 @@ combin1:
 	rts	r5
 
 maprel:
-	cmp	r0,$40
-	bne	1f
-	mov	$5,r0
-	rts	pc
-1:
-	bic	$!37,r0
-	cmp	r0,maxtyp
-	blos	1f
-	mov	r0,maxtyp
-1:
-	cmp	r0,$5
-	blos	1f
-	mov	$1,r0
-1:
-	rts	pc
+	mov r1, -(sp)
+	mov r0, -(sp)
+	jsr pc, _maprel
+	tst (sp)+
+	mov (sp)+, r1
+	rts pc
