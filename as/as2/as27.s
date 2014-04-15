@@ -140,12 +140,12 @@ exrsh:
 	clc
 	ror	r2
 exlsh:
-	jsr	r5,combin; relte2
+	jsr	r5,combin; _relte2
 	als	r1,r2
 	br	eoprnd
 
 exmod:
-	jsr	r5,combin; relte2
+	jsr	r5,combin; _relte2
 	mov	r3,r0
 	mov	r2,r3
 	clr	r2
@@ -155,34 +155,34 @@ exmod:
 	br	eoprnd
 
 exadd:
-	jsr	r5,combin; reltp2
+	jsr	r5,combin; _reltp2
 	add	r1,r2
 	br	eoprnd
 
 exsub:
-	jsr	r5,combin; reltm2
+	jsr	r5,combin; _reltm2
 	sub	r1,r2
 	br	eoprnd
 
 exand:
-	jsr	r5,combin; relte2
+	jsr	r5,combin; _relte2
 	com	r1
 	bic	r1,r2
 	br	eoprnd
 
 exor:
-	jsr	r5,combin; relte2
+	jsr	r5,combin; _relte2
 	bis	r1,r2
 	br	eoprnd
 
 exmul:
-	jsr	r5,combin; relte2
+	jsr	r5,combin; _relte2
 	mpy	r2,r1
 	mov	r1,r2
 	br	eoprnd
 
 exdiv:
-	jsr	r5,combin; relte2
+	jsr	r5,combin; _relte2
 	mov	r3,r0
 	mov	r2,r3
 	clr	r2
@@ -191,7 +191,7 @@ exdiv:
 	br	eoprnd
 
 exnot:
-	jsr	r5,combin; relte2
+	jsr	r5,combin; _relte2
 	com	r1
 	add	r1,r2
 	br	eoprnd
@@ -216,7 +216,7 @@ combin:
 1:
 	tst	r0
 	beq	1f
-	cmp	(r5)+,$reltm2
+	cmp	(r5)+,$_reltm2
 	bne	2f
 	cmp	r0,r3
 	bne	2f
@@ -265,30 +265,3 @@ maprel:
 	mov	$1,r0
 1:
 	rts	pc
-
-X = -2
-M = -1
-reltp2:
-	.byte 0, 0, 0, 0, 0, 0
-	.byte 0, M, 2, 3, 4,40
-	.byte 0, 2, X, X, X, X
-	.byte 0, 3, X, X, X, X
-	.byte 0, 4, X, X, X, X
-	.byte 0,40, X, X, X, X
-
-reltm2:
-	.byte 0, 0, 0, 0, 0, 0
-	.byte 0, M, 2, 3, 4,40
-	.byte 0, X, 1, X, X, X
-	.byte 0, X, X, 1, X, X
-	.byte 0, X, X, X, 1, X
-	.byte 0, X, X, X, X, X
-
-relte2:
-	.byte 0, 0, 0, 0, 0, 0
-	.byte 0, M, X, X, X, X
-	.byte 0, X, X, X, X, X
-	.byte 0, X, X, X, X, X
-	.byte 0, X, X, X, X, X
-	.byte 0, X, X, X, X, X
-
