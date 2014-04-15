@@ -201,53 +201,15 @@ eoprnd:
 	jmp	advanc
 
 combin:
-	tstb	passno
-	bne	combin1
-	mov	r0,-(sp)
-	bis	r3,(sp)
-	bic	$!40,(sp)
-	bic	$!37,r0
-	bic	$!37,r3
-	cmp	r0,r3
-	ble	1f
-	mov	r0,-(sp)
-	mov	r3,r0
-	mov	(sp)+,r3
-1:
-	tst	r0
-	beq	1f
-	cmp	(r5)+,$_reltm2
-	bne	2f
-	cmp	r0,r3
-	bne	2f
-	mov	$1,r3
-	br	2f
-1:
-	tst	(r5)+
-	clr	r3
-2:
-	bis	(sp)+,r3
-	rts	r5
-combin1:
-	mov	r1,-(sp)
-	clr	maxtyp
-	jsr	pc,maprel
-	mov	r0,r1
-	mpy	$6,r1
-	mov	r3,r0
-	jsr	pc,maprel
-	add	(r5)+,r0
-	add	r1,r0
-	movb	(r0),r3
-	bpl	1f
-	cmp	r3,$-1
-	beq	2f
-	jsr	r5,error; 'r
-2:
-	mov	maxtyp,r3
-1:
-	mov	(sp)+,r1
-	rts	r5
+	mov r1, -(sp)
+	mov (r5)+, -(sp)
+	mov r3, -(sp)
+	mov r0, -(sp)
+	jsr pc, _combin
+	mov r0, r3
+	add $6, sp
+	mov (sp)+, r1
+	rts r5
 
 maprel:
 	mov r1, -(sp)

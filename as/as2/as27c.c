@@ -1,5 +1,39 @@
 /* translated from as27.s */
 
+int passno, maxtyp;
+char reltp2[], reltm2[], relte2[];
+
+combin(r0, r3, r5)
+char *r5;
+{
+    int r1, globl, tmp;
+    if (!passno) {
+        globl = (r0 | r3) & 32;
+        r0 =& 31;
+        r3 =& 31;
+        if (r0 > r3) {
+            tmp = r0;
+            r0 = r3;
+            r3 = tmp;
+        }
+        if (!r0) {
+            r3 = 0;
+        } else if (r5 == reltm2 && r0 == r3) {
+            r3 = 1;
+        }
+        r3 =| globl;
+    } else {
+        maxtyp = 0;
+        r1 = maprel(r0) * 6;
+        r3 = r5[maprel(r3) + r1];
+        if (r3 < 0) {
+            if (r3 != -1) error("r");
+            r3 = maxtyp;
+        }
+    }
+    return r3;
+}
+
 int maxtyp;
 
 maprel(r0)
