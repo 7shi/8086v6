@@ -5,7 +5,7 @@ struct Op { int type, value; };
 int xsymbol, esw1, passno, curfb[];
 char reltp2[], reltm2[], relte2[];
 
-expres0(r4, r2, r3)
+expres(r4, r2, r3)
 int *r2, *r3;
 {
     xsymbol = 0;
@@ -23,7 +23,7 @@ int *r2, *r3;
     *r3 = 1;
 advanc:
     r0 = r4;
-    if (r0 < 0 && 127 < r0) {
+    if (r0 < 0 || 127 < r0) {
         r0 = r4->type;
         if (r0 == 0 && passno) {
             error("u");
