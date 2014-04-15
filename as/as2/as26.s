@@ -256,7 +256,7 @@ opl11:
 	cmp	r3,$1
 	ble	1f
 0:
-	jsr	pc,errora
+	jsr	r5,error; 'a
 1:
 	bis	(sp)+,r2
 	jsr	pc,outw
@@ -481,38 +481,6 @@ astar:
 	jsr	pc,readop
 	jmp	4b
 
-_org_errora:
-	jsr	r5,error; 'a
-	rts	pc
-
-_org_checkreg:
-	cmp	r2,$7
-	bhi	1f
-	cmp	r1,$1
-	blos	2f
-	cmp	r3,$5
-	blo	1f
-2:
-	rts	pc
-1:
-	jsr	pc,errora
-	clr	r2
-	clr	r3
-	rts	pc
-
-_org_errore:
-	jsr	r5,error; 'e
-	rts	pc
-
-_org_checkrp:
-	cmp	r4,$')
-	beq	1f
-	jsr	r5,error; ')
-	rts	pc
-1:
-	jsr	pc,readop
-	rts	pc
-
 setbr:
 	mov	brtabp,r1
 	cmp	r1,$brlen
@@ -559,17 +527,6 @@ getbr:
 	rts	pc
 
 / wrapper functions
-errore:
-	mov r1, -(sp)
-	jsr pc, _errore
-	mov (sp)+, r1
-	rts pc
-
-errora:
-	mov r1, -(sp)
-	jsr pc, _errora
-	mov (sp)+, r1
-	rts pc
 
 checkrp:
 	mov r1, -(sp)
@@ -595,4 +552,3 @@ checkreg:
 	mov (sp)+, r3
 	mov (sp)+, r1
     rts pc
-

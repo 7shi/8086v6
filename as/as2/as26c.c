@@ -1,15 +1,5 @@
 /* translated from as26.s */
 
-errore()
-{
-	error("e");
-}
-
-errora() 
-{
-	error("a");
-}
-
 checkrp(r4)
 int r4;
 {
@@ -26,7 +16,7 @@ int *r2;
 int *r3;
 {
 	if((*r2 > 7) || ((*r3 >= 0) && (*r3 < 5))) {
-		errora();
+		error("a");
 		*r2 = *r3 = 0; 
 		return;
 	}
@@ -36,4 +26,3 @@ int *r3;
 	}
 	*/
 }
-
