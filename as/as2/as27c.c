@@ -21,140 +21,106 @@ int *r2, *r3;
     opr = '+';
     *r2 = 0;
     *r3 = 1;
-advanc:
-    r0 = r4;
-    if (r0 < 0 || 127 < r0) {
-        r0 = r4->type;
-        if (r0 == 0 && passno) {
-            error("u");
-        }
-        if (r0 == 32) {
-            xsymbol = r4;
-            r1 = 0;
+    for (;;) {
+        r0 = r4;
+        if (r0 < 0 || 127 < r0) {
+            r0 = r4->type;
+            if (r0 == 0 && passno) {
+                error("u");
+            }
+            if (r0 == 32) {
+                xsymbol = r4;
+                r1 = 0;
+            } else {
+                r1 = r4->value;
+            }
         } else {
-            r1 = r4->value;
+            switch (r4) {
+            case '[':
+                r4 = expres1(readop(), &r1, &r0);
+                if (r4 != ']') error("]");
+                break;
+            case   1:
+                r4 = getw();
+                r1 = r4;
+                r0 = 1;
+                break;
+            case   2:
+                r1 = numval;
+                r0 = 1;
+                break;
+            case '^':
+            case  29:
+            case  30:
+            case  31:
+            case '+':
+            case '-':
+            case '*':
+            case '/':
+            case '&':
+            case '%':
+            case '!':
+                if (opr != '+') error("e");
+                opr = r4;
+                r4 = readop();
+                continue;
+            default:
+                if (r4 < 97) return r4;
+                r0 = curfb[r4 - 97];
+                r1 = r0->value;
+                r0 = r0->type;
+                break;
+            }
         }
-        goto oprand;
+
+        switch (opr) {
+        case '^':
+            *r3 = r0;
+            break;
+        case  29:
+            *r3 = combin(r0, *r3, relte2);
+            *r2 =<< r1;
+            break;
+        case  30:
+            *r3 = combin(r0, *r3, relte2);
+            *r2 =>> r1;
+            break;
+        case  31:
+            *r3 = combin(r0, *r3, relte2);
+            *r2 =| r1;
+            break;
+        case '+':
+            *r3 = combin(r0, *r3, reltp2);
+            *r2 =+ r1;
+            break;
+        case '-':
+            *r3 = combin(r0, *r3, reltm2);
+            *r2 =- r1;
+            break;
+        case '*':
+            *r3 = combin(r0, *r3, relte2);
+            *r2 =* r1;
+            break;
+        case '/':
+            *r3 = combin(r0, *r3, relte2);
+            *r2 =/ r1;
+            break;
+        case '&':
+            *r3 = combin(r0, *r3, relte2);
+            *r2 =& r1;
+            break;
+        case '%':
+            *r3 = combin(r0, *r3, relte2);
+            *r2 =% r1;
+            break;
+        case '!':
+            *r3 = combin(r0, *r3, relte2);
+            *r2 =+ ~r1;
+            break;
+        }
+        opr = '+';
+        r4 = readop();
     }
-    if (r4 >= 97) {
-        r0 = curfb[r4 - 97];
-        r1 = r0->value;
-        r0 = r0->type;
-        goto oprand;
-    }
-    switch (r4) {
-    case '+': goto binop;
-    case '-': goto binop;
-    case '*': goto binop;
-    case '/': goto binop;
-    case '&': goto binop;
-    case 037: goto binop;
-    case 035: goto binop;
-    case 036: goto binop;
-    case '%': goto binop;
-    case '[': goto brack;
-    case '^': goto binop;
-    case   1: goto exnum;
-    case   2: goto exnum1;
-    case '!': goto binop;
-    }
-    return r4;
-
-binop:
-    if (opr != '+') error("e");
-    opr = r4;
-    r4 = readop();
-    goto advanc;
-
-exnum1:
-    r1 = numval;
-    r0 = 1;
-    goto oprand;
-
-exnum:
-    r4 = getw();
-    r1 = r4;
-    r0 = 1;
-    goto oprand;
-
-brack:
-    r4 = expres1(readop(), &r1, &r0);
-    if (r4 != ']') error("]");
-
-oprand:
-    switch (opr) {
-    case '+': goto exadd;
-    case '-': goto exsub;
-    case '*': goto exmul;
-    case '/': goto exdiv;
-    case  31: goto exor;
-    case '&': goto exand;
-    case  29: goto exlsh;
-    case  30: goto exrsh;
-    case '%': goto exmod;
-    case '^': goto excmbin;
-    case '!': goto exnot;
-    }
-    goto eoprnd;
-
-excmbin:
-    *r3 = r0;
-    goto eoprnd;
-
-exrsh:
-    *r3 = combin(r0, *r3, relte2);
-    *r2 =>> r1;
-    goto eoprnd;
-
-exlsh:
-    *r3 = combin(r0, *r3, relte2);
-    *r2 =<< r1;
-    goto eoprnd;
-
-exmod:
-    *r3 = combin(r0, *r3, relte2);
-    *r2 =% r1;
-    goto eoprnd;
-
-exadd:
-    *r3 = combin(r0, *r3, reltp2);
-    *r2 =+ r1;
-    goto eoprnd;
-
-exsub:
-    *r3 = combin(r0, *r3, reltm2);
-    *r2 =- r1;
-    goto eoprnd;
-
-exand:
-    *r3 = combin(r0, *r3, relte2);
-    *r2 =& r1;
-    goto eoprnd;
-
-exor:
-    *r3 = combin(r0, *r3, relte2);
-    *r2 =| r1;
-    goto eoprnd;
-
-exmul:
-    *r3 = combin(r0, *r3, relte2);
-    *r2 =* r1;
-    goto eoprnd;
-
-exdiv:
-    *r3 = combin(r0, *r3, relte2);
-    *r2 =/ r1;
-    goto eoprnd;
-
-exnot:
-    *r3 = combin(r0, *r3, relte2);
-    *r2 =+ ~r1;
-    goto eoprnd;
-
-eoprnd:
-    opr = '+';
-    r4 = readop();
-    goto advanc;
 }
 
 int maxtyp;
