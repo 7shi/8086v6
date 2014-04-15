@@ -481,6 +481,31 @@ astar:
 	jsr	pc,readop
 	jmp	4b
 
+checkreg:
+	mov r1, -(sp)
+	mov r3, -(sp)
+	mov sp, r3
+	mov r2, -(sp)
+	mov sp, r2
+	mov r3, -(sp)
+	mov r2, -(sp)
+	mov r1, -(sp)
+	jsr pc, _checkreg
+	add $6, sp
+	mov (sp)+, r2
+	mov (sp)+, r3
+	mov (sp)+, r1
+    rts pc
+
+checkrp:
+	mov r1, -(sp)
+	mov r4, -(sp)
+	jsr pc, _checkrp
+	mov r0, r4
+	tst (sp)+
+	mov (sp)+, r1
+	rts pc
+
 setbr:
 	mov	brtabp,r1
 	cmp	r1,$brlen
@@ -525,30 +550,3 @@ getbr:
 	ash	(sp)+,r1
 	ror	r1		/ 0-bit into c-bit
 	rts	pc
-
-/ wrapper functions
-
-checkrp:
-	mov r1, -(sp)
-	mov r4, -(sp)
-	jsr pc, _checkrp
-	mov r0, r4
-	tst (sp)+
-	mov (sp)+, r1
-	rts pc
-
-checkreg:
-	mov r1, -(sp)
-	mov r3, -(sp)
-	mov sp, r3
-	mov r2, -(sp)
-	mov sp, r2
-	mov r3, -(sp)
-	mov r2, -(sp)
-	mov r1, -(sp)
-	jsr pc, _checkreg
-	add $6, sp
-	mov (sp)+, r2
-	mov (sp)+, r3
-	mov (sp)+, r1
-    rts pc
