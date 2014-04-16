@@ -1,5 +1,95 @@
 /* translated from as26.s */
 
+int xsymbol, dot, savop, adrbuf[];
+
+addres(r4, r5, r2)
+int *r5, *r2;
+{
+    int r1, r3, tmp;
+    tmp = 0;
+addres4:
+    switch (r4) {
+    case '(': goto alp;
+    case '-': goto amin;
+    case '$': goto adoll;
+    case '*': goto astar;
+    }
+getx:
+    r4 = expres(r4, &r1, r2, &r3);
+    if (r4 == '(') {
+        r4 = readop();
+        *(r5++) = *r2;
+        *(r5++) = r3;
+        *(r5++) = xsymbol;
+        r4 = expres(r4, &r1, r2, &r3);
+        checkreg(r1, r2, &r3);
+        r4 = checkrp(r4);
+        *r2 =| 060;
+        *r2 =| tmp;
+    } else if (r3 == 20) {
+        checkreg(r1, r2, &r3);
+        *r2 =| tmp;
+    } else {
+        r3 =| 0100000;
+        *r2 =- dot;
+        *r2 =- 4;
+        if (r5 != adrbuf) *r2 =- 2;
+        *(r5++) = *r2; /* index */
+        *(r5++) =  r3; /* index reloc. */
+        *(r5++) = xsymbol; /* index global */
+        *r2 = 067; /* address mode */
+        *r2 =| tmp;
+    }
+    return r4;
+
+alp:
+    r4 = expres(readop(), &r1, r2, &r3);
+    r4 = checkrp(r4);
+    checkreg(r1, r2, &r3);
+    if (r4 == '+') {
+        r4 = readop();
+        *r2 =| 020;
+        *r2 =| tmp;
+    } else if (tmp) {
+        *r2 =| 070;
+        *(r5++) = 0;
+        *(r5++) = 0;
+        *(r5++) = xsymbol;
+    } else {
+        *r2 =| 010;
+    }
+    return r4;
+
+amin:
+    r4 = readop();
+    if (r4 != '(') {
+        savop = r4;
+        r4 = '-';
+        goto getx;
+    }
+    r4 = expres(readop(), &r1, r2, &r3);
+    r4 = checkrp(r4);
+    checkreg(r1, r2, &r3);
+    *r2 =| tmp;
+    *r2 =| 040;
+    return r4;
+
+adoll:
+    r4 = expres(readop(), &r1, r2, &r3);
+    *(r5++) = *r2;
+    *(r5++) = r3;
+    *(r5++) = xsymbol;
+    *r2 = tmp;
+    *r2 =| 027;
+    return r4;
+
+astar:
+    if (tmp) error("*");
+    tmp = 010;
+    r4 = readop();
+    goto addres4;
+}
+
 checkreg(r1, r2, r3)
 int *r2, *r3;
 {
@@ -16,7 +106,7 @@ checkrp(r4)
     return r4;
 }
 
-int brtabp, brlen, brdelt, dot;
+int brtabp, brlen, brdelt;
 char brtab[];
 
 setbr(r0)

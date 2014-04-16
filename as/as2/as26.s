@@ -373,113 +373,18 @@ opl32:
 	rts	pc
 
 addres:
-	clr	-(sp)
-4:
-	cmp	r4,$'(
-	beq	alp
-	cmp	r4,$'-
-	beq	amin
-	cmp	r4,$'$
-	beq	adoll
-	cmp	r4,$'*
-	bne	getx
-	jmp	astar
-getx:
-	jsr	pc,expres
-	cmp	r4,$'(
-	bne	2f
-	jsr	pc,readop
-	mov	r2,(r5)+
-	mov	r3,(r5)+
-	mov	xsymbol,(r5)+
-	jsr	pc,expres
-	jsr	pc,checkreg
-	jsr	pc,checkrp
-	bis	$60,r2
-	bis	(sp)+,r2
-	rts	pc
-
-2:
-	cmp	r3,$24
-	bne	1f
-	jsr	pc,checkreg
-	bis	(sp)+,r2
-	rts	pc
-1:
-	mov	r3,-(sp)
-	bic	$40,r3
-	mov	(sp)+,r3
-	bis	$100000,r3
-	sub	dot,r2
-	sub	$4,r2
-	cmp	r5,$adrbuf
-	beq	1f
-	sub	$2,r2
-1:
-	mov	r2,(r5)+		/ index
-	mov	r3,(r5)+		/ index reloc.
-	mov	xsymbol,(r5)+		/ index global
-	mov	$67,r2			/ address mode
-	bis	(sp)+,r2
-	rts	pc
-
-alp:
-	jsr	pc,readop
-	jsr	pc,expres
-	jsr	pc,checkrp
-	jsr	pc,checkreg
-	cmp	r4,$'+
-	beq	1f
-	tst	(sp)+
-	beq	2f
-	bis	$70,r2
-	clr	(r5)+
-	clr	(r5)+
-	mov	xsymbol,(r5)+
-	rts	pc
-2:
-	bis	$10,r2
-	rts	pc
-1:
-	jsr	pc,readop
-	bis	$20,r2
-	bis	(sp)+,r2
-	rts	pc
-
-amin:
-	jsr	pc,readop
-	cmp	r4,$'(
-	beq	1f
-	mov	r4,savop
-	mov	$'-,r4
-	br	getx
-1:
-	jsr	pc,readop
-	jsr	pc,expres
-	jsr	pc,checkrp
-	jsr	pc,checkreg
-	bis	(sp)+,r2
-	bis	$40,r2
-	rts	pc
-
-adoll:
-	jsr	pc,readop
-	jsr	pc,expres
-	mov	r2,(r5)+
-	mov	r3,(r5)+
-	mov	xsymbol,(r5)+
-	mov	(sp)+,r2
-	bis	$27,r2
-	rts	pc
-
-astar:
-	tst	(sp)
-	beq	1f
-	jsr	r5,error; '*
-1:
-	mov	$10,(sp)
-	jsr	pc,readop
-	jmp	4b
+	mov r2, -(sp)
+	mov sp, r2
+	mov r2, -(sp)
+	mov r5, -(sp)
+	mov r4, -(sp)
+	jsr pc, _addres
+	mov r0, r4
+	tst (sp)+
+	mov (sp)+, r5
+	tst (sp)+
+	mov (sp)+, r2
+	rts pc
 
 checkreg:
 	mov r1, -(sp)
