@@ -22,7 +22,7 @@ assem()
             }
             r4 = readop();
             if (r4 == '=') {
-                r4 = expres(readop(), &r2, &r3);
+                r4 = expres(readop(), &r1, &r2, &r3);
                 r1 = oldr4;
                 if (r1 == symtab) { /* test for dot */
                     r3 =& ~32;

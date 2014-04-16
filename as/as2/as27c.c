@@ -5,19 +5,19 @@ struct Op { int type, value; };
 int xsymbol, esw1, passno, curfb[];
 char reltp2[], reltm2[], relte2[];
 
-expres(r4, r2, r3)
-int *r2, *r3;
+expres(r4, r1, r2, r3)
+int *r1, *r2, *r3;
 {
     xsymbol = 0;
-    return expres1(r4, r2, r3);
+    return expres1(r4, r1, r2, r3);
 }
 
 int numval;
 
-expres1(r4, r2, r3)
-int *r2, *r3;
+expres1(r4, r1, r2, r3)
+int *r1, *r2, *r3;
 {
-    int r0, r1, opr;
+    int r0, opr, tmp;
     opr = '+';
     *r2 = 0;
     *r3 = 1;
@@ -30,23 +30,23 @@ int *r2, *r3;
             }
             if (r0 == 32) {
                 xsymbol = r4;
-                r1 = 0;
+                *r1 = 0;
             } else {
-                r1 = r4->value;
+                *r1 = r4->value;
             }
         } else {
             switch (r4) {
             case '[':
-                r4 = expres1(readop(), &r1, &r0);
+                r4 = expres1(readop(), &tmp, r1, &r0);
                 if (r4 != ']') error("]");
                 break;
             case   1:
                 r4 = getw();
-                r1 = r4;
+                *r1 = r4;
                 r0 = 1;
                 break;
             case   2:
-                r1 = numval;
+                *r1 = numval;
                 r0 = 1;
                 break;
             case '^':
@@ -67,7 +67,7 @@ int *r2, *r3;
             default:
                 if (r4 < 97) return r4;
                 r0 = curfb[r4 - 97];
-                r1 = r0->value;
+                *r1 = r0->value;
                 r0 = r0->type;
                 break;
             }
@@ -79,43 +79,43 @@ int *r2, *r3;
             break;
         case  29:
             *r3 = combin(r0, *r3, relte2);
-            *r2 =<< r1;
+            *r2 =<< *r1;
             break;
         case  30:
             *r3 = combin(r0, *r3, relte2);
-            *r2 =>> r1;
+            *r2 =>> *r1;
             break;
         case  31:
             *r3 = combin(r0, *r3, relte2);
-            *r2 =| r1;
+            *r2 =| *r1;
             break;
         case '+':
             *r3 = combin(r0, *r3, reltp2);
-            *r2 =+ r1;
+            *r2 =+ *r1;
             break;
         case '-':
             *r3 = combin(r0, *r3, reltm2);
-            *r2 =- r1;
+            *r2 =- *r1;
             break;
         case '*':
             *r3 = combin(r0, *r3, relte2);
-            *r2 =* r1;
+            *r2 =* *r1;
             break;
         case '/':
             *r3 = combin(r0, *r3, relte2);
-            *r2 =/ r1;
+            *r2 =/ *r1;
             break;
         case '&':
             *r3 = combin(r0, *r3, relte2);
-            *r2 =& r1;
+            *r2 =& *r1;
             break;
         case '%':
             *r3 = combin(r0, *r3, relte2);
-            *r2 =% r1;
+            *r2 =% *r1;
             break;
         case '!':
             *r3 = combin(r0, *r3, relte2);
-            *r2 =+ ~r1;
+            *r2 =+ ~*r1;
             break;
         }
         opr = '+';

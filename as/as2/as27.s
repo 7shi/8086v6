@@ -8,11 +8,15 @@ expres:
 	mov sp, r3
 	mov r2, -(sp)
 	mov sp, r2
+	mov r1, -(sp)
+	mov sp, r1
 	mov r3, -(sp)
 	mov r2, -(sp)
+	mov r1, -(sp)
 	mov r4, -(sp)
 	jsr pc, _expres
-	add $6, sp
+	add $8, sp
+	mov (sp)+, r1
 	mov (sp)+, r2
 	mov (sp)+, r3
 	mov r0, r4
