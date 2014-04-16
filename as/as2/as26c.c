@@ -277,9 +277,7 @@ opl27: /* .bss */
     }
     r0 = tmp2;
     dot = savdot[r0 - 21];
-    r0 =>> 1;
-    r0 =- 19;
-    dotrel = r0; /* new . relocation */
+    dotrel = r0 - 19; /* new . relocation */
     return r4;
 
 opl32:
