@@ -15,13 +15,13 @@ addres4:
     case '*': goto astar;
     }
 getx:
-    r4 = expres(r4, &r1, r2, &r3);
+    r4 = expres(r4, r2, &r3);
     if (r4 == '(') {
         r4 = readop();
         *(r5++) = *r2;
         *(r5++) = r3;
         *(r5++) = xsymbol;
-        r4 = expres(r4, &r1, r2, &r3);
+        r4 = expres(r4, r2, &r3);
         checkreg(r2, &r3);
         r4 = checkrp(r4);
         *r2 =| 060;
@@ -43,7 +43,7 @@ getx:
     return r4;
 
 alp:
-    r4 = expres(readop(), &r1, r2, &r3);
+    r4 = expres(readop(), r2, &r3);
     r4 = checkrp(r4);
     checkreg(r2, &r3);
     if (r4 == '+') {
@@ -67,7 +67,7 @@ amin:
         r4 = '-';
         goto getx;
     }
-    r4 = expres(readop(), &r1, r2, &r3);
+    r4 = expres(readop(), r2, &r3);
     r4 = checkrp(r4);
     checkreg(r2, &r3);
     *r2 =| tmp;
@@ -75,7 +75,7 @@ amin:
     return r4;
 
 adoll:
-    r4 = expres(readop(), &r1, r2, &r3);
+    r4 = expres(readop(), r2, &r3);
     *(r5++) = *r2;
     *(r5++) = r3;
     *(r5++) = xsymbol;
