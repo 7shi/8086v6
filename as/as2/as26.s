@@ -507,31 +507,10 @@ checkrp:
 	rts pc
 
 setbr:
-	mov	brtabp,r1
-	cmp	r1,$brlen
-	blt	1f
-	mov	$2,r2
-	rts	pc
-1:
-	inc	brtabp
-	clr	-(sp)
-	sub	dot,r0
-	ble	1f
-	sub	brdelt,r0
-1:
-	jsr	r5,betwen; -254.; 256.
-		br 1f
-	br	2f
-1:
-	mov	r1,-(sp)
-	bic	$!7,(sp)
-	mov	$1,r0
-	ash	(sp)+,r0
-	ash	$-3,r1
-	bisb	r0,brtab(r1)
-	mov	$2,(sp)
-2:
-	mov	(sp)+,r2
+	mov r0, -(sp)
+	jsr pc, _setbr
+	tst (sp)+
+	mov r0, r2
 	rts	pc
 
 getbr:
