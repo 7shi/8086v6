@@ -535,18 +535,9 @@ setbr:
 	rts	pc
 
 getbr:
-	mov	brtabp,r1
-	cmp	r1,$brlen
-	blt	1f
+	jsr pc, _getbr
+	tst r0
+	beq 0f
 	sec
-	rts	pc
-1:
-	mov	r1,-(sp)
-	bic	$!7,(sp)
-	neg	(sp)
-	inc	brtabp
-	ash	$-3,r1
-	movb	brtab(r1),r1
-	ash	(sp)+,r1
-	ror	r1		/ 0-bit into c-bit
-	rts	pc
+0:
+	rts pc

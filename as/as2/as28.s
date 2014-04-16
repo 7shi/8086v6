@@ -34,10 +34,10 @@
 .globl _drelseek; _drelseek: drelseek:.=.+2
 	.=.+2
 .globl _symseek; _symseek: symseek:.=.+2
+.globl _brlen; _brlen: brlen	= 1024.; brlen
 
 .bss
 
-.globl _brlen; _brlen: brlen	= 1024.
 .globl _brtab; _brtab: brtab:	.=.+[brlen\/8.]
 .globl _brtabp; _brtabp: brtabp:	.=.+2
 .globl _brdelt; _brdelt: brdelt:	.=.+2

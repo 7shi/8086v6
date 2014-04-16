@@ -15,3 +15,17 @@ checkrp(r4)
     error(")");
     return r4;
 }
+
+int brtabp, brlen;
+char brtab[];
+
+getbr()
+{
+    int r1, tmp;
+    r1 = brtabp;
+    if (r1 >= brlen) return 1;
+    tmp = r1 & 7;
+    ++brtabp;
+    r1 = brtab[r1 >> 3];
+    return (r1 >> tmp) & 1; /* 0-bit into c-bit */
+}
