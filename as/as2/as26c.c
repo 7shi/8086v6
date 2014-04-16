@@ -9,12 +9,50 @@ int *r5, *r2;
     tmp = 0;
 addres4:
     switch (r4) {
-    case '(': goto alp;
-    case '-': goto amin;
-    case '$': goto adoll;
-    case '*': goto astar;
+    case '(':
+        r4 = expres(readop(), r2, &r3);
+        r4 = checkrp(r4);
+        checkreg(r2, &r3);
+        if (r4 == '+') {
+            r4 = readop();
+            *r2 =| 020;
+            *r2 =| tmp;
+        } else if (tmp) {
+            *r2 =| 070;
+            *(r5++) = 0;
+            *(r5++) = 0;
+            *(r5++) = xsymbol;
+        } else {
+            *r2 =| 010;
+        }
+        return r4;
+    case '-':
+        r4 = readop();
+        if (r4 != '(') {
+            savop = r4;
+            r4 = '-';
+            break;
+        }
+        r4 = expres(readop(), r2, &r3);
+        r4 = checkrp(r4);
+        checkreg(r2, &r3);
+        *r2 =| tmp;
+        *r2 =| 040;
+        return r4;
+    case '$':
+        r4 = expres(readop(), r2, &r3);
+        *(r5++) = *r2;
+        *(r5++) = r3;
+        *(r5++) = xsymbol;
+        *r2 = tmp;
+        *r2 =| 027;
+        return r4;
+    case '*':
+        if (tmp) error("*");
+        tmp = 010;
+        r4 = readop();
+        goto addres4;
     }
-getx:
     r4 = expres(r4, r2, &r3);
     if (r4 == '(') {
         r4 = readop();
@@ -41,53 +79,6 @@ getx:
         *r2 =| tmp;
     }
     return r4;
-
-alp:
-    r4 = expres(readop(), r2, &r3);
-    r4 = checkrp(r4);
-    checkreg(r2, &r3);
-    if (r4 == '+') {
-        r4 = readop();
-        *r2 =| 020;
-        *r2 =| tmp;
-    } else if (tmp) {
-        *r2 =| 070;
-        *(r5++) = 0;
-        *(r5++) = 0;
-        *(r5++) = xsymbol;
-    } else {
-        *r2 =| 010;
-    }
-    return r4;
-
-amin:
-    r4 = readop();
-    if (r4 != '(') {
-        savop = r4;
-        r4 = '-';
-        goto getx;
-    }
-    r4 = expres(readop(), r2, &r3);
-    r4 = checkrp(r4);
-    checkreg(r2, &r3);
-    *r2 =| tmp;
-    *r2 =| 040;
-    return r4;
-
-adoll:
-    r4 = expres(readop(), r2, &r3);
-    *(r5++) = *r2;
-    *(r5++) = r3;
-    *(r5++) = xsymbol;
-    *r2 = tmp;
-    *r2 =| 027;
-    return r4;
-
-astar:
-    if (tmp) error("*");
-    tmp = 010;
-    r4 = readop();
-    goto addres4;
 }
 
 checkreg(r2, r3)
