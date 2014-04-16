@@ -22,12 +22,12 @@ getx:
         *(r5++) = r3;
         *(r5++) = xsymbol;
         r4 = expres(r4, &r1, r2, &r3);
-        checkreg(r1, r2, &r3);
+        checkreg(r2, &r3);
         r4 = checkrp(r4);
         *r2 =| 060;
         *r2 =| tmp;
     } else if (r3 == 20) {
-        checkreg(r1, r2, &r3);
+        checkreg(r2, &r3);
         *r2 =| tmp;
     } else {
         r3 =| 0100000;
@@ -45,7 +45,7 @@ getx:
 alp:
     r4 = expres(readop(), &r1, r2, &r3);
     r4 = checkrp(r4);
-    checkreg(r1, r2, &r3);
+    checkreg(r2, &r3);
     if (r4 == '+') {
         r4 = readop();
         *r2 =| 020;
@@ -69,7 +69,7 @@ amin:
     }
     r4 = expres(readop(), &r1, r2, &r3);
     r4 = checkrp(r4);
-    checkreg(r1, r2, &r3);
+    checkreg(r2, &r3);
     *r2 =| tmp;
     *r2 =| 040;
     return r4;
@@ -90,10 +90,10 @@ astar:
     goto addres4;
 }
 
-checkreg(r1, r2, r3)
+checkreg(r2, r3)
 int *r2, *r3;
 {
-    if (*r2 > 7 || (r1 > 1 && *r3 < 5)) {
+    if (*r2 > 7 || (*r2 > 1 && *r3 < 5)) {
         error("a");
         r2 = r3 = 0;
     }

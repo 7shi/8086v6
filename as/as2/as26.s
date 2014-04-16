@@ -394,9 +394,8 @@ checkreg:
 	mov sp, r2
 	mov r3, -(sp)
 	mov r2, -(sp)
-	mov r1, -(sp)
 	jsr pc, _checkreg
-	add $6, sp
+	cmp (sp)+, (sp)+
 	mov (sp)+, r2
 	mov (sp)+, r3
 	mov (sp)+, r1
