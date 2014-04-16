@@ -5,9 +5,13 @@ int xsymbol, dot, savop, adrbuf[];
 addres(r4, /*in,out*/r5, /*out*/r2)
 int **r5, *r2;
 {
-    int r1, r3, tmp;
-    tmp = 0;
-addres4:
+    return addres1(r4, 0, r5, r2);
+}
+
+addres1(r4, tmp, /*in,out*/r5, /*out*/r2)
+int **r5, *r2;
+{
+    int r1, r3;
     switch (r4) {
     case '(':
         r4 = expres(readop(), r2, &r3);
@@ -49,9 +53,7 @@ addres4:
         return r4;
     case '*':
         if (tmp) error("*");
-        tmp = 010;
-        r4 = readop();
-        goto addres4;
+        return addres1(readop(), 010, r5, r2);
     }
     r4 = expres(r4, r2, &r3);
     if (r4 == '(') {
