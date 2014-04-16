@@ -375,14 +375,15 @@ opl32:
 addres:
 	mov r2, -(sp)
 	mov sp, r2
+	mov r5, -(sp)
+	mov sp, r5
 	mov r2, -(sp)
 	mov r5, -(sp)
 	mov r4, -(sp)
 	jsr pc, _addres
+	add $6, sp
 	mov r0, r4
-	tst (sp)+
 	mov (sp)+, r5
-	tst (sp)+
 	mov (sp)+, r2
 	rts pc
 

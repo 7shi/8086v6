@@ -2,8 +2,8 @@
 
 int xsymbol, dot, savop, adrbuf[];
 
-addres(r4, r5, r2)
-int *r5, *r2;
+addres(r4, /*in,out*/r5, /*out*/r2)
+int **r5, *r2;
 {
     int r1, r3, tmp;
     tmp = 0;
@@ -19,9 +19,9 @@ addres4:
             *r2 =| tmp;
         } else if (tmp) {
             *r2 =| 070;
-            *(r5++) = 0;
-            *(r5++) = 0;
-            *(r5++) = xsymbol;
+            *((*r5)++) = 0;
+            *((*r5)++) = 0;
+            *((*r5)++) = xsymbol;
         } else {
             *r2 =| 010;
         }
@@ -41,9 +41,9 @@ addres4:
         return r4;
     case '$':
         r4 = expres(readop(), r2, &r3);
-        *(r5++) = *r2;
-        *(r5++) = r3;
-        *(r5++) = xsymbol;
+        *((*r5)++) = *r2;
+        *((*r5)++) = r3;
+        *((*r5)++) = xsymbol;
         *r2 = tmp;
         *r2 =| 027;
         return r4;
@@ -56,9 +56,9 @@ addres4:
     r4 = expres(r4, r2, &r3);
     if (r4 == '(') {
         r4 = readop();
-        *(r5++) = *r2;
-        *(r5++) = r3;
-        *(r5++) = xsymbol;
+        *((*r5)++) = *r2;
+        *((*r5)++) = r3;
+        *((*r5)++) = xsymbol;
         r4 = expres(r4, r2, &r3);
         checkreg(r2, &r3);
         r4 = checkrp(r4);
@@ -71,10 +71,10 @@ addres4:
         r3 =| 0100000;
         *r2 =- dot;
         *r2 =- 4;
-        if (r5 != adrbuf) *r2 =- 2;
-        *(r5++) = *r2; /* index */
-        *(r5++) =  r3; /* index reloc. */
-        *(r5++) = xsymbol; /* index global */
+        if (*r5 != adrbuf) *r2 =- 2;
+        *((*r5)++) = *r2; /* index */
+        *((*r5)++) =  r3; /* index reloc. */
+        *((*r5)++) = xsymbol; /* index global */
         *r2 = 067; /* address mode */
         *r2 =| tmp;
     }
