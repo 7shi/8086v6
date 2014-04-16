@@ -2,8 +2,7 @@
 
 struct Op { int type, value; };
 
-int xsymbol, esw1, passno, curfb[];
-char reltp2[], reltm2[], relte2[];
+int xsymbol;
 
 expres(r4, r1, r2, r3)
 int *r1, *r2, *r3;
@@ -12,7 +11,8 @@ int *r1, *r2, *r3;
     return expres1(r4, r1, r2, r3);
 }
 
-int numval;
+int numval, esw1, passno, curfb[];
+char reltp2[], reltm2[], relte2[];
 
 expres1(r4, r1, r2, r3)
 int *r1, *r2, *r3;
@@ -34,6 +34,10 @@ int *r1, *r2, *r3;
             } else {
                 *r1 = r4->value;
             }
+        } else if (r4 >= 97) {
+            r0 = curfb[r4 - 97];
+            *r1 = r0->value;
+            r0 = r0->type;
         } else {
             switch (r4) {
             case '[':
@@ -41,8 +45,7 @@ int *r1, *r2, *r3;
                 if (r4 != ']') error("]");
                 break;
             case   1:
-                r4 = getw();
-                *r1 = r4;
+                *r1 = getw();
                 r0 = 1;
                 break;
             case   2:
@@ -65,11 +68,7 @@ int *r1, *r2, *r3;
                 r4 = readop();
                 continue;
             default:
-                if (r4 < 97) return r4;
-                r0 = curfb[r4 - 97];
-                *r1 = r0->value;
-                r0 = r0->type;
-                break;
+                return r4;
             }
         }
 
