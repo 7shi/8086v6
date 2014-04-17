@@ -264,8 +264,8 @@ opl27: /* .bss */
     tmp2 = r0;
     savdot[*dotrel - 2] = *dot;
     if (passno) {
-        flush(txtp);
-        flush(relp);
+        aflush(txtp);
+        aflush(relp);
         r2 = tmp2 - 21;
         tseekp = &tseeks[r2];
         rseekp = &rseeks[r2];

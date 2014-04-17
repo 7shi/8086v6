@@ -97,8 +97,8 @@ go()
     assem();
 
     /* polish off text and relocation */
-    flush(txtp);
-    flush(relp);
+    aflush(txtp);
+    aflush(relp);
 
     /* append full symbol table */
     seek(fin = symf, 0, 0);
@@ -115,7 +115,7 @@ go()
         getw();
         getw();
     }
-    flush(txtp);
+    aflush(txtp);
     aexit();
 }
 

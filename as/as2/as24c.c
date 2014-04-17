@@ -19,7 +19,7 @@ putw(r0, r5)
     r2 = r5;
     if (r2[0] >= r2[1]) {
         /* buf max */
-        flush(r2);
+        aflush(r2);
     }
     *r2[0] = r0;
     ++r2[0];
@@ -27,7 +27,7 @@ putw(r0, r5)
 
 char fout;
 
-flush(r5)
+aflush(r5)
 {
     int r1, *r2, next;
     r2 = r5;
