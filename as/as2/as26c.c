@@ -20,7 +20,7 @@ xxpr:
 xpr:
     r4 = expres(r4, &r2, &r3);
     outw(r2, r3);
-    return r4;
+    return;
 opline2:
     r0 = r4->cval;
     if (r0 == 20) goto xpr; /* reg */
@@ -74,7 +74,7 @@ opeof:
     }
     (r1++)->cval = '\n';
     (r1++)->cval = 0;
-    return r4;
+    return;
 
 opl30: /* mpy, dvd etc */
     ++swapf;
@@ -113,7 +113,7 @@ op2b:
         xsymbol = *(r1p++);
         outw(r2, r3);
     }
-    return r4;
+    return;
 
 opl15: /* single operand */
     tmp2 = 0;
@@ -149,7 +149,7 @@ opl36: /* jeq, jne, etc */
         outw(0000100/*jmp*/ + 037, 1);
         outw(r2, r3);
     }
-    return r4;
+    return;
 
 opl31: /* sob */
     r4 = expres(r4, &r2, &r3);
@@ -184,7 +184,7 @@ opl6_3:
     r2 =| tmp;
     r3 = 0;
     outw(r2, r3);
-    return r4;
+    return;
 opl6_2:
     error("b");
     r2 = 0;
@@ -206,7 +206,7 @@ opl11: /* sys, emt etc */
 opl11_1:
     r2 =| tmp;
     outw(r2, r3);
-    return r4;
+    return;
 
 opl16: /* .byte */
     r4 = expres(r4, &r2, &r3);
@@ -215,7 +215,7 @@ opl16: /* .byte */
         r4 = readop();
         goto opl16;
     }
-    return r4;
+    return;
 
 opl17: /* < (.ascii) */
     r4 = getw();
@@ -227,10 +227,10 @@ opl17: /* < (.ascii) */
         goto opl17;
     }
     r4 = getw();
-    return r4;
+    return;
 
 opl20: /* .even */
-    if ((dot & 1) == 0) return r4;
+    if ((dot & 1) == 0) return;
     if (dotrel == 4) {
         /* bss mode */
         ++dot;
@@ -238,13 +238,13 @@ opl20: /* .even */
         r2 = r3 = 0;
         outb(r2, r3);
     }
-    return r4;
+    return;
 
 opl21: /* if */
     r4 = expres(r4, &r2, &r3);
 opl22:
 oplret:
-    return r4;
+    return;
 
 opl23: /* .globl */
     if (r4 >= 128) {
@@ -255,7 +255,7 @@ opl23: /* .globl */
             goto opl23;
         }
     }
-    return r4;
+    return;
 
 opl25: /* .text */
 opl26: /* .data */
@@ -276,10 +276,10 @@ opl27: /* .bss */
     r0 = tmp2;
     dot = savdot[r0 - 21];
     dotrel = r0 - 19; /* new . relocation */
-    return r4;
+    return;
 
 opl32:
-    if (r4 < 128) return r4;
+    if (r4 < 128) return;
     tmp = r4;
     r4 = readop();
     r4 = readop();
@@ -289,7 +289,7 @@ opl32:
         r0->type =| 32;
         r0->value = r2;
     }
-    return r4;
+    return;
 }
 
 int savop;
