@@ -8,13 +8,8 @@ COBJS = $(CSRCS:.c=.o)
 
 all: $(TARGET)
 
-$(TARGET): $(TARGET).o $(COBJS)
+$(TARGET): $(COBJS)
 	$(CC) $^
-	mv a.out $@
-
-$(TARGET).o: $(SSRCS)
-	rm -f a.out
-	$(AS) - $^
 	mv a.out $@
 
 .c.o:
