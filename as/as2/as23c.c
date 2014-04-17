@@ -3,7 +3,7 @@
 struct Op { int type, value; };
 struct { char cval; };
 
-int line, savop, passno, *dotrel, *dot, brdelt, numval, txtsiz[];
+int line, savop, passno, *dotrel, *dot, brdelt, numval, *txtsiz;
 int curfb[];
 char symtab[];
 

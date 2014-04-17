@@ -1,9 +1,9 @@
 /* translated from as21.s */
 
 int outmod 0777;
-int savdot[], txtmagic, symsiz, ibufc, *fbbufp, *endtable;
+int savdot[], datbase, bssbase, ibufc, *fbbufp, *endtable;
 int *dotrel, *dot, *dotdot, brtabp, passno;
-int datbase, bssbase, txtsiz, datsiz, bsssiz;
+int header[], *txtsiz, *datsiz, *bsssiz, *symsiz;
 int symseek, drelseek, trelseek, datseek;
 char symf, fbfil, fin, *txtp[], *relp[], *atmp1;
 char *usymtab, *memend;
@@ -16,7 +16,7 @@ go()
     r1p = usymtab = memend = sbrk(0);
     setbrk(r1p);
     while (getw() != 4/*EOT*/) {
-        symsiz =+ 12; /* count symbols */
+        *symsiz =+ 12; /* count symbols */
         getw();
         getw();
         getw();
@@ -65,12 +65,12 @@ go()
     ibufc = 0;
     setup();
     ++passno;
-    ++bsssiz;
-    bsssiz =& ~1;
-    r1 = (txtsiz + 1) & ~1;
-    txtsiz = r1;
-    r2 = (datsiz + 1) & ~1;
-    datsiz = r2;
+    ++*bsssiz;
+    *bsssiz =& ~1;
+    r1 = (*txtsiz + 1) & ~1;
+    *txtsiz = r1;
+    r2 = (*datsiz + 1) & ~1;
+    *datsiz = r2;
     r3 = r1;
     datbase = r3; /* txtsiz */
     savdot[1] = r3;
@@ -91,9 +91,8 @@ go()
     }
     oset(0, txtp);
     oset(trelseek, relp);
-    r1p = &txtmagic;
     for (r2 = 0; r2 < 8; ++r2) {
-        putw(*(r1p++), txtp);
+        putw(header[r2], txtp);
     }
     assem();
 
@@ -121,7 +120,7 @@ go()
 }
 
 int errflg;
-char *atmp2, *atmp3, aout[];
+char *atmp2, *atmp3, *aout;
 
 aexit()
 {
@@ -133,14 +132,13 @@ aexit()
 }
 
 char ch;
-int qnl;
 
 filerr(r5)
 char *r5;
 {
     if (!errflg) ++errflg;
     write(1, r5, strlen(r5));
-    write(1, &qnl, 2);
+    write(1, "?\n", 2);
     aexit();
 }
 

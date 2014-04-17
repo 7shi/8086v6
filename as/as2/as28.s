@@ -3,29 +3,10 @@
 
 / as8 -- PDP-11 assembler pass 2
 
-.globl _qnl; _qnl: qnl:	<?\n>
-.globl _aout; _aout: a.out:	<a.out\0>
-
-.even
-.globl _aoutp; _aoutp: a.outp:	a.out
-
 	.data
-.globl _atmp1; _atmp1: a.tmp1:	0
-.globl _atmp2; _atmp2: a.tmp2:	0
-.globl _atmp3; _atmp3: a.tmp3:	0
 
 .globl _tseekp; _tseekp: tseekp:	txtseek
 .globl _rseekp; _rseekp: rseekp:	trelseek
-
-.globl _txtmagic; _txtmagic: txtmagic:
-	br	.+20
-.globl _txtsiz; _txtsiz: txtsiz:	.=.+2
-.globl _datsiz; _datsiz: datsiz:	.=.+2
-.globl _bsssiz; _bsssiz: bsssiz:	.=.+2
-.globl _symsiz; _symsiz: symsiz:	.=.+2
-.globl _stksiz; _stksiz: stksiz:	.=.+2
-.globl _exorig; _exorig: exorig:	.=.+2
-	.=.+2
 
 .globl _txtseek; _txtseek: txtseek: 20
 .globl _datseek; _datseek: datseek:.=.+2
