@@ -5,15 +5,6 @@
 
 	.data
 
-.globl _tseekp; _tseekp: tseekp:	txtseek
-.globl _rseekp; _rseekp: rseekp:	trelseek
-
-.globl _txtseek; _txtseek: txtseek: 20
-.globl _datseek; _datseek: datseek:.=.+2
-	.=.+2
-.globl _trelseek; _trelseek: trelseek:.=.+2
-.globl _drelseek; _drelseek: drelseek:.=.+2
-	.=.+2
 .globl _symseek; _symseek: symseek:.=.+2
 .globl _brlen; _brlen: brlen	= 1024.; brlen
 

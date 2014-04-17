@@ -4,7 +4,7 @@ int outmod 0777;
 int savdot[], datbase, bssbase, ibufc, *fbbufp, *endtable;
 int *dotrel, *dot, *dotdot, brtabp, passno;
 int header[], *txtsiz, *datsiz, *bsssiz, *symsiz;
-int symseek, drelseek, trelseek, datseek;
+int *datseek, *trelseek, *drelseek, symseek;
 char symf, fbfil, fin, *txtp[], *relp[], *atmp1;
 char *usymtab, *memend;
 
@@ -81,16 +81,16 @@ go()
     r3 =+ 16;
     symseek = r3; /* 2*txtsiz+2*datsiz+16 */
     r3 =- r2;
-    drelseek = r3; /* 2*txtsiz+datsiz+16 */
+    *drelseek = r3; /* 2*txtsiz+datsiz+16 */
     r3 =- r1;
-    trelseek = r3; /* txtsiz+datsiz+16 */
+    *trelseek = r3; /* txtsiz+datsiz+16 */
     r3 =- r2;
-    datseek = r3; /* txtsiz+16 */
+    *datseek = r3; /* txtsiz+16 */
     for (r1p = usymtab; r1p < endtable; r1p =+ 2) {
         doreloc(r1p);
     }
     oset(0, txtp);
-    oset(trelseek, relp);
+    oset(*trelseek, relp);
     for (r2 = 0; r2 < 8; ++r2) {
         putw(header[r2], txtp);
     }

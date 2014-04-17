@@ -3,9 +3,8 @@
 struct Op { int type, value; };
 struct { char cval; };
 
-int passno, line, swapf, rlimit, *dotrel, *dot, xsymbol, txtseek, trelseek;
-int *rseekp, *tseekp;
-int adrbuf[], savdot[];
+int passno, line, swapf, rlimit, *dotrel, *dot, xsymbol;
+int adrbuf[], savdot[], tseeks[], rseeks[], *tseekp, *rseekp;
 char argb[], *txtp[], *relp[];
 
 opline(r4)
@@ -268,8 +267,8 @@ opl27: /* .bss */
         flush(txtp);
         flush(relp);
         r2 = tmp2 - 21;
-        tseekp = &txtseek + r2;
-        rseekp = &trelseek + r2;
+        tseekp = &tseeks[r2];
+        rseekp = &rseeks[r2];
         oset(*tseekp, txtp);
         oset(*rseekp, relp);
     }
