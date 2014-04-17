@@ -2,7 +2,7 @@
 
 int outmod 0777;
 int savdot[], txtmagic, symsiz, ibufc, *fbbufp, *endtable;
-int dot, dotrel, dotdot, brtabp, passno;
+int *dotrel, *dot, *dotdot, brtabp, passno;
 int datbase, bssbase, txtsiz, datsiz, bsssiz;
 int symseek, drelseek, trelseek, datseek;
 char symf, fbfil, fin, *txtp[], *relp[], *atmp1;
@@ -56,9 +56,9 @@ go()
     /* prepare for pass 2 */
     if (outmod != 0777) aexit();
 
-    dot = 0;
-    dotrel = 2;
-    dotdot = 0;
+    *dot = 0;
+    *dotrel = 2;
+    *dotdot = 0; /* .. */
     brtabp = 0;
     close(fin);
     fin = ofile(atmp1);

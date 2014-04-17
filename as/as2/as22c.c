@@ -1,6 +1,6 @@
 /* translated from as22.s */
 
-int outmod, dotrel, dot, dotdot, xsymbol, passno;
+int outmod, *dotrel, *dot, *dotdot, xsymbol, passno;
 int *rseekp, *tseekp;
 char *usymtab, *txtp[], *relp[];
 
@@ -9,12 +9,12 @@ outw(r2, r3)
 	char c_flg;
 	char r3_flg;
 	
-	if(dotrel == 4) {
+	if(*dotrel == 4) {
 		error("x");
 		return;
 	}
 
-	if(dot & 1) {
+	if(*dot & 1) {
 		error("o");
 		outb(r2, 0);
 		return;
@@ -22,7 +22,7 @@ outw(r2, r3)
 
 	r3_flg = 1;
 
-	dot =+ 2;
+	*dot =+ 2;
 	
 	if(passno == 0) {
 		return;
@@ -66,10 +66,10 @@ outw(r2, r3)
 
 	if((r3 >= 0) && ((r3 != 2) || (r3 != 3))) {
 		if(c_flg != 0) {
-			r2 =- dotdot;
+			r2 =- *dotdot;
 		}
 	} else if(c_flg == 0) {
-		r2 =+ dotdot;
+		r2 =+ *dotdot;
 	}
 
 
@@ -90,18 +90,18 @@ outb(r2, r3)
 {
 	char *txtpp;
 	/* r3は1でOK */
-	/* dotrelは3でOK */
+	/* *dotrelは3でOK */
 	/* passnoは0か1*/
 	/* r2は1 */
 
-	if(dotrel == 4) {	/* test bss mode */
+	if(*dotrel == 4) {	/* test bss mode */
 		error("x");
 		return;
 	}
 	if(!(r3 <= 1)) error("r");
 
 	if(passno != 0) {
-		if(dot & 1) {
+		if(*dot & 1) {
 			txtpp = txtp[0]; 
 			*(--txtpp) = r2 & 0377;
 		} else {
@@ -112,7 +112,7 @@ outb(r2, r3)
 
 		}
 	}
-	++dot;  /* inc dot, rts pc */
+	++*dot;  /* inc dot, rts pc */
 }
 
 char argb[];

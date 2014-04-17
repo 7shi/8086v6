@@ -3,7 +3,7 @@
 struct Op { int type, value; };
 struct { char cval; };
 
-int line, savop, passno, dot, dotrel, brdelt, numval, txtsiz[];
+int line, savop, passno, *dotrel, *dot, brdelt, numval, txtsiz[];
 int curfb[];
 char symtab[];
 
@@ -26,13 +26,13 @@ assem()
                 r1 = oldr4;
                 if (r1 == symtab) { /* test for dot */
                     r3 =& ~32;
-                    if (r3 != dotrel) {
+                    if (r3 != *dotrel) {
                         /* can't change relocation */
                         error(".");
                     } else if (r3 == 4) { /* bss */
-                        dot = r2;
-                    } else if (dot <= r2) {
-                        for (i = dot; i < r2; ++i) {
+                        *dot = r2;
+                    } else if (*dot <= r2) {
+                        for (i = *dot; i < r2; ++i) {
                             outb(0, 1);
                         }
                     } else {
@@ -52,9 +52,9 @@ assem()
                     if (r4 == 2) {
                         fbadv(numval);
                         r0 = curfb[numval];
-                        r0->cval = dotrel;
-                        brdelt = r0->value - dot;
-                        r0->value = dot;
+                        r0->cval = *dotrel;
+                        brdelt = r0->value - *dot;
+                        r0->value = *dot;
                     } else {
                         error("x");
                     }
@@ -64,10 +64,10 @@ assem()
                         error("m");
                     }
                     r4->type =& ~31;
-                    r4->type =| dotrel;
-                    brdelt = r4->value - dot;
-                    r4->value = dot;
-                } else if (r4->value != dot) {
+                    r4->type =| *dotrel;
+                    brdelt = r4->value - *dot;
+                    r4->value = *dot;
+                } else if (r4->value != *dot) {
                     error("p");
                 }
             } else {
@@ -77,8 +77,8 @@ assem()
             }
         }
         if (!passno) {
-            if (txtsiz[dotrel - 2] < dot) {
-                txtsiz[dotrel - 2] = dot;
+            if (txtsiz[*dotrel - 2] < *dot) {
+                txtsiz[*dotrel - 2] = *dot;
             }
         }
         if (r4 == '\n') ++line;

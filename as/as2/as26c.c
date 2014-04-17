@@ -3,7 +3,7 @@
 struct Op { int type, value; };
 struct { char cval; };
 
-int passno, line, swapf, rlimit, dotrel, dot, xsymbol, txtseek, trelseek;
+int passno, line, swapf, rlimit, *dotrel, *dot, xsymbol, txtseek, trelseek;
 int *rseekp, *tseekp;
 int adrbuf[], savdot[];
 char argb[], *txtp[], *relp[];
@@ -137,8 +137,8 @@ opl36: /* jeq, jne, etc */
         r0 = r2;
         r2 = setbr(r0);
         if (r2 && tmp != 0000400/*br*/) r2 =+ 2;
-        dot =+ r2; /* if doesn't fit */
-        dot =+ 2;
+        *dot =+ r2; /* if doesn't fit */
+        *dot =+ 2;
     } else {
         if (getbr()) goto dobranch;
         r0 = tmp;
@@ -160,7 +160,7 @@ opl31: /* sob */
     r4 = readop();
     r4 = expres(r4, &r2, &r3);
     if (!passno) goto opl6_3;
-    r2 =- dot;
+    r2 =- *dot;
     r2 = -r2;
     r0 = r2;
     if (r0 < -2 || 125 < r0) goto opl6_2;
@@ -171,12 +171,12 @@ opl6: /* branch */
     r4 = expres(r4, &r2, &r3);
     if (!passno) goto opl6_3;
 dobranch:
-    r2 =- dot;
+    r2 =- *dot;
     r0 = r2;
     if (r0 < -254 || 256 < r0) goto opl6_2;
 opl6_1:
     if (r2 & 1) goto opl6_2;
-    if (r3 != dotrel) goto opl6_2; /* same relocation as . */
+    if (r3 != *dotrel) goto opl6_2; /* same relocation as . */
     r2 =>> 1;
     --r2;
     r2 =& ~0177400;
@@ -230,10 +230,10 @@ opl17: /* < (.ascii) */
     return;
 
 opl20: /* .even */
-    if ((dot & 1) == 0) return;
-    if (dotrel == 4) {
+    if ((*dot & 1) == 0) return;
+    if (*dotrel == 4) {
         /* bss mode */
-        ++dot;
+        ++*dot;
     } else {
         r2 = r3 = 0;
         outb(r2, r3);
@@ -260,10 +260,10 @@ opl23: /* .globl */
 opl25: /* .text */
 opl26: /* .data */
 opl27: /* .bss */
-    ++dot;
-    dot =& ~1;
+    ++*dot;
+    *dot =& ~1;
     tmp2 = r0;
-    savdot[dotrel - 2] = dot;
+    savdot[*dotrel - 2] = *dot;
     if (passno) {
         flush(txtp);
         flush(relp);
@@ -274,8 +274,8 @@ opl27: /* .bss */
         oset(*rseekp, relp);
     }
     r0 = tmp2;
-    dot = savdot[r0 - 21];
-    dotrel = r0 - 19; /* new . relocation */
+    *dot = savdot[r0 - 21];
+    *dotrel = r0 - 19; /* new . relocation */
     return;
 
 opl32:
@@ -363,7 +363,7 @@ int **r5, *r2;
         *r2 =| tmp;
     } else {
         r3 =| 0100000;
-        *r2 =- dot;
+        *r2 =- *dot;
         *r2 =- 4;
         if (*r5 != adrbuf) *r2 =- 2;
         *((*r5)++) = *r2; /* index */
@@ -400,7 +400,7 @@ setbr(r0)
     r1 = brtabp;
     if (r1 >= brlen) return 2;
     ++brtabp;
-    r0 =- dot;
+    r0 =- *dot;
     if (r0 > 0) r0 =- brdelt;
     if (-254 <= r0 && r0 <= 256) return 0;
     brtab[r1 >> 3] =| 1 << (r1 & 7);
