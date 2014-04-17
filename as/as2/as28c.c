@@ -14,7 +14,7 @@ int *stksiz   &header[5];
 int *exorig   &header[6];
 
 int tseeks[3] { 16 };
-int rseeks[3];
+int rseeks[3], symseek;
 
 int *tseekp tseeks;
 int *rseekp rseeks;
@@ -24,3 +24,17 @@ int *datseek &tseeks[1];
 
 int *trelseek &rseeks[0];
 int *drelseek &rseeks[1];
+
+int brlen 1024;
+char brtab[128]; /* bitmap: brlen / 8 */
+
+int savdot[3], adrbuf[6], curfb[10], nxtfb[10];
+int brtabp, brdelt, fbbufp, defund, datbase, bssbase;
+int ibufc, *ibufp, xsymbol, line, savop, numval, maxtyp;
+int swapf, rlimit, passno;
+
+char argb[22], *txtp[259], *relp[259];
+char fbfil, fin, txtfil, symf, fout, wordf, ch;
+char *usymtab, *endtable;
+
+int curfb[10], nxtfb[10];

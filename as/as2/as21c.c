@@ -1,12 +1,12 @@
 /* translated from as21.s */
 
 int outmod 0777;
-int savdot[], datbase, bssbase, ibufc, *fbbufp, *endtable;
+int savdot[], datbase, bssbase, ibufc, *fbbufp;
 int *dotrel, *dot, *dotdot, brtabp, passno;
 int header[], *txtsiz, *datsiz, *bsssiz, *symsiz;
 int *datseek, *trelseek, *drelseek, symseek;
 char symf, fbfil, fin, *txtp[], *relp[], *atmp1;
-char *usymtab, *memend;
+char *usymtab, *endtable, *memend;
 
 /* set up sizes and origins */
 go()
@@ -167,12 +167,13 @@ char *r1;
 }
 
 char txtfil;
-int curfb[];
+int curfb[], nxtfb[];
 
 setup()
 {
     int i;
-    memset(curfb, 0, 40);
+    memset(curfb, 0, 20);
+    memset(nxtfb, 0, 20);
     fin = txtfil;
     ibufc = 0;
     for (i = 0; i < 10; ++i) {
