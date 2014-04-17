@@ -34,7 +34,7 @@ int ibufc, *ibufp, xsymbol, line, savop, numval, maxtyp;
 int swapf, rlimit, passno;
 
 char argb[22], *txtp[259], *relp[259];
-char fbfil, fin, txtfil, symf, fout, wordf, ch;
+char fbfil, fin, txtfil, symf, faout, wordf, ch;
 char *usymtab, *endtable;
 
 int curfb[10], nxtfb[10];

@@ -25,7 +25,7 @@ putw(r0, r5)
     ++r2[0];
 }
 
-char fout;
+char faout;
 
 aflush(r5)
 {
@@ -33,10 +33,10 @@ aflush(r5)
     r2 = r5;
     next = r5 + 6;
     r1 = r2[2]; /* seek address */
-    seek(fout, r1, 0);
+    seek(faout, r1, 0);
     r2[2] = (r1 | 0777) + 1; /* new seek addr */
     r1 = next + (r1 & 0777); /* write address */
-    write(fout, r1, r2[0] - r1);
+    write(faout, r1, r2[0] - r1);
     r2[0] = next; /* new next slot */
 }
 

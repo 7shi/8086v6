@@ -230,7 +230,7 @@ int *dotdot &symtab[3];
 
 int defund;
 char *atmp1, *atmp2, *atmp3;
-char txtfil, fbfil, symf, fin, fout;
+char txtfil, fbfil, symf, fin, faout;
 char *aout;
 aexit();
 
@@ -251,7 +251,7 @@ char *argv[];
 	txtfil     = ofile(atmp1);
 	fbfil      = ofile(atmp2);
 	symf = fin = ofile(atmp3);
-	if ((fout = creat(aout, 0)) < 0)
+	if ((faout = creat(aout, 0)) < 0)
 		filerr(aout);
 	go();
 }
