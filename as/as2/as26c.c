@@ -101,7 +101,7 @@ op2b:
     }
     tmp2 = (tmp2 << 8) + ((tmp2 >> 8) & 255);
     tmp2 =>> 2;
-    if (tmp2 >= rlimit) error("x");
+    if (rlimit != -1 && tmp2 >= rlimit) error("x");
     r2 =| tmp2;
     r2 =| tmp;
     r3 = 0;
@@ -176,7 +176,7 @@ dobranch:
     if (r0 < -254 || 256 < r0) goto opl6_2;
 opl6_1:
     if (r2 & 1) goto opl6_2;
-    if (r3 != &dotrel) goto opl6_2; /* same relocation as . */
+    if (r3 != dotrel) goto opl6_2; /* same relocation as . */
     r2 =>> 1;
     --r2;
     r2 =& ~0177400;
@@ -230,7 +230,7 @@ opl17: /* < (.ascii) */
     return r4;
 
 opl20: /* .even */
-    if (dot & 1 == 0) return r4;
+    if ((dot & 1) == 0) return r4;
     if (dotrel == 4) {
         /* bss mode */
         ++dot;
@@ -263,13 +263,11 @@ opl27: /* .bss */
     ++dot;
     dot =& ~1;
     tmp2 = r0;
-    r1 = dotrel;
-    r1 =<< 1;
-    savdot[r1 - 4] = dot;
+    savdot[dotrel - 2] = dot;
     if (passno) {
         flush(txtp);
         flush(relp);
-        r2 = tmp2 - 25;
+        r2 = tmp2 - 21;
         tseekp = &txtseek + r2;
         rseekp = &trelseek + r2;
         oset(*tseekp, txtp);
