@@ -8,7 +8,7 @@ int *rseekp, *tseekp;
 int adrbuf[], savdot[];
 char argb[], *txtp[], *relp[];
 
-opline_(r4)
+opline(r4)
 {
     int r0, r1, *r1p, r2, r3, *r5, tmp, tmp2;
     r0 = r4;
