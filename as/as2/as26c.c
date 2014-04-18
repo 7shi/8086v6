@@ -1,7 +1,6 @@
 /* translated from as26.s */
 
 struct Op { int type, value; };
-struct { char cval; };
 
 int passno, line, rlimit, *dotrel, *dot, xsymbol;
 int adrbuf[], savdot[], tseeks[], rseeks[], *tseekp, *rseekp;
@@ -9,21 +8,18 @@ char argb[], *txtp[], *relp[];
 
 opline(r4)
 {
-    int r0, r1, r2, r3, *r5, *p, tmp, tmp2, swapf;
+    int r0, r1, r2, r3, *r5, *p, i, tmp, tmp2, swapf;
     if (r4 < 0 || 127 < r4) {
         goto opline2;
-    } else if (r4 == 5) { /* opeof: */
+    } else if (r4 == 5) {
+        /* file name */
         line = 1;
-        tmp = 16;
-        r1 = argb;
-        for (;;) {
+        memset(argb, 0, 22);
+        for (i = 0;; ++i) {
             r4 = getw();
             if (r4 < 0) break;
-            r1->cval = r4;
-            if (--tmp > 0) ++r1;
+            if (i < 21) argb[i] = r4;
         }
-        (r1++)->cval = '\n';
-        (r1++)->cval = 0;
         return;
     } else if (r4 == '<') {
         goto opl17;

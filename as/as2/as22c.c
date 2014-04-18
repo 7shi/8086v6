@@ -80,10 +80,12 @@ char *r5;
     /* make nonexecutable */
     outmod = 0666;
 
-    write(1, argb, strlen(argb));
-    memset(argb, 0, 22);
+    if (argb[0]) {
+        printf("%s\n", argb);
+        argb[0] = 0;
+    }
 
-    /* line[0]の内容を10進数で表示する */
+    /* lineの値を10進数で表示 */
     ln = line;
     for (i = 0; i < 4; i++) {
         buf[3 - i] = '0' + (ln % 10);
