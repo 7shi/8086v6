@@ -9,7 +9,7 @@ char argb[], *txtp[], *relp[];
 
 opline(r4)
 {
-    int r0, r1, *r1p, r2, r3, *r5, tmp, tmp2;
+    int r0, r1, r2, r3, *r5, *p, tmp, tmp2;
     r0 = r4;
     if (r0 < 0 || 127 < r0) goto opline2;
     if (r4 == 5) goto opeof;
@@ -98,19 +98,12 @@ op2b:
         tmp2 = r2;
         r2 = r0;
     }
-    tmp2 = (tmp2 << 8) + ((tmp2 >> 8) & 255);
-    tmp2 =>> 2;
+    tmp2 = ((tmp2 << 8) + ((tmp2 >> 8) & 255)) >> 2;
     if (rlimit != -1 && tmp2 >= rlimit) error("x");
-    r2 =| tmp2;
-    r2 =| tmp;
-    r3 = 0;
-    outw(r2, r3);
-    r1p = adrbuf;
-    while (r1p < r5) {
-        r2 = *(r1p++);
-        r3 = *(r1p++);
-        xsymbol = *(r1p++);
-        outw(r2, r3);
+    outw(r2 | tmp | tmp2, 0);
+    for (p = adrbuf; p < r5; p =+ 3) {
+        outw(p[0], p[1]);
+        xsymbol = p[2];
     }
     return;
 
@@ -180,9 +173,7 @@ opl6_1:
     --r2;
     r2 =& ~0177400;
 opl6_3:
-    r2 =| tmp;
-    r3 = 0;
-    outw(r2, r3);
+    outw(r2 | tmp, 0);
     return;
 opl6_2:
     error("b");
@@ -203,8 +194,7 @@ opl11: /* sys, emt etc */
     r4 = expres(r4, &r2, &r3);
     if (r2 >= 64 || r3 > 1) error("a");
 opl11_1:
-    r2 =| tmp;
-    outw(r2, r3);
+    outw(r2 | tmp, r3);
     return;
 
 opl16: /* .byte */
@@ -217,13 +207,11 @@ opl16: /* .byte */
     return;
 
 opl17: /* < (.ascii) */
-    r4 = getw();
-    r3 = 1;
-    r2 = r4;
-    if (r2 >= 0) {
-        r2 =& 255;
-        outb(r2, r3);
-        goto opl17;
+    for (;;) {
+        r4 = getw();
+        r2 = r4;
+        if (r2 < 0) break;
+        outb(r2 & 255, 1);
     }
     r4 = getw();
     return;
@@ -234,8 +222,7 @@ opl20: /* .even */
         /* bss mode */
         ++*dot;
     } else {
-        r2 = r3 = 0;
-        outb(r2, r3);
+        outb(0, 0);
     }
     return;
 
