@@ -40,8 +40,8 @@ outw(r2, r3)
         }
         if (--r3 < 0) r3 = 0;
     }
-    putw(r2, txtp);
-    putw((r3 << 1) | tmp, relp);
+    putw(txtp, r2);
+    putw(relp, (r3 << 1) | tmp);
     *tseekp =+ 2;
     *rseekp =+ 2;
 }
@@ -55,8 +55,8 @@ outb(r2, r3)
     if (r3 > 1) error("r");
     if (passno) {
         if ((*dot & 1) == 0) {
-            putw(r2, txtp);
-            putw(0, relp);
+            putw(txtp, r2);
+            putw(relp, 0);
             *rseekp =+ 2;
             *tseekp =+ 2;
         } else {

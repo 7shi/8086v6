@@ -89,10 +89,10 @@ go()
     for (r1p = usymtab; r1p < endtable; r1p =+ 2) {
         doreloc(r1p);
     }
-    oset(0, txtp);
-    oset(*trelseek, relp);
+    oset(txtp, 0);
+    oset(relp, *trelseek);
     for (r2 = 0; r2 < 8; ++r2) {
-        putw(header[r2], txtp);
+        putw(txtp, header[r2]);
     }
     assem();
 
@@ -103,15 +103,15 @@ go()
     /* append full symbol table */
     seek(fin = symf, 0, 0);
     ibufc = 0;
-    oset(symseek, txtp);
+    oset(txtp, symseek);
     r1p = usymtab;
     while ((r4 = getw()) != 4/*EOT*/) {
-        putw(r4, txtp);
-        putw(getw(), txtp);
-        putw(getw(), txtp);
-        putw(getw(), txtp);
-        putw(*(r1p++), txtp);
-        putw(*(r1p++), txtp);
+        putw(txtp, r4);
+        putw(txtp, getw());
+        putw(txtp, getw());
+        putw(txtp, getw());
+        putw(txtp, *(r1p++));
+        putw(txtp, *(r1p++));
         getw();
         getw();
     }

@@ -105,8 +105,8 @@ opline2:
             r2 = r0 - 21;
             tseekp = &tseeks[r2];
             rseekp = &rseeks[r2];
-            oset(*tseekp, txtp);
-            oset(*rseekp, relp);
+            oset(txtp, *tseekp);
+            oset(relp, *rseekp);
         }
         *dot = savdot[r0 - 21];
         *dotrel = r0 - 19; /* new . relocation */

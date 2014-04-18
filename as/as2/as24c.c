@@ -1,6 +1,6 @@
 /* translated from as24.s */
 
-oset(r0, r5)
+oset(r5, r0)
 {
     int *r1, next;
     r1 = r5;
@@ -13,7 +13,7 @@ oset(r0, r5)
     r1[2] = r0;
 }
 
-putw(r0, r5)
+putw(r5, r0)
 {
     int **r2;
     r2 = r5;
