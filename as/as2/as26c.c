@@ -9,7 +9,7 @@ char argb[], *txtp[], *relp[];
 opline(r4)
 {
     struct Op x;
-    int r0, r2, *r5, *p, i, opcode, tmp2;
+    int r2, *r5, *p, i, optype, opcode, tmp;
     if (r4 == 5) {
         /* file name */
         line = 1;
@@ -28,13 +28,13 @@ opline(r4)
         outw(x.value, x.type);
         return;
     }
-    r0 = r4->type;
+    optype = r4->type;
     opcode = r4->value;
     r5 = adrbuf;
-    switch (r0) {
+    switch (optype) {
     case 5: /* flop src,freg */
-        tmp2 = addres(&r5);
-        op2b(r5, opcode, tmp2, 0, 0400);
+        tmp = addres(&r5);
+        op2b(r5, opcode, tmp, 0, 0400);
         break;
     case 6: /* branch */
         expres(&x, readop());
@@ -60,21 +60,21 @@ opline(r4)
         outw(opcode | x.value, x.type);
         break;
     case 10: /* movf */
-        tmp2 = addres(&r5);
-        if (tmp2 >= 4) {
+        tmp = addres(&r5);
+        if (tmp >= 4) {
             /* see if source is fregister */
-            op2b(r5, opcode, tmp2, 1, 0400);
+            op2b(r5, opcode, tmp, 1, 0400);
         } else {
-            op2b(r5, 0174000, tmp2, 0, 0400);
+            op2b(r5, 0174000, tmp, 0, 0400);
         }
         break;
     case 11: /* double */
-        tmp2 = addres(&r5);
-        op2b(r5, opcode, tmp2, 0, -1);
+        tmp = addres(&r5);
+        op2b(r5, opcode, tmp, 0, -1);
         break;
     case 12: /* flop freg,fsrc */
-        tmp2 = addres(&r5);
-        op2b(r5, opcode, tmp2, 1, 0400);
+        tmp = addres(&r5);
+        op2b(r5, opcode, tmp, 1, 0400);
         break;
     case 13: /* single operand */
         op2b(r5, opcode, 0, 0, -1);
@@ -123,18 +123,17 @@ opline(r4)
         if (passno) {
             aflush(txtp);
             aflush(relp);
-            r2 = r0 - 21;
-            tseekp = &tseeks[r2];
-            rseekp = &rseeks[r2];
+            tseekp = &tseeks[optype - 21];
+            rseekp = &rseeks[optype - 21];
             oset(txtp, *tseekp);
             oset(relp, *rseekp);
         }
-        *dot = savdot[r0 - 21];
-        *dotrel = r0 - 19; /* new . relocation */
+        *dot = savdot[optype - 21];
+        *dotrel = optype - 19; /* new . relocation */
         return;
     case 24: /* mpy, dvd etc */
-        tmp2 = addres(&r5);
-        op2b(r5, opcode, tmp2, 1, 01000);
+        tmp = addres(&r5);
+        op2b(r5, opcode, tmp, 1, 01000);
         break;
     case 25: /* sob */
         expres(&x, readop());
@@ -196,19 +195,19 @@ opline(r4)
     }
 }
 
-op2b(r5, opcode, tmp2, swapf, rlimit)
+op2b(r5, opcode, tmp, swapf, rlimit)
 int *r5;
 {
     int r0, r2, *p;
     r2 = addres(&r5);
     if (swapf) {
-        r0 = tmp2;
-        tmp2 = r2;
+        r0 = tmp;
+        tmp = r2;
         r2 = r0;
     }
-    tmp2 = ((tmp2 << 8) + ((tmp2 >> 8) & 255)) >> 2;
-    if (rlimit != -1 && tmp2 >= rlimit) error("x");
-    outw(opcode | r2 | tmp2, 0);
+    tmp = ((tmp << 8) + ((tmp >> 8) & 255)) >> 2;
+    if (rlimit != -1 && tmp >= rlimit) error("x");
+    outw(opcode | r2 | tmp, 0);
     for (p = adrbuf; p < r5; p =+ 3) {
         outw(p[0], p[1]);
         xsymbol = p[2];
