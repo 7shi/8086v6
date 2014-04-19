@@ -4,17 +4,17 @@ struct Op { int type, value; };
 
 int xsymbol;
 
-expres(this, r4)
+expres(this, op)
 struct Op *this;
 {
     xsymbol = 0;
-    return expres1(this, r4);
+    return expres1(this, op);
 }
 
 int numval, esw1, passno, curfb[];
 char reltp2[], reltm2[], relte2[];
 
-expres1(this, r4)
+expres1(this, op)
 struct Op *this;
 {
     struct Op x, *fb;
@@ -23,26 +23,26 @@ struct Op *this;
     this->type  = 1;
     this->value = 0;
     for (;;) {
-        if (r4 < 0 || 127 < r4) {
-            x.type = r4->type;
+        if (op < 0 || 127 < op) {
+            x.type = op->type;
             if (x.type == 0 && passno) {
                 error("u");
             }
             if (x.type == 32) {
-                xsymbol = r4;
+                xsymbol = op;
                 x.value = 0;
             } else {
-                x.value = r4->value;
+                x.value = op->value;
             }
-        } else if (r4 >= 97) {
-            fb = curfb[r4 - 97];
+        } else if (op >= 97) {
+            fb = curfb[op - 97];
             x.type  = fb->type;
             x.value = fb->value;
         } else {
-            switch (r4) {
+            switch (op) {
             case '[':
-                r4 = expres1(&x, readop());
-                if (r4 != ']') error("]");
+                op = expres1(&x, readop());
+                if (op != ']') error("]");
                 break;
             case   1:
                 x.type  = 1;
@@ -64,11 +64,11 @@ struct Op *this;
             case '%':
             case '!':
                 if (opr != '+') error("e");
-                opr = r4;
-                r4 = readop();
+                opr = op;
+                op = readop();
                 continue;
             default:
-                return r4;
+                return op;
             }
         }
 
@@ -86,37 +86,37 @@ struct Op *this;
         case '!': combin(this, &x, relte2); this->value =+ ~x.value; break;
         }
         opr = '+';
-        r4 = readop();
+        op = readop();
     }
 }
 
 int maxtyp;
 
-combin(this, x, r5)
+combin(this, x, map)
 struct Op *this, *x;
-char *r5;
+char *map;
 {
-    int r0, r1, globl, tmp;
-    r0 = x->type;
+    int type, rel, globl, tmp;
+    type = x->type;
     if (!passno) {
-        globl = (r0 | this->type) & 32;
-        r0 =& 31;
+        globl = (type | this->type) & 32;
+        type =& 31;
         this->type =& 31;
-        if (r0 > this->type) {
-            tmp = r0;
-            r0 = this->type;
+        if (type > this->type) {
+            tmp = type;
+            type = this->type;
             this->type = tmp;
         }
-        if (!r0) {
+        if (!type) {
             this->type = 0;
-        } else if (r5 == reltm2 && r0 == this->type) {
+        } else if (map == reltm2 && type == this->type) {
             this->type = 1;
         }
         this->type =| globl;
     } else {
         maxtyp = 0;
-        r1 = maprel(r0) * 6;
-        this->type = r5[maprel(this->type) + r1];
+        rel = maprel(type) * 6;
+        this->type = map[maprel(this->type) + rel];
         if (this->type < 0) {
             if (this->type != -1) error("r");
             this->type = maxtyp;
@@ -126,13 +126,12 @@ char *r5;
 
 int maxtyp;
 
-maprel(r0)
+maprel(type)
 {
-    if (r0 == 32) return 5;
-    r0 =& 31;
-    if (maxtyp < r0) maxtyp = r0;
-    if (r0 > 5) return 1;
-    return r0;
+    if (type == 32) return 5;
+    type =& 31;
+    if (maxtyp < type) maxtyp = type;
+    return type <= 5 ? type : 1;
 }
 
 /* X = -2, M = -1 */
