@@ -2,14 +2,14 @@
 
 struct Op { int type, value; };
 
-int passno, line, rlimit, *dotrel, *dot, xsymbol;
+int passno, line, *dotrel, *dot, xsymbol;
 int adrbuf[], savdot[], tseeks[], rseeks[], *tseekp, *rseekp;
 char argb[], *txtp[], *relp[];
 
 opline(r4)
 {
     struct Op x;
-    int r0, r2, *r5, *p, i, tmp1, tmp2, swapf;
+    int r0, r2, *r5, *p, i, tmp1, tmp2;
     if (r4 == 5) {
         /* file name */
         line = 1;
@@ -21,7 +21,8 @@ opline(r4)
         }
         return;
     } else if (r4 == '<') {
-        goto opl17;
+        opl17();
+        return;
     } else if (0 <= r4 && r4 < 128) {
         expres(&x, r4);
         outw(x.value, x.type);
@@ -30,35 +31,64 @@ opline(r4)
     r0 = r4->type;
     tmp1 = r4->value;
     r5 = adrbuf;
-    swapf = 0;
-    rlimit = -1;
     switch (r0) {
-    case  5: goto opl5;
-    case  6: goto opl6;
-    case  7: goto opl7;
-    case  8: /* rts */
+    case 5: /* flop src,freg */
+        tmp2 = addres(&r5);
+        op2b(r5, tmp1, tmp2, 0, 0400);
+        break;
+    case 6: /* branch */
+        expres(&x, readop());
+        if (!passno) {
+            outw(x.value | tmp1, 0);
+        } else {
+            dobranch(&x, tmp1, 0);
+        }
+        break;
+    case 7: /* jsr */
+        expres(&x, readop());
+        checkreg(&x);
+        op2b(r5, tmp1, x.value, 0, -1);
+        break;
+    case 8: /* rts */
         expres(&x, readop());
         checkreg(&x);
         outw(x.value | tmp1, x.type);
-        return;
-    case  9: /* sys, emt etc */
+        break;
+    case 9: /* sys, emt etc */
         expres(&x, readop());
         if (x.value >= 64 || x.type > 1) error("a");
         outw(x.value | tmp1, x.type);
-        return;
-    case 10: goto opl12;
-    case 11: goto opl13;
-    case 12: goto opl14;
-    case 13: goto opl15;
+        break;
+    case 10: /* movf */
+        tmp2 = addres(&r5);
+        if (tmp2 >= 4) {
+            /* see if source is fregister */
+            op2b(r5, tmp1, tmp2, 1, 0400);
+        } else {
+            op2b(r5, 0174000, tmp2, 0, 0400);
+        }
+        break;
+    case 11: /* double */
+        tmp2 = addres(&r5);
+        op2b(r5, tmp1, tmp2, 0, -1);
+        break;
+    case 12: /* flop freg,fsrc */
+        tmp2 = addres(&r5);
+        op2b(r5, tmp1, tmp2, 1, 0400);
+        break;
+    case 13: /* single operand */
+        op2b(r5, tmp1, 0, 0, -1);
+        break;
     case 14: /* .byte */
         do {
             r4 = expres(&x, readop());
             outb(x.value, x.type);
         } while (r4 == ',');
-        return;
+        break;
     case 15:
         readop();
-        goto opl17;
+        opl17();
+        break;
     case 16: /* .even */
         readop();
         if (*dot & 1) {
@@ -69,12 +99,12 @@ opline(r4)
                 outb(0, 0);
             }
         }
-        return;
+        break;
     case 17: /* if */
         expres(&x, readop());
-        return;
+        break;
     case 18: /* .endif */
-        return;
+        break;
     case 19: /* .globl */
         do {
             r4 = readop();
@@ -82,7 +112,7 @@ opline(r4)
             r4->type =| 32;
             r4 = readop();
         } while (r4 == ',');
-        return;
+        break;
     case 21: /* .text */
     case 22: /* .data */
     case 23: /* .bss  */
@@ -102,8 +132,29 @@ opline(r4)
         *dot = savdot[r0 - 21];
         *dotrel = r0 - 19; /* new . relocation */
         return;
-    case 24: goto opl30;
-    case 25: goto opl31;
+    case 24: /* mpy, dvd etc */
+        tmp2 = addres(&r5);
+        op2b(r5, tmp1, tmp2, 1, 01000);
+        break;
+    case 25: /* sob */
+        expres(&x, readop());
+        checkreg(&x);
+        tmp1 =| ((x.value << 8) + ((x.value >> 8) & 255)) >> 2;
+        expres(&x, readop());
+        if (!passno) {
+            outw(x.value | tmp1, 0);
+            return;
+        }
+        x.value =- *dot;
+        x.value = -x.value;
+        if (x.value < -2 || 125 < x.value) {
+            error("b");
+            outw(tmp1, 0);
+        } else {
+            x.value =+ 4;
+            dobranch(&x, tmp1, 1);
+        }
+        break;
     case 26: /* .comm */
         r4 = readop();
         if (r4 < 128) return;
@@ -113,7 +164,7 @@ opline(r4)
             r4->type =| 32;
             r4->value = x.value;
         }
-        return;
+        break;
     case 29: /* jbr */
     case 30: /* jeq, jne, etc */
         expres(&x, readop());
@@ -123,40 +174,32 @@ opline(r4)
             *dot =+ r2; /* if doesn't fit */
             *dot =+ 2;
         } else {
-            if (getbr()) goto dobranch;
-            if (tmp1 != 0000400/*br*/) {
-                /* flip cond, add ".+6" */
-                outw(0402 ^ tmp1, 1);
+            if (getbr()) {
+                dobranch(&x, tmp1, 0);
+            } else {
+                if (tmp1 != 0000400/*br*/) {
+                    /* flip cond, add ".+6" */
+                    outw(0402 ^ tmp1, 1);
+                }
+                outw(0000100/*jmp*/ + 037, 1);
+                outw(x.value, x.type);
             }
-            outw(0000100/*jmp*/ + 037, 1);
-            outw(x.value, x.type);
         }
-        return;
+        break;
     case 20: /* reg */
     case 27: /* est text */
     case 28: /* est data */
     default:
         expres(&x, r4);
         outw(x.value, x.type);
-        return;
+        break;
     }
+}
 
-opl30: /* mpy, dvd etc */
-    ++swapf;
-    rlimit = 01000;
-    goto opl13;
-
-opl14: /* flop freg,fsrc */
-    ++swapf;
-
-opl5: /* flop src,freg */
-    rlimit = 0400;
-
-opl13: /* double */
-    r2 = addres(&r5);
-op2a:
-    tmp2 = r2;
-op2b:
+op2b(r5, tmp1, tmp2, swapf, rlimit)
+int *r5;
+{
+    int r0, r2, *p;
     r2 = addres(&r5);
     if (swapf) {
         r0 = tmp2;
@@ -170,70 +213,31 @@ op2b:
         outw(p[0], p[1]);
         xsymbol = p[2];
     }
-    return;
+}
 
-opl15: /* single operand */
-    tmp2 = 0;
-    goto op2b;
-
-opl12: /* movf */
-    rlimit = 0400;
-    r2 = addres(&r5);
-    if (r2 >= 4) {
-        /* see if source is fregister */
-        ++swapf;
+dobranch(this, opcode, sob)
+struct Op *this;
+{
+    if (!sob) this->value =- *dot;
+    if ((!sob && this->value < -254 || 256 < this->value)
+        || this->value & 1
+        || this->type != *dotrel /* same relocation as . */) {
+        error("b");
+        outw(opcode, 0);
     } else {
-        tmp1 = 0174000;
+        outw((((this->value >> 1) - 1) & ~0177400) | opcode, 0);
     }
-    goto op2a;
+}
 
-opl31: /* sob */
-    expres(&x, readop());
-    checkreg(&x);
-    tmp1 =| ((x.value << 8) + ((x.value >> 8) & 255)) >> 2;
-    expres(&x, readop());
-    if (!passno) {
-        outw(x.value | tmp1, 0);
-        return;
-    }
-    x.value =- *dot;
-    x.value = -x.value;
-    if (x.value < -2 || 125 < x.value) goto opl6_2;
-    x.value =+ 4;
-    goto opl6_1;
-
-opl6: /* branch */
-    expres(&x, readop());
-    if (!passno) {
-        outw(x.value | tmp1, 0);
-        return;
-    }
-dobranch:
-    x.value =- *dot;
-    if (x.value < -254 || 256 < x.value) goto opl6_2;
-opl6_1:
-    if (x.value & 1) goto opl6_2;
-    if (x.type != *dotrel) goto opl6_2; /* same relocation as . */
-    outw((((x.value >> 1) - 1) & ~0177400) | tmp1, 0);
-    return;
-opl6_2:
-    error("b");
-    outw(tmp1, 0);
-    return;
-
-opl7: /* jsr */
-    expres(&x, readop());
-    checkreg(&x);
-    r2 = x.value;
-    goto op2a;
-
-opl17: /* < (.ascii) */
+/* < (.ascii) */
+opl17()
+{
+    int w;
     for (;;) {
-        if ((r4 = getw()) < 0) break;
-        outb(r4 & 255, 1);
+        if ((w = getw()) < 0) break;
+        outb(w & 255, 1);
     }
     getw();
-    return;
 }
 
 int savop;
