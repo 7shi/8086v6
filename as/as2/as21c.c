@@ -11,8 +11,9 @@ char *usymtab, *endtable, *memend;
 /* set up sizes and origins */
 go()
 {
-    /* read in symbol table */
     int r0, r1, *r1p, r2, r3, r4;
+
+    /* read in symbol table */
     r1p = usymtab = memend = sbrk(0);
     setbrk(r1p);
     while (getw() != 4/*EOT*/) {
@@ -67,10 +68,8 @@ go()
     ++passno;
     ++*bsssiz;
     *bsssiz =& ~1;
-    r1 = (*txtsiz + 1) & ~1;
-    *txtsiz = r1;
-    r2 = (*datsiz + 1) & ~1;
-    *datsiz = r2;
+    *txtsiz = r1 = (*txtsiz + 1) & ~1;
+    *datsiz = r2 = (*datsiz + 1) & ~1;
     r3 = r1;
     datbase = r3; /* txtsiz */
     savdot[1] = r3;
@@ -133,12 +132,11 @@ aexit()
 
 char ch;
 
-filerr(r5)
-char *r5;
+filerr(fn)
+char *fn;
 {
     if (!errflg) ++errflg;
-    write(1, r5, strlen(r5));
-    write(1, "?\n", 2);
+    printf("%s?\n", fn);
     aexit();
 }
 
@@ -181,10 +179,10 @@ setup()
     }
 }
 
-ofile(r5)
-char *r5;
+ofile(fn)
+char *fn;
 {
-    int r0;
-    if ((r0 = open(r5, 0)) < 0) filerr(r5);
-    return r0;
+    int fd;
+    if ((fd = open(fn, 0)) < 0) filerr(fn);
+    return fd;
 }
