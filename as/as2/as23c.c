@@ -9,7 +9,8 @@ char symtab[];
 
 assem()
 {
-    int r0, r1, r2, r3, r4, oldr4, i;
+    struct Op x;
+    int r0, r1, r4, oldr4, i;
     do {
         r4 = readop();
         if (r4 == 5 || r4 == '<') {
@@ -22,29 +23,29 @@ assem()
             }
             r4 = readop();
             if (r4 == '=') {
-                r4 = expres(readop(), &r2, &r3);
+                r4 = expres(&x, readop());
                 r1 = oldr4;
                 if (r1 == symtab) { /* test for dot */
-                    r3 =& ~32;
-                    if (r3 != *dotrel) {
+                    x.type =& ~32;
+                    if (x.type != *dotrel) {
                         /* can't change relocation */
                         error(".");
-                    } else if (r3 == 4) { /* bss */
-                        *dot = r2;
-                    } else if (*dot <= r2) {
-                        for (i = *dot; i < r2; ++i) {
+                    } else if (x.type == 4) { /* bss */
+                        *dot = x.value;
+                    } else if (*dot <= x.value) {
+                        for (i = *dot; i < x.value; ++i) {
                             outb(0, 1);
                         }
                     } else {
                         error(".");
                     }
                 } else {
-                    if (r3 == 32) error("r");
-                    r3 =& 31;
-                    if (r3 == 0) r2 = 0;
+                    if (x.type == 32) error("r");
+                    x.type =& 31;
+                    if (x.type == 0) x.value = 0;
                     r1->type =& ~31;
-                    r1->type =| r3;
-                    r1->value = r2;
+                    r1->type =| x.type;
+                    r1->value = x.value;
                 }
             } else if (r4 == ':') {
                 r4 = oldr4;

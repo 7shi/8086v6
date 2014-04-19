@@ -4,15 +4,11 @@ struct Op { int type, value; };
 
 int xsymbol;
 
-expres(r4, r2, r3)
-int *r2, *r3;
+expres(this, r4)
+struct Op *this;
 {
-    struct Op x;
     xsymbol = 0;
-    r4 = expres1(&x, r4);
-    *r2 = x.value;
-    *r3 = x.type;
-    return r4;
+    return expres1(this, r4);
 }
 
 int numval, esw1, passno, curfb[];
