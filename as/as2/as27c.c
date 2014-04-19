@@ -21,43 +21,40 @@ char reltp2[], reltm2[], relte2[];
 expres1(this, r4)
 struct Op *this;
 {
-    struct Op x;
-    int r0, r1, opr;
+    struct Op x, *fb;
+    int opr;
     opr = '+';
     this->type  = 1;
     this->value = 0;
     for (;;) {
-        r0 = r4;
-        if (r0 < 0 || 127 < r0) {
-            r0 = r4->type;
-            if (r0 == 0 && passno) {
+        if (r4 < 0 || 127 < r4) {
+            x.type = r4->type;
+            if (x.type == 0 && passno) {
                 error("u");
             }
-            if (r0 == 32) {
+            if (x.type == 32) {
                 xsymbol = r4;
-                r1 = 0;
+                x.value = 0;
             } else {
-                r1 = r4->value;
+                x.value = r4->value;
             }
         } else if (r4 >= 97) {
-            r0 = curfb[r4 - 97];
-            r1 = r0->value;
-            r0 = r0->type;
+            fb = curfb[r4 - 97];
+            x.type  = fb->type;
+            x.value = fb->value;
         } else {
             switch (r4) {
             case '[':
                 r4 = expres1(&x, readop());
-                r0 = x.type;
-                r1 = x.value;
                 if (r4 != ']') error("]");
                 break;
             case   1:
-                r1 = getw();
-                r0 = 1;
+                x.type  = 1;
+                x.value = getw();
                 break;
             case   2:
-                r1 = numval;
-                r0 = 1;
+                x.type  = 1;
+                x.value = numval;
                 break;
             case '^':
             case  29:
@@ -80,49 +77,17 @@ struct Op *this;
         }
 
         switch (opr) {
-        case '^':
-            this->type = r0;
-            break;
-        case  29:
-            combin(this, r0, relte2);
-            this->value =<< r1;
-            break;
-        case  30:
-            combin(this, r0, relte2);
-            this->value =>> r1;
-            break;
-        case  31:
-            combin(this, r0, relte2);
-            this->value =| r1;
-            break;
-        case '+':
-            combin(this, r0, reltp2);
-            this->value =+ r1;
-            break;
-        case '-':
-            combin(this, r0, reltm2);
-            this->value =- r1;
-            break;
-        case '*':
-            combin(this, r0, relte2);
-            this->value =* r1;
-            break;
-        case '/':
-            combin(this, r0, relte2);
-            this->value =/ r1;
-            break;
-        case '&':
-            combin(this, r0, relte2);
-            this->value =& r1;
-            break;
-        case '%':
-            combin(this, r0, relte2);
-            this->value =% r1;
-            break;
-        case '!':
-            combin(this, r0, relte2);
-            this->value =+ ~r1;
-            break;
+        case '^': this->type = x.type; break;
+        case  29: combin(this, &x, relte2); this->value =<< x.value; break;
+        case  30: combin(this, &x, relte2); this->value =>> x.value; break;
+        case  31: combin(this, &x, relte2); this->value =|  x.value; break;
+        case '+': combin(this, &x, reltp2); this->value =+  x.value; break;
+        case '-': combin(this, &x, reltm2); this->value =-  x.value; break;
+        case '*': combin(this, &x, relte2); this->value =*  x.value; break;
+        case '/': combin(this, &x, relte2); this->value =/  x.value; break;
+        case '&': combin(this, &x, relte2); this->value =&  x.value; break;
+        case '%': combin(this, &x, relte2); this->value =%  x.value; break;
+        case '!': combin(this, &x, relte2); this->value =+ ~x.value; break;
         }
         opr = '+';
         r4 = readop();
@@ -131,11 +96,12 @@ struct Op *this;
 
 int maxtyp;
 
-combin(this, r0, r5)
-struct Op *this;
+combin(this, x, r5)
+struct Op *this, *x;
 char *r5;
 {
-    int r1, globl, tmp;
+    int r0, r1, globl, tmp;
+    r0 = x->type;
     if (!passno) {
         globl = (r0 | this->type) & 32;
         r0 =& 31;
