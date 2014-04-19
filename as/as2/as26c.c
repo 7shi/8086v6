@@ -9,7 +9,7 @@ char argb[], *txtp[], *relp[];
 opline(r4)
 {
     struct Op x;
-    int r0, r2, *r5, *p, i, tmp1, tmp2;
+    int r0, r2, *r5, *p, i, opcode, tmp2;
     if (r4 == 5) {
         /* file name */
         line = 1;
@@ -29,55 +29,55 @@ opline(r4)
         return;
     }
     r0 = r4->type;
-    tmp1 = r4->value;
+    opcode = r4->value;
     r5 = adrbuf;
     switch (r0) {
     case 5: /* flop src,freg */
         tmp2 = addres(&r5);
-        op2b(r5, tmp1, tmp2, 0, 0400);
+        op2b(r5, opcode, tmp2, 0, 0400);
         break;
     case 6: /* branch */
         expres(&x, readop());
         if (!passno) {
-            outw(x.value | tmp1, 0);
+            outw(opcode | x.value, 0);
         } else {
-            dobranch(&x, tmp1, 0);
+            dobranch(&x, opcode, 0);
         }
         break;
     case 7: /* jsr */
         expres(&x, readop());
         checkreg(&x);
-        op2b(r5, tmp1, x.value, 0, -1);
+        op2b(r5, opcode, x.value, 0, -1);
         break;
     case 8: /* rts */
         expres(&x, readop());
         checkreg(&x);
-        outw(x.value | tmp1, x.type);
+        outw(opcode | x.value, x.type);
         break;
     case 9: /* sys, emt etc */
         expres(&x, readop());
         if (x.value >= 64 || x.type > 1) error("a");
-        outw(x.value | tmp1, x.type);
+        outw(opcode | x.value, x.type);
         break;
     case 10: /* movf */
         tmp2 = addres(&r5);
         if (tmp2 >= 4) {
             /* see if source is fregister */
-            op2b(r5, tmp1, tmp2, 1, 0400);
+            op2b(r5, opcode, tmp2, 1, 0400);
         } else {
             op2b(r5, 0174000, tmp2, 0, 0400);
         }
         break;
     case 11: /* double */
         tmp2 = addres(&r5);
-        op2b(r5, tmp1, tmp2, 0, -1);
+        op2b(r5, opcode, tmp2, 0, -1);
         break;
     case 12: /* flop freg,fsrc */
         tmp2 = addres(&r5);
-        op2b(r5, tmp1, tmp2, 1, 0400);
+        op2b(r5, opcode, tmp2, 1, 0400);
         break;
     case 13: /* single operand */
-        op2b(r5, tmp1, 0, 0, -1);
+        op2b(r5, opcode, 0, 0, -1);
         break;
     case 14: /* .byte */
         do {
@@ -134,25 +134,25 @@ opline(r4)
         return;
     case 24: /* mpy, dvd etc */
         tmp2 = addres(&r5);
-        op2b(r5, tmp1, tmp2, 1, 01000);
+        op2b(r5, opcode, tmp2, 1, 01000);
         break;
     case 25: /* sob */
         expres(&x, readop());
         checkreg(&x);
-        tmp1 =| ((x.value << 8) + ((x.value >> 8) & 255)) >> 2;
+        opcode =| ((x.value << 8) + ((x.value >> 8) & 255)) >> 2;
         expres(&x, readop());
         if (!passno) {
-            outw(x.value | tmp1, 0);
+            outw(opcode | x.value, 0);
             return;
         }
         x.value =- *dot;
         x.value = -x.value;
         if (x.value < -2 || 125 < x.value) {
             error("b");
-            outw(tmp1, 0);
+            outw(opcode, 0);
         } else {
             x.value =+ 4;
-            dobranch(&x, tmp1, 1);
+            dobranch(&x, opcode, 1);
         }
         break;
     case 26: /* .comm */
@@ -170,16 +170,16 @@ opline(r4)
         expres(&x, readop());
         if (!passno) {
             r2 = setbr(x.value);
-            if (r2 && tmp1 != 0000400/*br*/) r2 =+ 2;
+            if (r2 && opcode != 0000400/*br*/) r2 =+ 2;
             *dot =+ r2; /* if doesn't fit */
             *dot =+ 2;
         } else {
             if (getbr()) {
-                dobranch(&x, tmp1, 0);
+                dobranch(&x, opcode, 0);
             } else {
-                if (tmp1 != 0000400/*br*/) {
+                if (opcode != 0000400/*br*/) {
                     /* flip cond, add ".+6" */
-                    outw(0402 ^ tmp1, 1);
+                    outw(0402 ^ opcode, 1);
                 }
                 outw(0000100/*jmp*/ + 037, 1);
                 outw(x.value, x.type);
@@ -196,7 +196,7 @@ opline(r4)
     }
 }
 
-op2b(r5, tmp1, tmp2, swapf, rlimit)
+op2b(r5, opcode, tmp2, swapf, rlimit)
 int *r5;
 {
     int r0, r2, *p;
@@ -208,7 +208,7 @@ int *r5;
     }
     tmp2 = ((tmp2 << 8) + ((tmp2 >> 8) & 255)) >> 2;
     if (rlimit != -1 && tmp2 >= rlimit) error("x");
-    outw(r2 | tmp1 | tmp2, 0);
+    outw(opcode | r2 | tmp2, 0);
     for (p = adrbuf; p < r5; p =+ 3) {
         outw(p[0], p[1]);
         xsymbol = p[2];
@@ -225,7 +225,7 @@ struct Op *this;
         error("b");
         outw(opcode, 0);
     } else {
-        outw((((this->value >> 1) - 1) & ~0177400) | opcode, 0);
+        outw(opcode | (((this->value >> 1) - 1) & ~0177400), 0);
     }
 }
 
