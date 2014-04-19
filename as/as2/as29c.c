@@ -238,20 +238,23 @@ main(argc, argv)
 int argc;
 char *argv[];
 {
-	if (!(signal(2, 1) & 1))
-		signal(2, aexit);
-	if (argc < 4)
-		aexit();
-	if (argc >= 5)
-		/* globalize all undefineds */
-		defund = 040;
-	atmp1 = argv[1];
-	atmp2 = argv[2];
-	atmp3 = argv[3];
-	txtfil     = ofile(atmp1);
-	fbfil      = ofile(atmp2);
-	symf = fin = ofile(atmp3);
-	if ((faout = creat(aout, 0)) < 0)
-		filerr(aout);
-	go();
+    if (argc < 4) {
+        return 1;
+    } else if (argc >= 5) {
+        /* globalize all undefineds (-g) */
+        defund = 040;
+    }
+    atmp1 = argv[1];
+    atmp2 = argv[2];
+    atmp3 = argv[3];
+    if (!(signal(2, 1) & 1)) {
+        signal(2, aexit);
+    }
+    txtfil     = ofile(atmp1);
+    fbfil      = ofile(atmp2);
+    symf = fin = ofile(atmp3);
+    if ((faout = creat(aout, 0)) < 0) {
+        filerr(aout);
+    }
+    go();
 }
