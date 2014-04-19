@@ -90,13 +90,11 @@ struct Op *this;
     }
 }
 
-int maxtyp;
-
 combin(this, x, map)
 struct Op *this, *x;
 char *map;
 {
-    int type, rel, globl, tmp;
+    int type, rel, globl, tmp, maxtyp;
     type = x->type;
     if (!passno) {
         globl = (type | this->type) & 32;
@@ -115,8 +113,8 @@ char *map;
         this->type =| globl;
     } else {
         maxtyp = 0;
-        rel = maprel(type) * 6;
-        this->type = map[maprel(this->type) + rel];
+        rel = maprel(type, &maxtyp) * 6;
+        this->type = map[maprel(this->type, &maxtyp) + rel];
         if (this->type < 0) {
             if (this->type != -1) error("r");
             this->type = maxtyp;
@@ -124,13 +122,12 @@ char *map;
     }
 }
 
-int maxtyp;
-
-maprel(type)
+maprel(type, maxtyp)
+int *maxtyp;
 {
     if (type == 32) return 5;
     type =& 31;
-    if (maxtyp < type) maxtyp = type;
+    if (*maxtyp < type) *maxtyp = type;
     return type <= 5 ? type : 1;
 }
 
