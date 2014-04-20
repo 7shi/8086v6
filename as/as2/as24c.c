@@ -1,10 +1,10 @@
 /* translated from as24.s */
 
-oset(r5, r0)
+oset(buf, r0)
 {
     int *r1, next;
-    r1 = r5;
-    next = r5 + 6;
+    r1 = buf;
+    next = buf + 6;
     /* next slot */
     r1[0] = next + (r0 & 0777);
     /* buf max */
@@ -13,10 +13,10 @@ oset(r5, r0)
     r1[2] = r0;
 }
 
-putw(r5, r0)
+putw(buf, r0)
 {
     int **r2;
-    r2 = r5;
+    r2 = buf;
     if (r2[0] >= r2[1]) {
         /* buf max */
         aflush(r2);
@@ -27,11 +27,11 @@ putw(r5, r0)
 
 char faout;
 
-aflush(r5)
+aflush(buf)
 {
     int r1, *r2, next;
-    r2 = r5;
-    next = r5 + 6;
+    r2 = buf;
+    next = buf + 6;
     r1 = r2[2]; /* seek address */
     seek(faout, r1, 0);
     r2[2] = (r1 | 0777) + 1; /* new seek addr */
@@ -45,19 +45,19 @@ char symtab[], *usymtab;
 
 readop()
 {
-    int r4;
+    int op;
     if (savop) {
-        r4 = savop;
+        op = savop;
         savop = 0;
-        return r4;
+        return op;
     }
-    r4 = getw();
-    if (r4 >= 04000) {
-        return usymtab + (r4 - 04000);
-    } else if (r4 >= 01000) {
-        return  symtab + (r4 - 01000);
+    op = getw();
+    if (op >= 04000) {
+        return usymtab + (op - 04000);
+    } else if (op >= 01000) {
+        return  symtab + (op - 01000);
     }
-    return r4;
+    return op;
 }
 
 int inbuf[256], *ibufp, ibufc;

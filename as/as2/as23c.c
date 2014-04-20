@@ -10,22 +10,21 @@ char symtab[];
 assem()
 {
     struct Op x;
-    int r0, r1, r4, oldr4, i;
+    int r0, op, oldop, i;
     do {
-        r4 = readop();
-        if (r4 == 5 || r4 == '<') {
-            opline(r4);
-        } else if (!checkeos(r4)) {
-            oldr4 = r4;
-            if (r4 == 1) {
-                oldr4 = 2;
+        op = readop();
+        if (op == 5 || op == '<') {
+            opline(op);
+        } else if (!checkeos(op)) {
+            oldop = op;
+            if (op == 1) {
+                oldop = 2;
                 numval = getw();
             }
-            r4 = readop();
-            if (r4 == '=') {
-                r4 = expres(&x, readop());
-                r1 = oldr4;
-                if (r1 == symtab) { /* test for dot */
+            op = readop();
+            if (op == '=') {
+                op = expres(&x, readop());
+                if (oldop == symtab) { /* test for dot */
                     x.type =& ~32;
                     if (x.type != *dotrel) {
                         /* can't change relocation */
@@ -43,14 +42,14 @@ assem()
                     if (x.type == 32) error("r");
                     x.type =& 31;
                     if (x.type == 0) x.value = 0;
-                    r1->type =& ~31;
-                    r1->type =| x.type;
-                    r1->value = x.value;
+                    oldop->type =& ~31;
+                    oldop->type =| x.type;
+                    oldop->value = x.value;
                 }
-            } else if (r4 == ':') {
-                r4 = oldr4;
-                if (r4 < 128) {
-                    if (r4 == 2) {
+            } else if (op == ':') {
+                op = oldop;
+                if (op < 128) {
+                    if (op == 2) {
                         fbadv(numval);
                         r0 = curfb[numval];
                         r0->cval = *dotrel;
@@ -60,21 +59,21 @@ assem()
                         error("x");
                     }
                 } else if (!passno) {
-                    r0 = r4->type & 31;
+                    r0 = op->type & 31;
                     if (r0 != 0 && r0 != 27 && r0 != 28) {
                         error("m");
                     }
-                    r4->type =& ~31;
-                    r4->type =| *dotrel;
-                    brdelt = r4->value - *dot;
-                    r4->value = *dot;
-                } else if (r4->value != *dot) {
+                    op->type =& ~31;
+                    op->type =| *dotrel;
+                    brdelt = op->value - *dot;
+                    op->value = *dot;
+                } else if (op->value != *dot) {
                     error("p");
                 }
             } else {
-                savop = r4;
-                r4 = oldr4;
-                opline(r4);
+                savop = op;
+                op = oldop;
+                opline(op);
             }
         }
         if (!passno) {
@@ -82,28 +81,28 @@ assem()
                 txtsiz[*dotrel - 2] = *dot;
             }
         }
-        if (r4 == '\n') ++line;
-    } while (r4 != 4/*EOT*/);
+        if (op == '\n') ++line;
+    } while (op != 4/*EOT*/);
 }
 
-checkeos(r4)
+checkeos(op)
 {
-    return r4 == '\n' || r4 == ';' || r4 == 4/*EOT*/;
+    return op == '\n' || op == ';' || op == 4/*EOT*/;
 }
 
 int nxtfb[], *fbbufp;
 
-fbadv(r4)
+fbadv(op)
 {
-    int *r1;
-    r1 = nxtfb[r4];
-    curfb[r4] = r1;
-    if (r1 == 0) {
-        r1 = fbbufp - 2;
+    int *fb;
+    fb = nxtfb[op];
+    curfb[op] = fb;
+    if (fb == 0) {
+        fb = fbbufp - 2;
     }
     do {
-        r1 =+ 2;
-        if (*r1 >> 9 == r4) break;
-    } while (*r1 >= 0);
-    nxtfb[r4] = r1;
+        fb =+ 2;
+        if (*fb >> 9 == op) break;
+    } while (*fb >= 0);
+    nxtfb[op] = fb;
 }

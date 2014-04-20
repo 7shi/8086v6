@@ -69,8 +69,8 @@ outb(r2, r3)
 char argb[];
 int line, errflg;
 
-error(r5)
-char *r5;
+error(e)
+char *e;
 {
     int i, ln;
     char *p, buf[5];
@@ -92,5 +92,5 @@ char *r5;
         ln =/ 10;
     }
     buf[4] = 0;
-    printf("%s %s\n", r5, buf);
+    printf("%s %s\n", e, buf);
 }

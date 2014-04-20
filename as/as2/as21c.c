@@ -11,7 +11,7 @@ char *usymtab, *endtable, *memend;
 /* set up sizes and origins */
 go()
 {
-    int r0, r1, *r1p, r2, r3, r4;
+    int r0, r1, *r1p, r2, r3, w;
 
     /* read in symbol table */
     r1p = usymtab = memend = sbrk(0);
@@ -21,11 +21,11 @@ go()
         getw();
         getw();
         getw();
-        r0 = r4 = getw();
+        r0 = w = getw();
         r0 =& 037;
         if (r0 == 2/*text*/ || r0 == 3/*data*/) {
-            r4 =+ 25; /* mark "estimated" */
-            *(r1p++) = r4;
+            w =+ 25; /* mark "estimated" */
+            *(r1p++) = w;
             *(r1p++) = getw();
         } else {
             *(r1p++) = 0;
@@ -39,9 +39,9 @@ go()
     fbbufp = r1p;
     fin = fbfil;
     ibufc = 0;
-    while ((r4 = getw()) != 4/*EOT*/) {
-        r4 =+ 25; /* "estimated" */
-        *(r1p++) = r4;
+    while ((w = getw()) != 4/*EOT*/) {
+        w =+ 25; /* "estimated" */
+        *(r1p++) = w;
         *(r1p++) = getw();
         setbrk(r1p);
     }
@@ -104,8 +104,8 @@ go()
     ibufc = 0;
     oset(txtp, symseek);
     r1p = usymtab;
-    while ((r4 = getw()) != 4/*EOT*/) {
-        putw(txtp, r4);
+    while ((w = getw()) != 4/*EOT*/) {
+        putw(txtp, w);
         putw(txtp, getw());
         putw(txtp, getw());
         putw(txtp, getw());
