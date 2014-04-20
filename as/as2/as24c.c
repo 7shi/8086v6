@@ -1,42 +1,37 @@
 /* translated from as24.s */
 
+struct Buf {
+    int *next; /* next slot */
+    int *max;  /* buf max */
+    int addr;  /* seek addr */
+    int data[256];
+};
+
 oset(buf, ad)
 {
-    int *p, next;
-    p = buf;
-    next = buf + 6;
-    /* next slot */
-    p[0] = next + (ad & 0777);
-    /* buf max */
-    p[1] = next + 01000;
-    /* seek addr */
-    p[2] = ad;
+    buf->next = buf->data;
+    buf->max  = &buf->data[256 - ((ad & 511) >> 1)];
+    buf->addr = ad;
 }
 
 putw(buf, w)
-int **buf;
 {
-    if (buf[0] >= buf[1]) {
+    if (buf->next >= buf->max) {
         /* buf max */
         aflush(buf);
     }
-    *buf[0] = w;
-    ++buf[0];
+    *(buf->next++) = w;
 }
 
 char faout;
 
 aflush(buf)
 {
-    int ad, *p, next;
-    p = buf;
-    next = buf + 6;
-    ad = p[2]; /* seek address */
-    seek(faout, ad, 0);
-    p[2] = (ad | 0777) + 1; /* new seek addr */
-    ad = next + (ad & 0777); /* write address */
-    write(faout, ad, p[0] - ad);
-    p[0] = next; /* new next slot */
+    int len;
+    len = (buf->next - buf->data) << 1;
+    seek(faout, buf->addr, 0);
+    write(faout, buf->data, len);
+    oset(buf, buf->addr + len);
 }
 
 int savop;
