@@ -325,15 +325,15 @@ checkrp(op)
     return op;
 }
 
-int brtabp, brlen, brdelt;
+int brtabi, brlen, brdelt;
 char brtab[];
 
 setbr(ad)
 {
     int i, rel;
-    i = brtabp;
+    i = brtabi;
     if (i >= brlen) return 2;
-    ++brtabp;
+    ++brtabi;
     rel = ad - *dot;
     if (rel > 0) rel =- brdelt;
     if (-254 <= rel && rel <= 256) return 0;
@@ -344,9 +344,9 @@ setbr(ad)
 getbr()
 {
     int i;
-    i = brtabp;
+    i = brtabi;
     if (i >= brlen) return 1;
-    ++brtabp;
+    ++brtabi;
     /* 0-bit into c-bit */
     return (brtab[i >> 3] >> (i & 7)) & 1;
 }

@@ -28,7 +28,7 @@ int brlen 1024;
 char brtab[128]; /* bitmap: brlen / 8 */
 
 int savdot[3], adrbuf[6], curfb[10], nxtfb[10];
-int brtabp, brdelt, fbbufp, defund, datbase, bssbase;
+int brtabi, brdelt, fbbufp, defund, datbase, bssbase;
 int ibufc, *ibufp, xsymbol, line, savop, numval, passno;
 
 char argb[22], *txtp[259], *relp[259];

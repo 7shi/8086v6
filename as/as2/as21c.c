@@ -2,7 +2,7 @@
 
 int outmod 0777;
 int savdot[], datbase, bssbase, ibufc, *fbbufp;
-int *dotrel, *dot, *dotdot, brtabp, passno;
+int *dotrel, *dot, *dotdot, brtabi, passno;
 int header[], *txtsiz, *datsiz, *bsssiz, *symsiz;
 int *datseek, *trelseek, *drelseek, symseek;
 char symf, fbfil, fin, *txtp[], *relp[], *atmp1;
@@ -60,7 +60,7 @@ go()
     *dot = 0;
     *dotrel = 2;
     *dotdot = 0; /* .. */
-    brtabp = 0;
+    brtabi = 0;
     close(fin);
     fin = ofile(atmp1);
     ibufc = 0;
