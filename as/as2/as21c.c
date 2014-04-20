@@ -1,5 +1,7 @@
 /* translated from as21.s */
 
+struct Op { int type, value; };
+
 int outmod 0777;
 int savdot[], datbase, bssbase, ibufc, *fbbufp;
 int *dotrel, *dot, *dotdot, brtabi, passno;
@@ -11,42 +13,41 @@ char *usymtab, *endtable, *memend;
 /* set up sizes and origins */
 go()
 {
-    int r0, r1, *r1p, r2, r3, w;
+    int t, *p, i, w;
 
     /* read in symbol table */
-    r1p = usymtab = memend = sbrk(0);
-    setbrk(r1p);
+    p = usymtab = memend = sbrk(0);
+    setbrk(p);
     while (getw() != 4/*EOT*/) {
         *symsiz =+ 12; /* count symbols */
         getw();
         getw();
         getw();
-        r0 = w = getw();
-        r0 =& 037;
-        if (r0 == 2/*text*/ || r0 == 3/*data*/) {
-            w =+ 25; /* mark "estimated" */
-            *(r1p++) = w;
-            *(r1p++) = getw();
+        w = getw();
+        t = w & 31;
+        if (t == 2/*text*/ || t == 3/*data*/) {
+            *(p++) = w + 25; /* mark "estimated" */
+            *(p++) = getw();
         } else {
-            *(r1p++) = 0;
-            *(r1p++) = 0;
+            *(p++) = 0;
+            *(p++) = 0;
             getw();
         }
-        setbrk(r1p);
+        setbrk(p);
     }
 
     /* read in f-b definitions */
-    fbbufp = r1p;
+    fbbufp = p;
     fin = fbfil;
     ibufc = 0;
     while ((w = getw()) != 4/*EOT*/) {
         w =+ 25; /* "estimated" */
-        *(r1p++) = w;
-        *(r1p++) = getw();
-        setbrk(r1p);
+        *(p++) = w;
+        *(p++) = getw();
+        setbrk(p);
     }
-    endtable = r1p;
-    *(r1p++) = 0100000;
+    endtable = p;
+    *(p++) = 0100000;
 
     /* set up input text file; initialize f-b table */
     setup();
@@ -68,30 +69,21 @@ go()
     ++passno;
     ++*bsssiz;
     *bsssiz =& ~1;
-    *txtsiz = r1 = (*txtsiz + 1) & ~1;
-    *datsiz = r2 = (*datsiz + 1) & ~1;
-    r3 = r1;
-    datbase = r3; /* txtsiz */
-    savdot[1] = r3;
-    r3 =+ r2;
-    bssbase = r3; /*txtsiz+datsiz */
-    savdot[2] = r3;
-    r3 =<< 1;
-    r3 =+ 16;
-    symseek = r3; /* 2*txtsiz+2*datsiz+16 */
-    r3 =- r2;
-    *drelseek = r3; /* 2*txtsiz+datsiz+16 */
-    r3 =- r1;
-    *trelseek = r3; /* txtsiz+datsiz+16 */
-    r3 =- r2;
-    *datseek = r3; /* txtsiz+16 */
-    for (r1p = usymtab; r1p < endtable; r1p =+ 2) {
-        doreloc(r1p);
+    *txtsiz = (*txtsiz + 1) & ~1;
+    *datsiz = (*datsiz + 1) & ~1;
+    savdot[1] = datbase = *txtsiz;
+    savdot[2] = bssbase = *txtsiz + *datsiz;
+    *datseek  = 16 + *txtsiz;
+    *trelseek = 16 + *txtsiz + *datsiz;
+    *drelseek = 16 + *txtsiz + *datsiz + *txtsiz;
+    symseek   = 16 + *txtsiz + *datsiz + *txtsiz + *datsiz;
+    for (p = usymtab; p < endtable; p =+ 2) {
+        doreloc(p);
     }
     oset(txtp, 0);
     oset(relp, *trelseek);
-    for (r2 = 0; r2 < 8; ++r2) {
-        putw(txtp, header[r2]);
+    for (i = 0; i < 8; ++i) {
+        putw(txtp, header[i]);
     }
     assem();
 
@@ -103,14 +95,14 @@ go()
     seek(fin = symf, 0, 0);
     ibufc = 0;
     oset(txtp, symseek);
-    r1p = usymtab;
+    p = usymtab;
     while ((w = getw()) != 4/*EOT*/) {
         putw(txtp, w);
         putw(txtp, getw());
         putw(txtp, getw());
         putw(txtp, getw());
-        putw(txtp, *(r1p++));
-        putw(txtp, *(r1p++));
+        putw(txtp, *(p++));
+        putw(txtp, *(p++));
         getw();
         getw();
     }
@@ -142,23 +134,23 @@ char *fn;
 
 int defund;
 
-doreloc(r1)
-int *r1;
+doreloc(sym)
+int *sym;
 {
-    int r0;
-    if (!(r0 = r1[0])) r1[0] =| defund;
-    r0 =& 31;
-    if (r0 == 3) {
-        r1[1] =+ datbase;
-    } else if (r0 == 4) {
-        r1[1] =+ bssbase;
+    int t;
+    if (sym->type == 0) sym->type = defund;
+    t = sym->type & 31;
+    if (t == 3) {
+        sym->value =+ datbase;
+    } else if (t == 4) {
+        sym->value =+ bssbase;
     }
 }
 
-setbrk(r1)
-char *r1;
+setbrk(p)
+char *p;
 {
-    if (r1 + 16 >= memend) {
+    if (p + 16 >= memend) {
         memend =+ 512;
         brk(memend);
     }

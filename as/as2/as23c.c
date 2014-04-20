@@ -1,7 +1,6 @@
 /* translated from as23.s */
 
 struct Op { int type, value; };
-struct { char cval; };
 
 int line, savop, passno, *dotrel, *dot, brdelt, numval, *txtsiz;
 int curfb[];
@@ -10,7 +9,8 @@ char symtab[];
 assem()
 {
     struct Op x;
-    int r0, op, oldop, i;
+    int t, op, oldop, i;
+    char *fb;
     do {
         op = readop();
         if (op == 5 || op == '<') {
@@ -51,16 +51,16 @@ assem()
                 if (op < 128) {
                     if (op == 2) {
                         fbadv(numval);
-                        r0 = curfb[numval];
-                        r0->cval = *dotrel;
-                        brdelt = r0->value - *dot;
-                        r0->value = *dot;
+                        fb = curfb[numval];
+                        *fb = *dotrel;
+                        brdelt = fb->value - *dot;
+                        fb->value = *dot;
                     } else {
                         error("x");
                     }
                 } else if (!passno) {
-                    r0 = op->type & 31;
-                    if (r0 != 0 && r0 != 27 && r0 != 28) {
+                    t = op->type & 31;
+                    if (t != 0 && t != 27 && t != 28) {
                         error("m");
                     }
                     op->type =& ~31;
