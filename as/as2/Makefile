@@ -17,6 +17,10 @@ $(TARGET): $(COBJS)
 
 utils.o: ../utils.c
 
+install: $(TARGET)
+	cp $(TARGET) $(V6ROOT)/lib/as2
+	$(STRIP) $(V6ROOT)/lib/as2
+
 dest: $(TARGET)
 	mkdir -p $(DESTDIR)/lib
 	cp $< $(DESTDIR)/lib

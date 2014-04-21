@@ -5,3 +5,4 @@ LIBC = $(V6ROOT)/lib/libc.a
 CC = v6cc
 AS = v6as
 LD = v6ld
+STRIP = v6strip

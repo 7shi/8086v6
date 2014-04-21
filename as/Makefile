@@ -7,7 +7,7 @@ all:
 	$(MAKE) $@ -C as1
 	$(MAKE) $@ -C as2
 
-dest:
+install dest:
 	$(MAKE) $@ -C as1
 	$(MAKE) $@ -C as2
 

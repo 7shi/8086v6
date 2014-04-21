@@ -17,6 +17,10 @@ $(TARGET): $(COBJS)
 
 utils.o: ../utils.c
 
+install: $(TARGET)
+	cp $(TARGET) $(V6ROOT)/bin/as
+	$(STRIP) $(V6ROOT)/bin/as
+
 dest: $(TARGET)
 	mkdir -p $(DESTDIR)/bin
 	cp $< $(DESTDIR)/bin/as
