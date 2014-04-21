@@ -48,7 +48,7 @@ assem()
                 }
             } else if (op == ':') {
                 op = oldop;
-                if (op < 128) {
+                if (!issym(op)) {
                     if (op == 2) {
                         fbadv(numval);
                         fb = curfb[numval];

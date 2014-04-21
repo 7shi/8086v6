@@ -23,7 +23,7 @@ struct Op *this;
     this->type  = 1;
     this->value = 0;
     for (;;) {
-        if (op < 0 || 127 < op) {
+        if (issym(op)) {
             x.type = op->type;
             if (x.type == 0 && passno) {
                 error("u");

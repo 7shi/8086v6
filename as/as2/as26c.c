@@ -23,7 +23,7 @@ opline(op)
     } else if (op == '<') {
         opl17();
         return;
-    } else if (0 <= op && op < 128) {
+    } else if (!issym(op)) {
         expres(&x, op);
         outw(x.value, x.type);
         return;
@@ -108,7 +108,7 @@ opline(op)
     case 19: /* .globl */
         do {
             op = readop();
-            if (0 <= op && op < 128) break;
+            if (!issym(op)) break;
             op->type =| 32;
             op = readop();
         } while (op == ',');
@@ -156,7 +156,7 @@ opline(op)
         break;
     case 26: /* .comm */
         op = readop();
-        if (op < 128) return;
+        if (!issym(op)) return;
         readop();
         expres(&x, readop());
         if ((op->type & 31) == 0) {
@@ -349,4 +349,10 @@ getbr()
     ++brtabi;
     /* 0-bit into c-bit */
     return (brtab[i >> 3] >> (i & 7)) & 1;
+}
+
+/* トークンがシンボルかどうかを判定（独自関数） */
+issym(op)
+{
+    return op < 0 || 127 < op;
 }
