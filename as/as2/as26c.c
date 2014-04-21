@@ -173,7 +173,7 @@ opline(op)
             *dot =+ br; /* if doesn't fit */
             *dot =+ 2;
         } else {
-            if (getbr()) {
+            if (!getbr()) {
                 dobranch(&x, opcode, 0);
             } else {
                 if (opcode != 0000400/*br*/) {
