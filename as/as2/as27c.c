@@ -2,7 +2,7 @@
 
 struct Op { int type, value; };
 
-int xsymbol;
+char *xsymbol;
 
 expres(this, op)
 struct Op *this;

@@ -2,9 +2,9 @@
 
 struct Op { int type, value; };
 
-int passno, line, *dotrel, *dot, xsymbol;
+int passno, line, *dotrel, *dot;
 int adrbuf[], savdot[], tseeks[], rseeks[], *tseekp, *rseekp;
-char argb[], *txtp[], *relp[];
+char argb[], *txtp[], *relp[], *xsymbol;
 
 opline(op)
 {
