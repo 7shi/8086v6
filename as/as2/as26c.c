@@ -208,8 +208,8 @@ op2b(abufi, opcode, ad1, swapf, rlimit)
     if (rlimit != -1 && ad1 >= rlimit) error("x");
     outw(opcode | ad1 | ad2, 0);
     for (i = 0; i < abufi; i =+ 3) {
-        outw(adrbuf[i], adrbuf[i + 1]);
         xsymbol = adrbuf[i + 2];
+        outw(adrbuf[i], adrbuf[i + 1]);
     }
 }
 
