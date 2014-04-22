@@ -21,6 +21,7 @@ char *s1, *s2;
         *s1 = *s2;
         if (!*s2) break;
     }
+    memset(s1, 0, n);
     return ret;
 }
 
