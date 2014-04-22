@@ -2,30 +2,32 @@
 
 struct Op { int type, value; };
 
-int line, savop, passno, *dotrel, *dot, brdelt, numval, *txtsiz;
-int curfb[];
+int line, savop, passno, *dotrel, *dot, brdelt, numval;
+int header[], curfb[];
 char symtab[];
 
 assem()
 {
     struct Op x;
-    int t, op, oldop, i;
+    int t, op, op2, i;
     char *fb;
-    do {
+    for (;;) {
         op = readop();
-        if (op == 5 || op == '<') {
+        if (op == 4/*EOT*/) {
+            break;
+        } else if (op == '\n') {
+            ++line;
+        } else if (op == 5/*file name*/ || op == '<'/*string*/) {
             opline(op);
-        } else if (!checkeos(op)) {
-            oldop = op;
+        } else if (op != ';') {
             if (op == 1) {
-                oldop = 2;
+                op = 2;
                 numval = getw();
             }
-            op = readop();
-            if (op == '=') {
+            op2 = readop();
+            if (op2 == '=') {
                 expres(&x, readop());
-                op = readop();
-                if (oldop == symtab) { /* test for dot */
+                if (op == symtab) { /* test for dot */
                     x.type =& ~32;
                     if (x.type != *dotrel) {
                         /* can't change relocation */
@@ -43,12 +45,11 @@ assem()
                     if (x.type == 32) error("r");
                     x.type =& 31;
                     if (x.type == 0) x.value = 0;
-                    oldop->type =& ~31;
-                    oldop->type =| x.type;
-                    oldop->value = x.value;
+                    op->type =& ~31;
+                    op->type =| x.type;
+                    op->value = x.value;
                 }
-            } else if (op == ':') {
-                op = oldop;
+            } else if (op2 == ':') {
                 if (!issym(op)) {
                     if (op == 2) {
                         fbadv(numval);
@@ -72,23 +73,17 @@ assem()
                     error("p");
                 }
             } else {
-                savop = op;
-                op = oldop;
+                savop = op2;
                 opline(op);
             }
         }
         if (!passno) {
-            if (txtsiz[*dotrel - 2] < *dot) {
-                txtsiz[*dotrel - 2] = *dot;
+            /* txtsiz, datsiz, bsssiz */
+            if (header[*dotrel - 1] < *dot) {
+                header[*dotrel - 1] = *dot;
             }
         }
-        if (op == '\n') ++line;
-    } while (op != 4/*EOT*/);
-}
-
-checkeos(op)
-{
-    return op == '\n' || op == ';' || op == 4/*EOT*/;
+    }
 }
 
 int nxtfb[], *fbbufp;
