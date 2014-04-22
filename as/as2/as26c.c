@@ -300,11 +300,10 @@ int *abufi;
         checkreg(&x);
         return x.value;
     }
-    x.type  =| 0100000;
     x.value =- *dot + 4;
     if (*abufi) x.value =- 2;
     adrbuf[(*abufi)++] = x.value; /* index */
-    adrbuf[(*abufi)++] = x.type;  /* index reloc. */
+    adrbuf[(*abufi)++] = -x.type; /* index reloc. */
     adrbuf[(*abufi)++] = xsymbol; /* index global */
     return 067; /* address mode */
 }

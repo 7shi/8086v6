@@ -17,7 +17,7 @@ outw(type, value)
     }
     *dot =+ 2;
     if (!passno) return;
-    t = type & 32767; /* get relative pc bit */
+    t = abs(type); /* get relative pc bit */
     if (t == 32) {
         /* external references */
         outmod = 0666; /* make nonexecutable */
