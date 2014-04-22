@@ -24,7 +24,7 @@ opline(op)
         opl17();
         return;
     } else if (!issym(op)) {
-        expres(&x, op); readop();
+        expres(&x, op);
         outw(x.type, x.value);
         return;
     }
@@ -37,7 +37,7 @@ opline(op)
         op2b(abufi, opcode, ad, 0, 0400);
         break;
     case 6: /* branch */
-        expres(&x, readop()); readop();
+        expres(&x, readop());
         if (!passno) {
             outw(0, opcode | x.value);
         } else {
@@ -45,17 +45,18 @@ opline(op)
         }
         break;
     case 7: /* jsr */
-        expres(&x, readop()); readop();
+        expres(&x, readop());
         checkreg(&x);
+        checkop(','); /* skip , */
         op2b(abufi, opcode, x.value, 0, -1);
         break;
     case 8: /* rts */
-        expres(&x, readop()); readop();
+        expres(&x, readop());
         checkreg(&x);
         outw(x.type, opcode | x.value);
         break;
     case 9: /* sys, emt etc */
-        expres(&x, readop()); readop();
+        expres(&x, readop());
         if (x.value >= 64 || x.type > 1) error("a");
         outw(x.type, opcode | x.value);
         break;
@@ -101,7 +102,7 @@ opline(op)
         }
         break;
     case 17: /* if */
-        expres(&x, readop()); readop();
+        expres(&x, readop());
         break;
     case 18: /* .endif */
         break;
@@ -135,10 +136,11 @@ opline(op)
         op2b(abufi, opcode, ad, 1, 01000);
         break;
     case 25: /* sob */
-        expres(&x, readop()); readop();
+        expres(&x, readop());
         checkreg(&x);
         opcode =| ((x.value << 8) + ((x.value >> 8) & 255)) >> 2;
-        expres(&x, readop()); readop();
+        checkop(','); /* skip , */
+        expres(&x, readop());
         if (!passno) {
             outw(0, opcode | x.value);
             return;
@@ -165,7 +167,7 @@ opline(op)
         break;
     case 29: /* jbr */
     case 30: /* jeq, jne, etc */
-        expres(&x, readop()); readop();
+        expres(&x, readop());
         if (!passno) {
             br = setbr(x.value);
             if (br && opcode != 0000400/*br*/) br =+ 2;
@@ -278,7 +280,7 @@ int *abufi;
         checkreg(&x);
         return x.value | 040;
     case '$':
-        expres(&x, readop()); readop();
+        expres(&x, readop());
         adrbuf[(*abufi)++] = x.value;
         adrbuf[(*abufi)++] = x.type;
         adrbuf[(*abufi)++] = xsymbol;
