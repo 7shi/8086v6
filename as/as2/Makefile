@@ -1,5 +1,5 @@
 TOPDIR = ../..
-include $(TOPDIR)/Makefile.inc
+include ../Makefile.inc
 
 TARGET = as2
 SSRCS = as21.s as22.s as23.s as24.s as26.s as27.s as28.s as29.s
@@ -11,9 +11,6 @@ all: $(TARGET)
 $(TARGET): $(COBJS)
 	$(CC) $^
 	mv a.out $@
-
-.c.o:
-	$(CC) -c $<
 
 utils.o: ../utils.c
 

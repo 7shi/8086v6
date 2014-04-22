@@ -8,22 +8,14 @@ all: $(TARGET)
 	mv a.out $@
 
 1-s.o: 1-s.s
-	$(AS) - $<
-	mv a.out $@
-
 1-c.o: 1-c.c
-	$(CC) -c $<
 
 2.out: 2-c.o 2-s.o
 	$(CC) $^
 	mv a.out $@
 
 2-c.o: 2-c.c
-	$(CC) -c $<
-
 2-s.o: 2-s.s
-	$(AS) $<
-	mv a.out $@
 
 test: $(TARGET)
 	$(RUN) 1.out

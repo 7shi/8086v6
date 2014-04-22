@@ -1,5 +1,5 @@
 TOPDIR = ..
-include $(TOPDIR)/Makefile.inc
+include Makefile.inc
 
 all:
 	$(MAKE) $@ -C as1.orig
