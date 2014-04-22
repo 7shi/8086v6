@@ -256,11 +256,12 @@ int *abufi;
         savop = expres(&x, readop());
         if (!checkop(')')) error(")");
         checkreg(&x);
-        op = readop(); /* skip , or eos */
-        if (op == '+') {
-            readop(); /* skip , or eos */
+        if (checkop('+')) {
+            checkop(','); /* skip , */
             return x.value | 020;
-        } else if (astar) {
+        }
+        checkop(','); /* skip , */
+        if (astar) {
             adrbuf[(*abufi)++] = 0;
             adrbuf[(*abufi)++] = 0;
             adrbuf[(*abufi)++] = xsymbol;
@@ -277,7 +278,7 @@ int *abufi;
         savop = expres(&x, readop());
         if (!checkop(')')) error(")");
         checkreg(&x);
-        readop(); /* skip , or eos */
+        checkop(','); /* skip , */
         return x.value | 040;
     case '$':
         op = expres(&x, readop());
@@ -297,7 +298,7 @@ int *abufi;
         savop = expres(&x, readop());
         if (!checkop(')')) error(")");
         checkreg(&x);
-        readop(); /* skip , or eos */
+        checkop(','); /* skip , */
         return x.value | 060;
     } else if (x.type == 20) {
         checkreg(&x);
