@@ -11,5 +11,9 @@ as2: $(SRCS)
 	$(LD) a.out
 	mv a.out $@
 
+install: $(TARGET)
+	cp $(TARGET) $(V6ROOT)/lib/as2
+	$(STRIP) $(V6ROOT)/lib/as2
+
 clean:
 	rm -f $(TARGET) a.out

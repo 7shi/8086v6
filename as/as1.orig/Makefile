@@ -11,5 +11,9 @@ as1: $(SRCS)
 	$(LD) a.out
 	mv a.out $@
 
+install: $(TARGET)
+	cp $(TARGET) $(V6ROOT)/bin/as
+	$(STRIP) $(V6ROOT)/bin/as
+
 clean:
 	rm -f $(TARGET) a.out

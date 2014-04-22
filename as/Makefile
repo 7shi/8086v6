@@ -11,6 +11,10 @@ install distrib:
 	$(MAKE) $@ -C as1
 	$(MAKE) $@ -C as2
 
+install-orig:
+	$(MAKE) install -C as1.orig
+	$(MAKE) install -C as2.orig
+
 orig:
 	$(MAKE) all -C as1.orig
 	$(MAKE) all -C as2.orig
