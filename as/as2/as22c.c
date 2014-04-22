@@ -34,8 +34,8 @@ outw(value, type)
         }
         if (t < 2 || t > 4) {
             if (type < 0) value =- *dotdot;
-        } else if (type >= 0) {
-            value =+ *dotdot;
+        } else {
+            if (type >= 0) value =+ *dotdot;
         }
         if (--t < 0) t = 0;
     }
