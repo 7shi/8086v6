@@ -56,8 +56,8 @@ outb(type, value)
         if ((*dot & 1) == 0) {
             putw(txtp, value);
             putw(relp, 0);
-            *rseekp =+ 2;
             *tseekp =+ 2;
+            *rseekp =+ 2;
         } else {
             txtp[0][-1] = value;
         }
