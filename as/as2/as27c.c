@@ -2,13 +2,14 @@
 
 struct Op { int type, value; };
 
+int savop;
 char *xsymbol;
 
 expres(this, op)
 struct Op *this;
 {
     xsymbol = 0;
-    return expres1(this, op);
+    expres1(this, op);
 }
 
 int numval, esw1, passno, curfb[];
@@ -41,7 +42,7 @@ struct Op *this;
         } else {
             switch (op) {
             case '[':
-                op = expres1(&x, readop());
+                expres1(&x, readop()); op = readop();
                 if (op != ']') error("]");
                 break;
             case   1:
@@ -68,7 +69,8 @@ struct Op *this;
                 op = readop();
                 continue;
             default:
-                return op;
+                savop = op;
+                return;
             }
         }
 

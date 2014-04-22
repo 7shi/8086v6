@@ -23,7 +23,8 @@ assem()
             }
             op = readop();
             if (op == '=') {
-                op = expres(&x, readop());
+                expres(&x, readop());
+                op = readop();
                 if (oldop == symtab) { /* test for dot */
                     x.type =& ~32;
                     if (x.type != *dotrel) {
