@@ -7,31 +7,34 @@ struct Buf {
     int data[256];
 };
 
-oset(buf, ad)
+oset(this, ad)
+struct Buf *this;
 {
-    buf->next = buf->data;
-    buf->max  = &buf->data[256 - ((ad & 511) >> 1)];
-    buf->addr = ad;
+    this->next = this->data;
+    this->max  = &this->data[256 - ((ad & 511) >> 1)];
+    this->addr = ad;
 }
 
-putw(buf, w)
+putw(this, w)
+struct Buf *this;
 {
-    if (buf->next >= buf->max) {
+    if (this->next >= this->max) {
         /* buf max */
-        aflush(buf);
+        aflush(this);
     }
-    *(buf->next++) = w;
+    *(this->next++) = w;
 }
 
 char faout;
 
-aflush(buf)
+aflush(this)
+struct Buf *this;
 {
     int len;
-    len = (buf->next - buf->data) << 1;
-    seek(faout, buf->addr, 0);
-    write(faout, buf->data, len);
-    oset(buf, buf->addr + len);
+    len = (this->next - this->data) << 1;
+    seek(faout, this->addr, 0); /* 仕様変更 */
+    write(faout, this->data, len);
+    oset(this, this->addr + len);
 }
 
 int savop;
