@@ -81,9 +81,9 @@ opline(op)
         break;
     case 14: /* .byte */
         do {
-            expres(&x, readop()); op = readop();
+            expres(&x, readop());
             outb(x.type, x.value);
-        } while (op == ',');
+        } while (checkop(','));
         break;
     case 15:
         readop();
@@ -110,8 +110,7 @@ opline(op)
             op = readop();
             if (!issym(op)) break;
             op->type =| 32;
-            op = readop();
-        } while (op == ',');
+        } while (checkop(','));
         break;
     case 21: /* .text */
     case 22: /* .data */
@@ -157,8 +156,8 @@ opline(op)
     case 26: /* .comm */
         op = readop();
         if (!issym(op)) return;
-        readop();
-        expres(&x, readop()); readop();
+        checkop(','); /* skip , */
+        expres(&x, readop());
         if ((op->type & 31) == 0) {
             op->type =| 32;
             op->value = x.value;
@@ -189,7 +188,7 @@ opline(op)
     case 27: /* est text */
     case 28: /* est data */
     default:
-        expres(&x, op); readop();
+        expres(&x, op);
         outw(x.type, x.value);
         break;
     }
@@ -269,9 +268,7 @@ int *abufi;
         }
         return x.value | 010;
     case '-':
-        op = readop();
-        if (op != '(') {
-            savop = op;
+        if (!checkop('(')) {
             op = '-';
             break;
         }
@@ -290,8 +287,8 @@ int *abufi;
         if (astar) error("*");
         return addres1(abufi, 1) | 010;
     }
-    expres(&x, op); op = readop();
-    if (op == '(') {
+    expres(&x, op);
+    if (checkop('(')) {
         adrbuf[(*abufi)++] = x.value;
         adrbuf[(*abufi)++] = x.type;
         adrbuf[(*abufi)++] = xsymbol;
@@ -300,7 +297,9 @@ int *abufi;
         checkreg(&x);
         checkop(','); /* skip , */
         return x.value | 060;
-    } else if (x.type == 20) {
+    }
+    checkop(','); /* skip , */
+    if (x.type == 20) {
         checkreg(&x);
         return x.value;
     }
