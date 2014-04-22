@@ -33,7 +33,7 @@ assem()
                         *dot = x.value;
                     } else if (*dot <= x.value) {
                         for (i = *dot; i < x.value; ++i) {
-                            outb(0, 1);
+                            outb(1, 0);
                         }
                     } else {
                         error(".");

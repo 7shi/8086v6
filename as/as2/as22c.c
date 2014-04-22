@@ -3,7 +3,7 @@
 int outmod, *dotrel, *dot, *dotdot, passno, *rseekp, *tseekp;
 char *xsymbol, *usymtab, *txtp[], *relp[];
 
-outw(value, type)
+outw(type, value)
 {
     int t;
     if (*dotrel == 4) { /* test bss mode */
@@ -12,7 +12,7 @@ outw(value, type)
     }
     if (*dot & 1) {
         error("o");
-        outb(value, 0);
+        outb(0, value);
         return;
     }
     *dot =+ 2;
@@ -45,7 +45,7 @@ outw(value, type)
     *rseekp =+ 2;
 }
 
-outb(value, type)
+outb(type, value)
 {
     if (*dotrel == 4) { /* test bss mode */
         error("x");

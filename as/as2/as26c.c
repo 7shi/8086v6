@@ -25,7 +25,7 @@ opline(op)
         return;
     } else if (!issym(op)) {
         expres(&x, op);
-        outw(x.value, x.type);
+        outw(x.type, x.value);
         return;
     }
     optype = op->type;
@@ -39,7 +39,7 @@ opline(op)
     case 6: /* branch */
         expres(&x, readop());
         if (!passno) {
-            outw(opcode | x.value, 0);
+            outw(0, opcode | x.value);
         } else {
             dobranch(&x, opcode, 0);
         }
@@ -52,12 +52,12 @@ opline(op)
     case 8: /* rts */
         expres(&x, readop());
         checkreg(&x);
-        outw(opcode | x.value, x.type);
+        outw(x.type, opcode | x.value);
         break;
     case 9: /* sys, emt etc */
         expres(&x, readop());
         if (x.value >= 64 || x.type > 1) error("a");
-        outw(opcode | x.value, x.type);
+        outw(x.type, opcode | x.value);
         break;
     case 10: /* movf */
         ad = addres(&abufi);
@@ -82,7 +82,7 @@ opline(op)
     case 14: /* .byte */
         do {
             op = expres(&x, readop());
-            outb(x.value, x.type);
+            outb(x.type, x.value);
         } while (op == ',');
         break;
     case 15:
@@ -141,14 +141,14 @@ opline(op)
         opcode =| ((x.value << 8) + ((x.value >> 8) & 255)) >> 2;
         expres(&x, readop());
         if (!passno) {
-            outw(opcode | x.value, 0);
+            outw(0, opcode | x.value);
             return;
         }
         x.value =- *dot;
         x.value = -x.value;
         if (x.value < -2 || 125 < x.value) {
             error("b");
-            outw(opcode, 0);
+            outw(0, opcode);
         } else {
             x.value =+ 4;
             dobranch(&x, opcode, 1);
@@ -178,10 +178,10 @@ opline(op)
             } else {
                 if (opcode != 0000400/*br*/) {
                     /* flip cond, add ".+6" */
-                    outw(0402 ^ opcode, 1);
+                    outw(1, 0402 ^ opcode);
                 }
-                outw(0000100/*jmp*/ + 037, 1);
-                outw(x.value, x.type);
+                outw(1, 0000100/*jmp*/ + 037);
+                outw(x.type, x.value);
             }
         }
         break;
@@ -190,7 +190,7 @@ opline(op)
     case 28: /* est data */
     default:
         expres(&x, op);
-        outw(x.value, x.type);
+        outw(x.type, x.value);
         break;
     }
 }
@@ -206,10 +206,10 @@ op2b(abufi, opcode, ad1, swapf, rlimit)
     }
     ad1 =<< 6;
     if (rlimit != -1 && ad1 >= rlimit) error("x");
-    outw(opcode | ad1 | ad2, 0);
+    outw(0, opcode | ad1 | ad2);
     for (i = 0; i < abufi; i =+ 3) {
         xsymbol = adrbuf[i + 2];
-        outw(adrbuf[i], adrbuf[i + 1]);
+        outw(adrbuf[i + 1], adrbuf[i]);
     }
 }
 
@@ -221,9 +221,9 @@ struct Op *this;
         || this->value & 1
         || this->type != *dotrel /* same relocation as . */) {
         error("b");
-        outw(opcode, 0);
+        outw(0, opcode);
     } else {
-        outw(opcode | (((this->value >> 1) - 1) & ~0177400), 0);
+        outw(0, opcode | (((this->value >> 1) - 1) & ~0177400));
     }
 }
 
@@ -233,7 +233,7 @@ opl17()
     int w;
     for (;;) {
         if ((w = getw()) < 0) break;
-        outb(w & 255, 1);
+        outb(1, w & 255);
     }
     getw();
 }
