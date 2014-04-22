@@ -7,7 +7,7 @@ all:
 	$(MAKE) $@ -C as1
 	$(MAKE) $@ -C as2
 
-install dest:
+install distrib:
 	$(MAKE) $@ -C as1
 	$(MAKE) $@ -C as2
 
@@ -15,7 +15,7 @@ orig:
 	$(MAKE) all -C as1.orig
 	$(MAKE) all -C as2.orig
 
-test: dest orig
+test: distrib orig
 	cd as1.orig && $(RUN) -r ../$(DESTDIR) ../$(DESTDIR)/bin/as as1?.s
 	mv as1.orig/a.out .
 	$(LD) a.out

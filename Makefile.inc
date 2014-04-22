@@ -5,6 +5,7 @@ RUN     = 7run
 CC      = v6cc
 AS      = v6as
 LD      = v6ld
+AR      = v6ar
 STRIP   = v6strip
 CFLAGS  = 
 

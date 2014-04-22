@@ -1,7 +1,7 @@
 TOPDIR = .
 include $(TOPDIR)/Makefile.inc
 
-all install dest:
+all install distrib:
 	$(MAKE) $@ -C as
 	$(MAKE) $@ -C sys
 

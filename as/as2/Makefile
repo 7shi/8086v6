@@ -18,11 +18,11 @@ install: $(TARGET)
 	cp $(TARGET) $(V6ROOT)/lib/as2
 	$(STRIP) $(V6ROOT)/lib/as2
 
-dest: $(TARGET)
+distrib: $(TARGET)
 	mkdir -p $(DESTDIR)/lib
 	cp $< $(DESTDIR)/lib
 
-test: dest
+test: distrib
 	$(MAKE) orig -C ..
 	cd ../as1.orig && $(RUN) -r $(DESTDIR) $(V6ROOT)/bin/as as1?.s
 	mv ../as1.orig/a.out .
