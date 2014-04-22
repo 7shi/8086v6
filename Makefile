@@ -1,14 +1,16 @@
 TOPDIR = .
 include $(TOPDIR)/Makefile.inc
 
-all test:
+all install dest:
 	$(MAKE) $@ -C as
-	$(MAKE) $@ -C tests
+	$(MAKE) $@ -C sys
 
-install dest:
+test:
+	$(MAKE) $@ -C tests
 	$(MAKE) $@ -C as
 
 clean:
-	$(MAKE) $@ -C as
 	$(MAKE) $@ -C tests
+	$(MAKE) $@ -C as
+	$(MAKE) $@ -C sys
 	rm -rf $(DESTDIR)

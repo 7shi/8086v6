@@ -1,8 +1,13 @@
 syntax: glob
 *.o
+*.a
 *.out
 dest/
 as/as1.orig/as1
 as/as2.orig/as2
 as/as1/as1
 as/as2/as2
+sys/conf/c.c
+sys/conf/l.s
+sys/conf/mkconf
+sys/*unix
