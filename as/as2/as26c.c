@@ -253,11 +253,12 @@ int *abufi;
     int op;
     switch (op = readop()) {
     case '(':
-        op = expres(&x, readop());
-        op = checkrp(op);
+        savop = expres(&x, readop());
+        if (!checkop(')')) error(")");
         checkreg(&x);
+        op = readop(); /* skip , or eos */
         if (op == '+') {
-            op = readop();
+            readop(); /* skip , or eos */
             return x.value | 020;
         } else if (astar) {
             adrbuf[(*abufi)++] = 0;
@@ -273,9 +274,10 @@ int *abufi;
             op = '-';
             break;
         }
-        op = expres(&x, readop());
-        op = checkrp(op);
+        savop = expres(&x, readop());
+        if (!checkop(')')) error(")");
         checkreg(&x);
+        readop(); /* skip , or eos */
         return x.value | 040;
     case '$':
         op = expres(&x, readop());
@@ -292,9 +294,10 @@ int *abufi;
         adrbuf[(*abufi)++] = x.value;
         adrbuf[(*abufi)++] = x.type;
         adrbuf[(*abufi)++] = xsymbol;
-        op = expres(&x, readop());
+        savop = expres(&x, readop());
+        if (!checkop(')')) error(")");
         checkreg(&x);
-        op = checkrp(op);
+        readop(); /* skip , or eos */
         return x.value | 060;
     } else if (x.type == 20) {
         checkreg(&x);
@@ -317,11 +320,13 @@ struct Op *this;
     }
 }
 
-checkrp(op)
+/* checkrp()を汎用化（独自関数） */
+checkop(ch)
 {
-    if (op == ')') return readop();
-    error(")");
-    return op;
+    int op;
+    if ((op = readop()) == ch) return 1;
+    savop = op;
+    return 0;
 }
 
 int brtabi, brlen, brdelt;

@@ -174,6 +174,7 @@ struct Op *this;
     }
 }
 
+/* checkrp()を汎用化（独自関数） */
 checkop(ch)
 {
     int op;
