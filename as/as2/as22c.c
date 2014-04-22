@@ -32,7 +32,7 @@ outw(value, type)
             }
             t = 1; /* make absolute */
         }
-        if (2 <= t && t <= 4) {
+        if (t < 2 || t > 4) {
             if (type < 0) value =- *dotdot;
         } else if (type >= 0) {
             value =+ *dotdot;
