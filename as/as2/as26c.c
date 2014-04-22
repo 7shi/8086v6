@@ -242,7 +242,10 @@ int savop;
 addres(abufi)
 int *abufi;
 {
-    return addres1(abufi, 0);
+    int ret;
+    ret = addres1(abufi, 0);
+    checkop(','); /* skip , */
+    return ret;
 }
 
 addres1(abufi, astar)
@@ -256,10 +259,8 @@ int *abufi;
         if (!checkop(')')) error(")");
         checkreg(&x);
         if (checkop('+')) {
-            checkop(','); /* skip , */
             return x.value | 020;
         }
-        checkop(','); /* skip , */
         if (astar) {
             adrbuf[(*abufi)++] = 0;
             adrbuf[(*abufi)++] = 0;
@@ -275,7 +276,6 @@ int *abufi;
         expres(&x, readop());
         if (!checkop(')')) error(")");
         checkreg(&x);
-        checkop(','); /* skip , */
         return x.value | 040;
     case '$':
         expres(&x, readop()); readop();
@@ -295,11 +295,8 @@ int *abufi;
         expres(&x, readop());
         if (!checkop(')')) error(")");
         checkreg(&x);
-        checkop(','); /* skip , */
         return x.value | 060;
-    }
-    checkop(','); /* skip , */
-    if (x.type == 20) {
+    } else if (x.type == 20) {
         checkreg(&x);
         return x.value;
     }
