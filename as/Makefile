@@ -2,8 +2,7 @@ TOPDIR = ..
 include Makefile.inc
 
 all:
-	$(MAKE) $@ -C as1.orig
-	$(MAKE) $@ -C as2.orig
+	$(MAKE) $@ -C orig
 	$(MAKE) $@ -C as1
 	$(MAKE) $@ -C as2
 
@@ -12,26 +11,23 @@ install distrib:
 	$(MAKE) $@ -C as2
 
 install-orig:
-	$(MAKE) install -C as1.orig
-	$(MAKE) install -C as2.orig
+	$(MAKE) install -C orig
 
 orig:
-	$(MAKE) all -C as1.orig
-	$(MAKE) all -C as2.orig
+	$(MAKE) all -C orig
 
 test: distrib orig
-	cd as1.orig && $(RUN) -r ../$(DESTDIR) ../$(DESTDIR)/bin/as as1?.s
-	mv as1.orig/a.out .
+	cd orig && $(RUN) -r ../$(DESTDIR) ../$(DESTDIR)/bin/as as1?.s
+	mv orig/a.out .
 	$(LD) a.out
-	cmp a.out as1.orig/as1
-	cd as2.orig && $(RUN) -r ../$(DESTDIR) ../$(DESTDIR)/bin/as as2?.s
-	mv as2.orig/a.out .
+	cmp a.out orig/as1
+	cd orig && $(RUN) -r ../$(DESTDIR) ../$(DESTDIR)/bin/as as2?.s
+	mv orig/a.out .
 	$(LD) a.out
-	cmp a.out as2.orig/as2
+	cmp a.out orig/as2
 
 clean:
-	$(MAKE) $@ -C as1.orig
-	$(MAKE) $@ -C as2.orig
+	$(MAKE) $@ -C orig
 	$(MAKE) $@ -C as1
 	$(MAKE) $@ -C as2
 	rm -f a.out
