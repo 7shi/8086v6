@@ -112,28 +112,26 @@ struct Op *this, *x;
             this->type = globl | max(this->type, x->type);
         }
     } else {
-        maxtyp = 0;
-        rel = maprel(this, &maxtyp) + maprel(x, &maxtyp) * 6;
+        maxtyp = max(this->type & 31, x->type & 31);
+        rel = maprel(this) + maprel(x) * 6;
         switch (opr) {
         case '+': this->type = reltp2[rel]; break;
         case '-': this->type = reltm2[rel]; break;
         default : this->type = relte2[rel]; break;
         }
         if (this->type < 0) {
-            if (this->type != -1) error("r");
+            if (this->type == -2) error("r");
             this->type = maxtyp;
         }
     }
 }
 
-maprel(this, maxtyp)
+maprel(this)
 struct Op *this;
-int *maxtyp;
 {
     int type;
     if (this->type == 32) return 5;
     type = this->type & 31;
-    if (*maxtyp < type) *maxtyp = type;
     return type <= 5 ? type : 1;
 }
 
