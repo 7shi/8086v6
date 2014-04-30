@@ -236,7 +236,6 @@ opl17()
         if ((w = getw()) < 0) break;
         outb(1, w & 255);
     }
-    getw();
 }
 
 int savop;
