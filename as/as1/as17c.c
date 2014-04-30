@@ -96,9 +96,7 @@ struct Op *this, *x;
         this->type = globl;
     } else if (opr == '-' && this->type == x->type) {
         this->type = globl | 1;
-    } else if (this->type >= x->type) {
-        this->type = globl | this->type;
     } else {
-        this->type = globl | x->type;
+        this->type = globl | max(this->type, x->type);
     }
 }

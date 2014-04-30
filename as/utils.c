@@ -77,3 +77,6 @@ debug16(s, v)
     buf[4] = '\n';
     write(2, buf, 5);
 }
+
+min(a, b) { return a < b ? a : b; }
+max(a, b) { return a > b ? a : b; }
