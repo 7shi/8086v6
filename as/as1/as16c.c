@@ -123,8 +123,8 @@ addres()
         expres(&x, readop());
         checkreg(&x);
         if (!checkop(')')) error(")");
-        if (!checkop('+')) return 2;
-        return 0;
+        if (checkop('+')) break;
+        return 2;
     case '-':
         if (checkop('(')) {
             expres(&x, readop());
@@ -133,18 +133,19 @@ addres()
         } else {
             getx(op);
         }
-        return 0;
+        break;
     case '$':
         expres(&x, readop());
         *dot =+ 2;
-        return 0;
+        break;
     case '*':
         if (checkop('*')) error("*");
-        num = addres();
-        *dot =+ num;
-        return num;
+        *dot =+ addres();
+        break;
+    default:
+        getx(op);
+        break;
     }
-    getx(op);
     return 0;
 }
 
