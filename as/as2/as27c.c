@@ -74,49 +74,55 @@ struct Op *this;
             }
         }
 
-        switch (opr) {
-        case '^': this->type = x.type; break;
-        case  29: combin(this, &x, relte2); this->value =<< x.value; break;
-        case  30: combin(this, &x, relte2); this->value =>> x.value; break;
-        case  31: combin(this, &x, relte2); this->value =|  x.value; break;
-        case '+': combin(this, &x, reltp2); this->value =+  x.value; break;
-        case '-': combin(this, &x, reltm2); this->value =-  x.value; break;
-        case '*': combin(this, &x, relte2); this->value =*  x.value; break;
-        case '/': combin(this, &x, relte2); this->value =/  x.value; break;
-        case '&': combin(this, &x, relte2); this->value =&  x.value; break;
-        case '%': combin(this, &x, relte2); this->value =%  x.value; break;
-        case '!': combin(this, &x, relte2); this->value =+ ~x.value; break;
+        if (opr == '^') {
+            this->type = x.type;
+        } else {
+            combin(this, &x, opr);
+            switch (opr) {
+            case  29: this->value =<< x.value; break;
+            case  30: this->value =>> x.value; break;
+            case  31: this->value =|  x.value; break;
+            case '+': this->value =+  x.value; break;
+            case '-': this->value =-  x.value; break;
+            case '*': this->value =*  x.value; break;
+            case '/': this->value =/  x.value; break;
+            case '&': this->value =&  x.value; break;
+            case '%': this->value =%  x.value; break;
+            case '!': this->value =+ ~x.value; break;
+            }
         }
         opr = '+';
         op = readop();
     }
 }
 
-combin(this, x, map)
+combin(this, x, opr)
 struct Op *this, *x;
-char *map;
 {
-    int type, rel, globl, tmp, maxtyp;
-    type = x->type;
+    int rel, globl, tmp, maxtyp;
     if (!passno) {
-        globl = (type | this->type) & 32;
-        type =& 31;
+        globl = (this->type | x->type) & 32;
         this->type =& 31;
-        if (type > this->type) {
-            tmp = type;
-            type = this->type;
+        x   ->type =& 31;
+        if (x->type > this->type) {
+            tmp = x->type;
+            x->type = this->type;
             this->type = tmp;
         }
-        if (!type) {
+        if (!x->type) {
             this->type = 0;
-        } else if (map == reltm2 && type == this->type) {
+        } else if (opr == '-' && x->type == this->type) {
             this->type = 1;
         }
         this->type =| globl;
     } else {
         maxtyp = 0;
-        rel = maprel(type, &maxtyp) * 6;
-        this->type = map[maprel(this->type, &maxtyp) + rel];
+        rel = maprel(this, &maxtyp) + maprel(x, &maxtyp) * 6;
+        switch (opr) {
+        case '+': this->type = reltp2[rel]; break;
+        case '-': this->type = reltm2[rel]; break;
+        default : this->type = relte2[rel]; break;
+        }
         if (this->type < 0) {
             if (this->type != -1) error("r");
             this->type = maxtyp;
@@ -124,11 +130,13 @@ char *map;
     }
 }
 
-maprel(type, maxtyp)
+maprel(this, maxtyp)
+struct Op *this;
 int *maxtyp;
 {
-    if (type == 32) return 5;
-    type =& 31;
+    int type;
+    if (this->type == 32) return 5;
+    type = this->type & 31;
     if (*maxtyp < type) *maxtyp = type;
     return type <= 5 ? type : 1;
 }
