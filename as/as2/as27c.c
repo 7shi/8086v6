@@ -124,7 +124,7 @@ struct Op *this, *x;
         } else if ((opr == '+' || opr == '-') && rel2 == 1) {
             this->type = rel1;
         } else if (opr == '-' && rel1 <= 4 && rel1 == rel2) {
-            this->type = rel1;
+            this->type = 1;
         } else {
             error("r");
             this->type = maxtyp;
