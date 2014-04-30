@@ -61,7 +61,7 @@ struct Op *this;
             }
         }
 
-        opfound =+ 1;
+        ++opfound;
         if (opr == '^') {
             /* give left flag of right */
             this->type = x.type;

@@ -38,7 +38,7 @@ opline(op)
     case 14: /* .byte */
         do {
             expres(&x, readop());
-            *dot =+ 1;
+            ++*dot;
         } while (checkop(','));
         break;
     case 15: /* < (.ascii) */
@@ -51,7 +51,7 @@ opline(op)
     case 17: /* .if */
         expres(&x, readop());
         if (x.type  == 0) error("U");
-        if (x.value == 0) ifflg =+ 1;
+        if (x.value == 0) ++ifflg;
         break;
     case 18: /* endif */
         break;
