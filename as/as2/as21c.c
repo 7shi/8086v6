@@ -7,7 +7,7 @@ int savdot[], datbase, bssbase, ibufc, *fbbufp;
 int *dotrel, *dot, *dotdot, brtabi, passno;
 int header[], *txtsiz, *datsiz, *bsssiz, *symsiz;
 int *datseek, *trelseek, *drelseek, symseek;
-char symf, fbfil, fin, *txtp[], *relp[], *atmp1;
+char fin, *txtp[], *relp[], *atmp1, *atmp2, *atmp3;
 char *usymtab, *endtable, *memend;
 
 /* set up sizes and origins */
@@ -18,6 +18,7 @@ go()
     /* read in symbol table */
     p = usymtab = memend = sbrk(0);
     setbrk(p);
+    fin = ofile(atmp3);
     while (getw() != 4/*EOT*/) {
         *symsiz =+ 12; /* count symbols */
         getw();
@@ -35,17 +36,19 @@ go()
         }
         setbrk(p);
     }
+    close(fin);
 
     /* read in f-b definitions */
     fbbufp = p;
-    fin = fbfil;
     ibufc = 0;
+    fin = ofile(atmp2);
     while ((w = getw()) != 4/*EOT*/) {
         w =+ 25; /* "estimated" */
         *(p++) = w;
         *(p++) = getw();
         setbrk(p);
     }
+    close(fin);
     endtable = p;
     *(p++) = 0100000;
 
@@ -53,7 +56,9 @@ go()
     setup();
 
     /* do pass 1 */
+    fin = ofile(atmp1);
     assem();
+    close(fin);
 
     /* prepare for pass 2 */
     if (outmod != 0777) aexit();
@@ -62,8 +67,6 @@ go()
     *dotrel = 2;
     *dotdot = 0; /* .. */
     brtabi = 0;
-    close(fin);
-    fin = ofile(atmp1);
     ibufc = 0;
     setup();
     ++passno;
@@ -85,17 +88,21 @@ go()
     for (i = 0; i < 8; ++i) {
         putw(txtp, header[i]);
     }
+
+    /* do pass 2 */
+    fin = ofile(atmp1);
     assem();
+    close(fin);
 
     /* polish off text and relocation */
     aflush(txtp);
     aflush(relp);
 
     /* append full symbol table */
-    seek(fin = symf, 0, 0);
     ibufc = 0;
     oset(txtp, symseek);
     p = usymtab;
+    fin = ofile(atmp3);
     while ((w = getw()) != 4/*EOT*/) {
         putw(txtp, w);
         putw(txtp, getw());
@@ -106,6 +113,7 @@ go()
         getw();
         getw();
     }
+    close(fin);
     aflush(txtp);
     aexit();
 }
@@ -156,7 +164,6 @@ char *p;
     }
 }
 
-char txtfil;
 int curfb[], nxtfb[];
 
 setup()
@@ -164,7 +171,6 @@ setup()
     int i;
     memset(curfb, 0, 20);
     memset(nxtfb, 0, 20);
-    fin = txtfil;
     ibufc = 0;
     for (i = 0; i < 10; ++i) {
         fbadv(i);

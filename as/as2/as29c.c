@@ -229,9 +229,8 @@ int *dot    &symtab[1];
 int *dotdot &symtab[3];
 
 int defund;
-char *atmp1, *atmp2, *atmp3;
-char txtfil, fbfil, symf, fin, faout;
-char *aout;
+char *atmp1, *atmp2, *atmp3, *aout, faout;
+
 aexit();
 
 main(argc, argv)
@@ -250,9 +249,6 @@ char *argv[];
     if (!(signal(2, 1) & 1)) {
         signal(2, aexit);
     }
-    txtfil     = ofile(atmp1);
-    fbfil      = ofile(atmp2);
-    symf = fin = ofile(atmp3);
     if ((faout = creat(aout, 0)) < 0) {
         filerr(aout);
     }
