@@ -99,7 +99,7 @@ struct Op *this;
 combin(this, x, opr)
 struct Op *this, *x;
 {
-    int rel, globl, tmp, maxtyp;
+    int rel1, rel2, globl, maxtyp;
     if (!passno) {
         globl = (this->type | x->type) & 32;
         this->type =& 31;
@@ -113,14 +113,20 @@ struct Op *this, *x;
         }
     } else {
         maxtyp = max(this->type & 31, x->type & 31);
-        rel = maprel(this) + maprel(x) * 6;
-        switch (opr) {
-        case '+': this->type = reltp2[rel]; break;
-        case '-': this->type = reltm2[rel]; break;
-        default : this->type = relte2[rel]; break;
-        }
-        if (this->type < 0) {
-            if (this->type == -2) error("r");
+        rel1 = maprel(this);
+        rel2 = maprel(x);
+        if (rel1 == 0 || rel2 == 0) {
+            this->type = 0;
+        } else if (rel1 == 1 && rel2 == 1) {
+            this->type = maxtyp;
+        } else if (opr == '+' && rel1 == 1) {
+            this->type = rel2;
+        } else if ((opr == '+' || opr == '-') && rel2 == 1) {
+            this->type = rel1;
+        } else if (opr == '-' && rel1 <= 4 && rel1 == rel2) {
+            this->type = rel1;
+        } else {
+            error("r");
             this->type = maxtyp;
         }
     }
@@ -130,36 +136,7 @@ maprel(this)
 struct Op *this;
 {
     int type;
-    if (this->type == 32) return 5;
+    if (this->type == 32) return 32;
     type = this->type & 31;
-    return type <= 5 ? type : 1;
+    return type <= 4 ? type : 1;
 }
-
-/* X = -2, M = -1 */
-
-char reltp2[] {
-    0,  0,  0,  0,  0,  0,
-    0, -1,  2,  3,  4, 32,
-    0,  2, -2, -2, -2, -2,
-    0,  3, -2, -2, -2, -2,
-    0,  4, -2, -2, -2, -2,
-    0, 32, -2, -2, -2, -2
-};
-
-char reltm2[] {
-    0,  0,  0,  0,  0,  0,
-    0, -1,  2,  3,  4, 32,
-    0, -2,  1, -2, -2, -2,
-    0, -2, -2,  1, -2, -2,
-    0, -2, -2, -2,  1, -2,
-    0, -2, -2, -2, -2, -2
-};
-
-char relte2[] {
-    0,  0,  0,  0,  0,  0,
-    0, -1, -2, -2, -2, -2,
-    0, -2, -2, -2, -2, -2,
-    0, -2, -2, -2, -2, -2,
-    0, -2, -2, -2, -2, -2,
-    0, -2, -2, -2, -2, -2
-};
