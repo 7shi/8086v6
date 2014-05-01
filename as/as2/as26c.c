@@ -232,8 +232,7 @@ struct Op *this;
 opl17()
 {
     int w;
-    for (;;) {
-        if ((w = getw()) < 0) break;
+    while ((w = getw()) != -1) {
         outb(1, w & 255);
     }
 }
