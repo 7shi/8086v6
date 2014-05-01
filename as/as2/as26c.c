@@ -224,7 +224,7 @@ struct Op *this;
         error("b");
         outw(0, opcode);
     } else {
-        outw(0, opcode | (((this->value >> 1) - 1) & ~0177400));
+        outw(0, opcode | (((this->value - 2) >> 1) & 255));
     }
 }
 
