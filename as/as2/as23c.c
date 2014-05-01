@@ -93,12 +93,9 @@ fbadv(op)
     int *fb;
     fb = nxtfb[op];
     curfb[op] = fb;
-    if (fb == 0) {
-        fb = fbbufp - 2;
-    }
+    if (fb == 0) fb = fbbufp - 2;
     do {
         fb =+ 2;
-        if (*fb >> 9 == op) break;
-    } while (*fb >= 0);
+    } while ((*fb >> 9) != op && *fb >= 0);
     nxtfb[op] = fb;
 }
