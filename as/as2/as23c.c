@@ -88,14 +88,13 @@ assem()
 
 int nxtfb[], *fbbufp;
 
-fbadv(op)
+fbadv(num)
 {
     int *fb;
-    fb = nxtfb[op];
-    curfb[op] = fb;
-    if (fb == 0) fb = fbbufp - 2;
+    fb = curfb[num] = nxtfb[num];
+    if (!fb) fb = fbbufp - 2;
     do {
         fb =+ 2;
-    } while ((*fb >> 9) != op && *fb >= 0);
-    nxtfb[op] = fb;
+    } while ((*fb >> 9) != num && *fb >= 0);
+    nxtfb[num] = fb;
 }
