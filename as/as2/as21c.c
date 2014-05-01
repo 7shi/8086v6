@@ -43,8 +43,7 @@ go()
     ibufc = 0;
     fin = ofile(atmp2);
     while ((w = getw()) != 4/*EOT*/) {
-        w =+ 25; /* "estimated" */
-        *(p++) = w;
+        *(p++) = w + 25; /* "estimated" */
         *(p++) = getw();
         setbrk(p);
     }
