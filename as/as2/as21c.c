@@ -17,9 +17,9 @@ go()
 
     /* read in symbol table */
     p = usymtab = memend = sbrk(0);
-    setbrk(p);
     fin = ofile(atmp3);
     while (getw() != 4/*EOT*/) {
+        setbrk(p + 6);
         *symsiz =+ 12; /* count symbols */
         getw();
         getw();
@@ -34,7 +34,6 @@ go()
             *(p++) = 0;
             getw();
         }
-        setbrk(p);
     }
     close(fin);
 
@@ -43,12 +42,13 @@ go()
     ibufc = 0;
     fin = ofile(atmp2);
     while ((w = getw()) != 4/*EOT*/) {
+        setbrk(p + 2);
         *(p++) = w + 25; /* "estimated" */
         *(p++) = getw();
-        setbrk(p);
     }
     close(fin);
     endtable = p;
+    setbrk(p + 1);
     *(p++) = 0100000;
 
     /* set up input text file; initialize f-b table */
@@ -157,7 +157,7 @@ int *sym;
 setbrk(p)
 char *p;
 {
-    if (p + 16 >= memend) {
+    while (p > memend) {
         memend =+ 512;
         brk(memend);
     }
