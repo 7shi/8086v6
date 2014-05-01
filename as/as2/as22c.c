@@ -24,7 +24,7 @@ outw(type, value)
         t = (xsymbol - usymtab) << 1;
         t =| 4; /* external relocation */
     } else {
-        t =& ~32; /* clear any ext bits */
+        t =& 31; /* clear any ext bits */
         if (t >= 5) {
             if (t == 27 || t == 28) {
                 /* est. text, data */
