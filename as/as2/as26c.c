@@ -138,7 +138,7 @@ opline(op)
     case 25: /* sob */
         expres(&x, readop());
         checkreg(&x);
-        opcode =| ((x.value << 8) + ((x.value >> 8) & 255)) >> 2;
+        opcode =| x.value << 6;
         checkop(','); /* skip , */
         expres(&x, readop());
         if (!passno) {
