@@ -42,8 +42,7 @@ opline(op)
         } while (checkop(','));
         break;
     case 15: /* < (.ascii) */
-        readop();
-        *dot =+ numval;
+        error("<"); /* never call */
         break;
     case 16: /* .even */
         *dot = (*dot + 1) & ~1;

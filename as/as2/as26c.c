@@ -9,19 +9,21 @@ char argb[], *txtp[], *relp[], *xsymbol;
 opline(op)
 {
     struct Op x;
-    int br, abufi, i, optype, opcode, ad;
+    int w, br, abufi, i, optype, opcode, ad;
     if (op == 5) {
         /* file name */
         line = 1;
         memset(argb, 0, 22);
         for (i = 0;; ++i) {
-            op = getw();
-            if (op < 0) break;
-            if (i < 21) argb[i] = op;
+            w = getw();
+            if (w < 0) break;
+            if (i < 21) argb[i] = w;
         }
         return;
     } else if (op == '<') {
-        opl17();
+        while ((w = getw()) != -1) {
+            outb(1, w & 255);
+        }
         return;
     } else if (!issym(op)) {
         expres(&x, op);
@@ -86,9 +88,8 @@ opline(op)
             outb(x.type, x.value);
         } while (checkop(','));
         break;
-    case 15:
-        readop();
-        opl17();
+    case 15: /* < (.ascii) */
+        error("<"); /* never call */
         break;
     case 16: /* .even */
         readop();
@@ -225,15 +226,6 @@ struct Op *this;
         outw(0, opcode);
     } else {
         outw(0, opcode | (((this->value - 2) >> 1) & 255));
-    }
-}
-
-/* < (.ascii) */
-opl17()
-{
-    int w;
-    while ((w = getw()) != -1) {
-        outb(1, w & 255);
     }
 }
 
