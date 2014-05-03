@@ -89,7 +89,7 @@ opline(op)
         } while (checkop(','));
         break;
     case 15: /* < (.ascii) */
-        error("<"); /* never call */
+        /* not used */
         break;
     case 16: /* .even */
         readop();

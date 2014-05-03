@@ -42,7 +42,7 @@ opline(op)
         } while (checkop(','));
         break;
     case 15: /* < (.ascii) */
-        error("<"); /* never call */
+        /* not used */
         break;
     case 16: /* .even */
         *dot = (*dot + 1) & ~1;
@@ -87,6 +87,10 @@ opline(op)
             expres(&x, readop());
         }
         break;
+    case 27: /* estimated text */
+    case 28: /* estimated data */
+        /* used in as2 only */
+        break;
     case 29: /* jbr */
     case 30: /* jeq, etc */
         len = op->type == 29 ? 4 : 6;
@@ -102,8 +106,6 @@ opline(op)
     case  6: /* branch */
     case  8: /* rts */
     case  9: /* sys */
-    case 27: /* estimated text */
-    case 28: /* estimated data */
         op = readop();
     default:
         expres(&x, op);
