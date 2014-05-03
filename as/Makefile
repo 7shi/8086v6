@@ -6,15 +6,15 @@ all:
 	$(MAKE) $@ -C as1
 	$(MAKE) $@ -C as2
 
+all-orig:
+	$(MAKE) all -C orig
+
 install distrib:
 	$(MAKE) $@ -C as1
 	$(MAKE) $@ -C as2
 
 install-orig:
 	$(MAKE) install -C orig
-
-orig:
-	$(MAKE) all -C orig
 
 test: distrib orig
 	cd orig && $(RUN) -r ../$(DESTDIR) ../$(DESTDIR)/bin/as as1?.s

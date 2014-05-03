@@ -23,7 +23,7 @@ distrib: $(TARGET)
 	cp $< $(DESTDIR)/lib
 
 test: distrib
-	$(MAKE) orig -C ..
+	$(MAKE) all-orig -C ..
 	cd ../orig && $(RUN) -r $(DESTDIR) $(V6ROOT)/bin/as as1?.s
 	mv ../orig/a.out .
 	$(LD) a.out
