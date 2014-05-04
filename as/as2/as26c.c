@@ -43,7 +43,8 @@ opline(op)
         if (!passno) {
             outw(0, opcode | x.value);
         } else {
-            dobranch(&x, opcode, 0);
+            x.value =- *dot + 2; /* pc relative */
+            dobranch(&x, opcode, -256, 254);
         }
         break;
     case 7: /* jsr */
@@ -146,15 +147,8 @@ opline(op)
             outw(0, opcode | x.value);
             return;
         }
-        x.value =- *dot;
-        x.value = -x.value;
-        if (x.value < -2 || 125 < x.value) {
-            error("b");
-            outw(0, opcode);
-        } else {
-            x.value =+ 4;
-            dobranch(&x, opcode, 1);
-        }
+        x.value = (*dot + 2) - x.value; /* back only */
+        dobranch(&x, opcode, 0, 126);
         break;
     case 26: /* .comm */
         op = readop();
@@ -181,7 +175,8 @@ opline(op)
             }
         } else {
             if (getbr()) {
-                dobranch(&x, opcode, 0);
+                x.value =- *dot + 2; /* pc relative */
+                dobranch(&x, opcode, -256, 254);
             } else {
                 if (optype != 29/*jbr*/) {
                     /* flip cond, add ".+6" */
@@ -220,17 +215,16 @@ op2b(opcode, ad1, swapf, rlimit)
     }
 }
 
-dobranch(this, opcode, sob)
+dobranch(this, opcode, min, max)
 struct Op *this;
 {
-    if (!sob) this->value =- *dot;
-    if ((!sob && this->value < -254 || 256 < this->value)
-        || this->value & 1
-        || this->type != *dotrel /* same relocation as . */) {
+    if (this->value < min || max < this->value
+            || this->value & 1 /* (must) even */
+            || this->type != *dotrel /* (must) same relocation as . */) {
         error("b");
         outw(0, opcode);
     } else {
-        outw(0, opcode | (((this->value - 2) >> 1) & 255));
+        outw(0, opcode | ((this->value >> 1) & 255));
     }
 }
 
