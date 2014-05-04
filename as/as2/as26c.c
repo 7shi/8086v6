@@ -132,7 +132,7 @@ opline(op)
         }
         *dot = savdot[optype - 21];
         *dotrel = optype - 19; /* new . relocation */
-        return;
+        break;
     case 24: /* mpy, dvd etc */
         ad = addres();
         op2b(opcode, ad, 1, 01000);
@@ -152,7 +152,7 @@ opline(op)
         break;
     case 26: /* .comm */
         op = readop();
-        if (!issym(op)) return;
+        if (!issym(op)) break; /* checked by as1 */
         checkop(','); /* skip , */
         expres(&x, readop());
         if ((op->type & 31) == 0) {
