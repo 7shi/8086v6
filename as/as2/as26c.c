@@ -2,14 +2,14 @@
 
 struct Op { int type, value; };
 
-int passno, line, *dotrel, *dot;
+int passno, line, *dotrel, *dot, abufi;
 int adrbuf[], savdot[], tseeks[], rseeks[], *tseekp, *rseekp;
 char argb[], *txtp[], *relp[], *xsymbol;
 
 opline(op)
 {
     struct Op x;
-    int w, br, abufi, i, optype, opcode, ad;
+    int w, br, i, optype, opcode, ad;
     if (op == 5) {
         /* file name */
         line = 1;
@@ -35,8 +35,8 @@ opline(op)
     abufi = 0;
     switch (optype) {
     case 5: /* flop src,freg */
-        ad = addres(&abufi);
-        op2b(abufi, opcode, ad, 0, 0400);
+        ad = addres();
+        op2b(opcode, ad, 0, 0400);
         break;
     case 6: /* branch */
         expres(&x, readop());
@@ -50,7 +50,7 @@ opline(op)
         expres(&x, readop());
         checkreg(&x);
         checkop(','); /* skip , */
-        op2b(abufi, opcode, x.value, 0, -1);
+        op2b(opcode, x.value, 0, -1);
         break;
     case 8: /* rts */
         expres(&x, readop());
@@ -63,24 +63,24 @@ opline(op)
         outw(x.type, opcode | x.value);
         break;
     case 10: /* movf */
-        ad = addres(&abufi);
+        ad = addres();
         if (ad >= 4) {
             /* see if source is fregister */
-            op2b(abufi, opcode, ad, 1, 0400);
+            op2b(opcode, ad, 1, 0400);
         } else {
-            op2b(abufi, 0174000, ad, 0, 0400);
+            op2b(0174000, ad, 0, 0400);
         }
         break;
     case 11: /* double */
-        ad = addres(&abufi);
-        op2b(abufi, opcode, ad, 0, -1);
+        ad = addres();
+        op2b(opcode, ad, 0, -1);
         break;
     case 12: /* flop freg,fsrc */
-        ad = addres(&abufi);
-        op2b(abufi, opcode, ad, 1, 0400);
+        ad = addres();
+        op2b(opcode, ad, 1, 0400);
         break;
     case 13: /* single operand */
-        op2b(abufi, opcode, 0, 0, -1);
+        op2b(opcode, 0, 0, -1);
         break;
     case 14: /* .byte */
         do {
@@ -133,8 +133,8 @@ opline(op)
         *dotrel = optype - 19; /* new . relocation */
         return;
     case 24: /* mpy, dvd etc */
-        ad = addres(&abufi);
-        op2b(abufi, opcode, ad, 1, 01000);
+        ad = addres();
+        op2b(opcode, ad, 1, 01000);
         break;
     case 25: /* sob */
         expres(&x, readop());
@@ -197,10 +197,10 @@ opline(op)
     }
 }
 
-op2b(abufi, opcode, ad1, swapf, rlimit)
+op2b(opcode, ad1, swapf, rlimit)
 {
     int ad2, i, tmp;
-    ad2 = addres(&abufi);
+    ad2 = addres();
     if (swapf) {
         tmp = ad1;
         ad1 = ad2;
@@ -231,17 +231,15 @@ struct Op *this;
 
 int savop;
 
-addres(abufi)
-int *abufi;
+addres()
 {
     int ret;
-    ret = addres1(abufi, 0);
+    ret = addres1(0);
     checkop(','); /* skip , */
     return ret;
 }
 
-addres1(abufi, astar)
-int *abufi;
+addres1(astar)
 {
     struct Op x;
     int op;
@@ -254,9 +252,9 @@ int *abufi;
             return x.value | 020;
         }
         if (astar) {
-            adrbuf[(*abufi)++] = 0;
-            adrbuf[(*abufi)++] = 0;
-            adrbuf[(*abufi)++] = xsymbol;
+            adrbuf[abufi++] = 0;
+            adrbuf[abufi++] = 0;
+            adrbuf[abufi++] = xsymbol;
             return x.value | 070;
         }
         return x.value | 010;
@@ -271,19 +269,19 @@ int *abufi;
         return x.value | 040;
     case '$':
         expres(&x, readop());
-        adrbuf[(*abufi)++] = x.value;
-        adrbuf[(*abufi)++] = x.type;
-        adrbuf[(*abufi)++] = xsymbol;
+        adrbuf[abufi++] = x.value;
+        adrbuf[abufi++] = x.type;
+        adrbuf[abufi++] = xsymbol;
         return 027;
     case '*':
         if (astar) error("*");
-        return addres1(abufi, 1) | 010;
+        return addres1(1) | 010;
     }
     expres(&x, op);
     if (checkop('(')) {
-        adrbuf[(*abufi)++] = x.value;
-        adrbuf[(*abufi)++] = x.type;
-        adrbuf[(*abufi)++] = xsymbol;
+        adrbuf[abufi++] = x.value;
+        adrbuf[abufi++] = x.type;
+        adrbuf[abufi++] = xsymbol;
         expres(&x, readop());
         if (!checkop(')')) error(")");
         checkreg(&x);
@@ -293,10 +291,10 @@ int *abufi;
         return x.value;
     }
     x.value =- *dot + 4;
-    if (*abufi) x.value =- 2;
-    adrbuf[(*abufi)++] = x.value; /* index */
-    adrbuf[(*abufi)++] = -x.type; /* index reloc. */
-    adrbuf[(*abufi)++] = xsymbol; /* index global */
+    if (abufi) x.value =- 2;
+    adrbuf[abufi++] = x.value; /* index */
+    adrbuf[abufi++] = -x.type; /* index reloc. */
+    adrbuf[abufi++] = xsymbol; /* index global */
     return 067; /* address mode */
 }
 
