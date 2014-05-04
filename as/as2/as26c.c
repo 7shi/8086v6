@@ -170,7 +170,7 @@ opline(op)
     case 30: /* jeq, jne, etc */
         expres(&x, readop());
         if (!passno) {
-            if (!setbr(x.value)) {
+            if (setbr(x.value)) {
                 *dot =+ 2;
             } else {
                 /* if doesn't fit */
@@ -180,7 +180,7 @@ opline(op)
                 *dot =+ 4;
             }
         } else {
-            if (!getbr()) {
+            if (getbr()) {
                 dobranch(&x, opcode, 0);
             } else {
                 if (optype != 29/*jbr*/) {
@@ -324,26 +324,29 @@ checkop(ch)
 int brtabi, brlen, brdelt;
 char brtab[];
 
+/* 戻り値の意味をオリジナルと逆転 */
 setbr(ad)
 {
     int i, rel;
     i = brtabi;
-    if (i >= brlen) return 2;
+    if (i >= brlen) return 0; /* not fit */
     ++brtabi;
     rel = ad - *dot;
     if (rel > 0) rel =- brdelt;
-    if (-254 <= rel && rel <= 256) return 0;
+    if (rel < -254 || 256 < rel) return 0; /* not fit */
+    /* set bitmap */
     brtab[i >> 3] =| 1 << (i & 7);
-    return 2;
+    return 1; /* fit */
 }
 
+/* 戻り値の意味をオリジナルと逆転 */
 getbr()
 {
     int i;
     i = brtabi;
-    if (i >= brlen) return 1;
+    if (i >= brlen) return 0; /* not fit */
     ++brtabi;
-    /* 0-bit into c-bit */
+    /* get bitmap */
     return (brtab[i >> 3] >> (i & 7)) & 1;
 }
 
