@@ -1,6 +1,6 @@
 /* translated from as26.s */
 
-struct Op { int type, value; };
+struct Op { char type, num; int value; };
 
 int passno, line, *dotrel, *dot, abufi;
 int adrbuf[], savdot[], tseeks[], rseeks[], *tseekp, *rseekp;

@@ -1,16 +1,16 @@
 /* translated from as23.s */
 
-struct Op { int type, value; };
+struct Op { char type, num; int value; };
+struct Op *curfb[10], *nxtfb[10], *fbbufp;
 
 int line, savop, passno, *dotrel, *dot, brdelt, numval;
-int header[], curfb[];
+int header[];
 char symtab[];
 
 assem()
 {
-    struct Op x;
+    struct Op x, *fb;
     int t, op, op2, i;
-    char *fb;
     for (;;) {
         op = readop();
         if (op == 4/*EOT*/) {
@@ -54,8 +54,8 @@ assem()
                     if (op == 2) {
                         fbadv(numval);
                         fb = curfb[numval];
-                        *fb = *dotrel;
                         brdelt = fb->value - *dot;
+                        fb->type  = *dotrel;
                         fb->value = *dot;
                     } else {
                         error("x");
@@ -86,15 +86,13 @@ assem()
     }
 }
 
-int nxtfb[], *fbbufp;
-
 fbadv(num)
 {
-    int *fb;
+    struct Op *fb;
     fb = curfb[num] = nxtfb[num];
-    if (!fb) fb = fbbufp - 2;
+    if (!fb) fb = fbbufp - 1;
     do {
-        fb =+ 2;
-    } while ((*fb >> 9) != num && *fb >= 0);
+        ++fb;
+    } while (fb->type >= 0 && (fb->num >> 1) != num);
     nxtfb[num] = fb;
 }

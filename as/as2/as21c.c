@@ -1,9 +1,10 @@
 /* translated from as21.s */
 
-struct Op { int type, value; };
+struct Op { char type, num; int value; };
+struct Op *curfb[10], *nxtfb[10], *fbbufp;
 
 int outmod 0777;
-int savdot[], datbase, bssbase, ibufc, *fbbufp;
+int savdot[], datbase, bssbase, ibufc;
 int *dotrel, *dot, *dotdot, brtabi, passno;
 int header[], *txtsiz, *datsiz, *bsssiz, *symsiz;
 int *datseek, *trelseek, *drelseek, symseek;
@@ -49,7 +50,7 @@ go()
     close(fin);
     endtable = p;
     setbrk(p + 1);
-    *(p++) = 0100000;
+    *(p++) = -1;
 
     /* set up input text file; initialize f-b table */
     setup();
@@ -162,8 +163,6 @@ char *p;
         brk(memend);
     }
 }
-
-int curfb[], nxtfb[];
 
 setup()
 {

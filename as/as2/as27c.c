@@ -1,6 +1,7 @@
 /* translated from as27.s */
 
-struct Op { int type, value; };
+struct Op { char type, num; int value; };
+struct Op *curfb[10];
 
 int savop;
 char *xsymbol;
@@ -12,7 +13,7 @@ struct Op *this;
     expres1(this, op);
 }
 
-int numval, esw1, passno, curfb[];
+int numval, esw1, passno;
 char reltp2[], reltm2[], relte2[];
 
 expres1(this, op)
@@ -22,6 +23,7 @@ struct Op *this;
     int opr;
     opr = '+';
     this->type  = 1;
+    this->num   = 0;
     this->value = 0;
     for (;;) {
         if (issym(op)) {
@@ -35,9 +37,9 @@ struct Op *this;
             } else {
                 x.value = op->value;
             }
-        } else if (op >= 97) {
-            fb = curfb[op - 97];
-            x.type  = fb->type;
+        } else if (op >= 'a') {
+            fb = curfb[op - 'a'];
+            x.type  = fb->type & 255;
             x.value = fb->value;
         } else {
             switch (op) {
