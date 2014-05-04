@@ -9,7 +9,7 @@ char argb[], *txtp[], *relp[], *xsymbol;
 opline(op)
 {
     struct Op x;
-    int w, br, i, optype, opcode, ad;
+    int w, i, optype, opcode, ad;
     if (op == 5) {
         /* file name */
         line = 1;
@@ -170,10 +170,15 @@ opline(op)
     case 30: /* jeq, jne, etc */
         expres(&x, readop());
         if (!passno) {
-            br = setbr(x.value);
-            if (br && optype != 29/*jbr*/) br =+ 2;
-            *dot =+ br; /* if doesn't fit */
-            *dot =+ 2;
+            if (!setbr(x.value)) {
+                *dot =+ 2;
+            } else {
+                /* if doesn't fit */
+                if (optype != 29/*jbr*/) {
+                    *dot =+ 2;
+                }
+                *dot =+ 4;
+            }
         } else {
             if (!getbr()) {
                 dobranch(&x, opcode, 0);
