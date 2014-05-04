@@ -36,7 +36,7 @@ opline(op)
     switch (optype) {
     case 5: /* flop src,freg */
         opr = addres();
-        op2b(opcode, opr, 0, 0400);
+        op2b(opcode, opr, addres(), 0400);
         break;
     case 6: /* branch */
         expres(&x, readop());
@@ -51,7 +51,7 @@ opline(op)
         expres(&x, readop());
         checkreg(&x);
         checkop(','); /* skip , */
-        op2b(opcode, x.value, 0, -1);
+        op2b(opcode, x.value, addres(), -1);
         break;
     case 8: /* rts */
         expres(&x, readop());
@@ -67,21 +67,21 @@ opline(op)
         opr = addres();
         if (opr >= 4) {
             /* see if source is fregister */
-            op2b(opcode, opr, 1, 0400);
+            op2b(opcode, addres(), opr, 0400);
         } else {
-            op2b(0174000, opr, 0, 0400);
+            op2b(0174000, opr, addres(), 0400);
         }
         break;
     case 11: /* double */
         opr = addres();
-        op2b(opcode, opr, 0, -1);
+        op2b(opcode, opr, addres(), -1);
         break;
     case 12: /* flop freg,fsrc */
         opr = addres();
-        op2b(opcode, opr, 1, 0400);
+        op2b(opcode, addres(), opr, 0400);
         break;
     case 13: /* single operand */
-        op2b(opcode, 0, 0, -1);
+        op2b(opcode, 0, addres(), -1);
         break;
     case 14: /* .byte */
         do {
@@ -135,7 +135,7 @@ opline(op)
         break;
     case 24: /* mpy, dvd etc */
         opr = addres();
-        op2b(opcode, opr, 1, 01000);
+        op2b(opcode, addres(), opr, 01000);
         break;
     case 25: /* sob */
         expres(&x, readop());
@@ -197,15 +197,9 @@ opline(op)
     }
 }
 
-op2b(opcode, opr1, swapf, rlimit)
+op2b(opcode, opr1, opr2, rlimit)
 {
-    int opr2, i, tmp;
-    opr2 = addres();
-    if (swapf) {
-        tmp = opr1;
-        opr1 = opr2;
-        opr2 = tmp;
-    }
+    int i;
     opr1 =<< 6;
     if (rlimit != -1 && opr1 >= rlimit) error("x");
     outw(0, opcode | opr1 | opr2);
