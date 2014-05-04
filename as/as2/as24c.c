@@ -57,7 +57,7 @@ readop()
     return op;
 }
 
-int inbuf[256], *ibufp, ibufc;
+int inbuf[256], ibufi, ibufc;
 char fin;
 
 getw()
@@ -68,12 +68,12 @@ getw()
         savop = 0;
         return op;
     }
-    if (--ibufc <= 0) {
+    if (ibufi >= ibufc) {
         len = read(fin, inbuf, 512);
         if (len < 0 || (ibufc = len >> 1) == 0) {
             return 4/*EOT*/;
         }
-        ibufp = inbuf;
+        ibufi = 0;
     }
-    return *(ibufp++);
+    return inbuf[ibufi++];
 }

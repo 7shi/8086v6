@@ -29,7 +29,7 @@ char brtab[128]; /* bitmap: brlen / 8 */
 
 int savdot[3], adrbuf[6], curfb[10], nxtfb[10];
 int brtabi, brdelt, fbbufp, defund, datbase, bssbase;
-int abufi, ibufc, *ibufp, line, savop, numval, passno;
+int abufi, ibufi, ibufc, line, savop, numval, passno;
 
 char argb[22], *txtp[259], *relp[259];
 char fin, faout, wordf, ch;
