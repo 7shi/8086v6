@@ -39,7 +39,7 @@ struct Op *this;
             }
         } else if (op >= 'a') {
             fb = curfb[op - 'a'];
-            x.type  = fb->type & 255;
+            x.type  = fb->type;
             x.value = fb->value;
         } else {
             switch (op) {
