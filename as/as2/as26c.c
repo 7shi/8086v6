@@ -41,7 +41,7 @@ opline(op)
     case 6: /* branch */
         expres(&x, readop());
         if (!passno) {
-            outw(0, opcode | x.value);
+            *dot =+ 2;
         } else {
             x.value =- *dot + 2; /* pc relative */
             dobranch(&x, opcode, -256, 254);
@@ -144,11 +144,11 @@ opline(op)
         checkop(','); /* skip , */
         expres(&x, readop());
         if (!passno) {
-            outw(0, opcode | x.value);
-            return;
+            *dot =+ 2;
+        } else {
+            x.value = (*dot + 2) - x.value; /* back only */
+            dobranch(&x, opcode, 0, 126);
         }
-        x.value = (*dot + 2) - x.value; /* back only */
-        dobranch(&x, opcode, 0, 126);
         break;
     case 26: /* .comm */
         op = readop();
