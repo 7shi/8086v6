@@ -9,7 +9,7 @@ char argb[], *txtp[], *relp[], *xsymbol;
 opline(op)
 {
     struct Op x;
-    int w, i, optype, opcode, ad;
+    int w, i, optype, opcode, opr;
     if (op == 5) {
         /* file name */
         line = 1;
@@ -35,8 +35,8 @@ opline(op)
     abufi = 0;
     switch (optype) {
     case 5: /* flop src,freg */
-        ad = addres();
-        op2b(opcode, ad, 0, 0400);
+        opr = addres();
+        op2b(opcode, opr, 0, 0400);
         break;
     case 6: /* branch */
         expres(&x, readop());
@@ -64,21 +64,21 @@ opline(op)
         outw(x.type, opcode | x.value);
         break;
     case 10: /* movf */
-        ad = addres();
-        if (ad >= 4) {
+        opr = addres();
+        if (opr >= 4) {
             /* see if source is fregister */
-            op2b(opcode, ad, 1, 0400);
+            op2b(opcode, opr, 1, 0400);
         } else {
-            op2b(0174000, ad, 0, 0400);
+            op2b(0174000, opr, 0, 0400);
         }
         break;
     case 11: /* double */
-        ad = addres();
-        op2b(opcode, ad, 0, -1);
+        opr = addres();
+        op2b(opcode, opr, 0, -1);
         break;
     case 12: /* flop freg,fsrc */
-        ad = addres();
-        op2b(opcode, ad, 1, 0400);
+        opr = addres();
+        op2b(opcode, opr, 1, 0400);
         break;
     case 13: /* single operand */
         op2b(opcode, 0, 0, -1);
@@ -134,8 +134,8 @@ opline(op)
         *dotrel = optype - 19; /* new . relocation */
         break;
     case 24: /* mpy, dvd etc */
-        ad = addres();
-        op2b(opcode, ad, 1, 01000);
+        opr = addres();
+        op2b(opcode, opr, 1, 01000);
         break;
     case 25: /* sob */
         expres(&x, readop());
@@ -197,18 +197,18 @@ opline(op)
     }
 }
 
-op2b(opcode, ad1, swapf, rlimit)
+op2b(opcode, opr1, swapf, rlimit)
 {
-    int ad2, i, tmp;
-    ad2 = addres();
+    int opr2, i, tmp;
+    opr2 = addres();
     if (swapf) {
-        tmp = ad1;
-        ad1 = ad2;
-        ad2 = tmp;
+        tmp = opr1;
+        opr1 = opr2;
+        opr2 = tmp;
     }
-    ad1 =<< 6;
-    if (rlimit != -1 && ad1 >= rlimit) error("x");
-    outw(0, opcode | ad1 | ad2);
+    opr1 =<< 6;
+    if (rlimit != -1 && opr1 >= rlimit) error("x");
+    outw(0, opcode | opr1 | opr2);
     for (i = 0; i < abufi; i =+ 3) {
         xsymbol = adrbuf[i + 2];
         outw(adrbuf[i + 1], adrbuf[i]);
