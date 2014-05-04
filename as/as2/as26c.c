@@ -36,7 +36,7 @@ opline(op)
     switch (optype) {
     case 5: /* flop src,freg */
         opr = addres();
-        op2b(opcode, opr, addres(), 0400);
+        op2b(opcode, opr, addres(), 4);
         break;
     case 6: /* branch */
         expres(&x, readop());
@@ -67,9 +67,9 @@ opline(op)
         opr = addres();
         if (opr >= 4) {
             /* see if source is fregister */
-            op2b(opcode, addres(), opr, 0400);
+            op2b(opcode, addres(), opr, 4);
         } else {
-            op2b(0174000, opr, addres(), 0400);
+            op2b(0174000, opr, addres(), -1);
         }
         break;
     case 11: /* double */
@@ -78,7 +78,7 @@ opline(op)
         break;
     case 12: /* flop freg,fsrc */
         opr = addres();
-        op2b(opcode, addres(), opr, 0400);
+        op2b(opcode, addres(), opr, 4);
         break;
     case 13: /* single operand */
         op2b(opcode, 0, addres(), -1);
@@ -135,7 +135,7 @@ opline(op)
         break;
     case 24: /* mpy, dvd etc */
         opr = addres();
-        op2b(opcode, addres(), opr, 01000);
+        op2b(opcode, addres(), opr, 010);
         break;
     case 25: /* sob */
         expres(&x, readop());
@@ -200,9 +200,8 @@ opline(op)
 op2b(opcode, opr1, opr2, rlimit)
 {
     int i;
-    opr1 =<< 6;
     if (rlimit != -1 && opr1 >= rlimit) error("x");
-    outw(0, opcode | opr1 | opr2);
+    outw(0, opcode | (opr1 << 6) | opr2);
     for (i = 0; i < abufi; i =+ 3) {
         xsymbol = adrbuf[i + 2];
         outw(adrbuf[i + 1], adrbuf[i]);
