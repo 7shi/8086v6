@@ -171,18 +171,18 @@ opline(op)
         expres(&x, readop());
         if (!passno) {
             br = setbr(x.value);
-            if (br && opcode != 0000400/*br*/) br =+ 2;
+            if (br && optype != 29/*jbr*/) br =+ 2;
             *dot =+ br; /* if doesn't fit */
             *dot =+ 2;
         } else {
             if (!getbr()) {
                 dobranch(&x, opcode, 0);
             } else {
-                if (opcode != 0000400/*br*/) {
+                if (optype != 29/*jbr*/) {
                     /* flip cond, add ".+6" */
-                    outw(1, 0402 ^ opcode);
+                    outw(1, opcode ^ 0402);
                 }
-                outw(1, 0000100/*jmp*/ + 037);
+                outw(1, 0000137); /* jmp *$A */
                 outw(x.type, x.value);
             }
         }
