@@ -1,6 +1,6 @@
 /* translated from as22.s */
 
-int outmod, *dotrel, *dot, *dotdot, passno, *rseekp, *tseekp;
+int outmod, *dotrel, *dot, *dotdot, passno, tseeks[], rseeks[];
 char *xsymbol, *usymtab, *txtp[], *relp[];
 
 outw(type, value)
@@ -41,8 +41,8 @@ outw(type, value)
     }
     putw(txtp, value);
     putw(relp, (t << 1) | (type < 0));
-    *tseekp =+ 2;
-    *rseekp =+ 2;
+    tseeks[*dotrel - 2] =+ 2;
+    rseeks[*dotrel - 2] =+ 2;
 }
 
 outb(type, value)
@@ -56,8 +56,8 @@ outb(type, value)
         if ((*dot & 1) == 0) {
             putw(txtp, value);
             putw(relp, 0);
-            *tseekp =+ 2;
-            *rseekp =+ 2;
+            tseeks[*dotrel - 2] =+ 2;
+            rseeks[*dotrel - 2] =+ 2;
         } else {
             txtp[0][-1] = value;
         }

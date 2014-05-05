@@ -15,9 +15,6 @@ int *exorig   &header[6];
 int tseeks[3] { 16 };
 int rseeks[3], symseek;
 
-int *tseekp tseeks;
-int *rseekp rseeks;
-
 int *txtseek &tseeks[0];
 int *datseek &tseeks[1];
 

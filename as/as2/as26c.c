@@ -3,7 +3,7 @@
 struct Op { char type, num; int value; };
 
 int passno, line, *dotrel, *dot, abufi;
-int adrbuf[], savdot[], tseeks[], rseeks[], *tseekp, *rseekp;
+int adrbuf[], savdot[], tseeks[], rseeks[];
 char argb[], *txtp[], *relp[], *xsymbol;
 
 opline(op)
@@ -125,10 +125,8 @@ opline(op)
         if (passno) {
             aflush(txtp);
             aflush(relp);
-            tseekp = &tseeks[optype - 21];
-            rseekp = &rseeks[optype - 21];
-            oset(txtp, *tseekp);
-            oset(relp, *rseekp);
+            oset(txtp, tseeks[optype - 21]);
+            oset(relp, rseeks[optype - 21]);
         }
         *dot = savdot[optype - 21];
         *dotrel = optype - 19; /* new . relocation */
