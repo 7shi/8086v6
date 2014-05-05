@@ -1,6 +1,6 @@
 /* translated from as16.s */
 
-struct Op { int type, value; };
+struct Op { char type, num; int value; };
 
 int *dot, *dotrel, savdot[], savop, ifflg, numval;
 

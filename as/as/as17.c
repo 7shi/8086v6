@@ -1,6 +1,6 @@
 /* translated from as17.s */
 
-struct Op { int type, value; };
+struct Op { char type, num; int value; };
 
 char curfbr[];
 int curfb[], numval, savop;
@@ -13,6 +13,7 @@ struct Op *this;
     int opfound;
 
     this->type  = 1; /* absolute */
+    this->num   = 0;
     this->value = 0;
 
     opr = '+';

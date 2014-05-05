@@ -25,7 +25,7 @@ _opline(op)
             outb(1, w & 255);
         }
         return;
-    } else if (!_issym(op)) {
+    } else if (!issym(op)) {
         _expres(&x, op);
         outw(x.type, x.value);
         return;
@@ -110,7 +110,7 @@ _opline(op)
     case 19: /* .globl */
         do {
             op = _readop();
-            if (!_issym(op)) break;
+            if (!issym(op)) break;
             op->type =| 32;
         } while (_checkop(','));
         break;
@@ -148,7 +148,7 @@ _opline(op)
         break;
     case 26: /* .comm */
         op = _readop();
-        if (!_issym(op)) break; /* checked by as1 */
+        if (!issym(op)) break; /* checked by as1 */
         _checkop(','); /* skip , */
         _expres(&x, _readop());
         if ((op->type & 31) == 0) {
@@ -333,10 +333,4 @@ getbr()
     ++brtabi;
     /* get bitmap */
     return (brtab[i >> 3] >> (i & 7)) & 1;
-}
-
-/* トークンがシンボルかどうかを判定（独自関数） */
-_issym(op)
-{
-    return op < 0 || 127 < op;
 }

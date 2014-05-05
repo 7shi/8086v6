@@ -26,7 +26,7 @@ struct Op *this;
     this->num   = 0;
     this->value = 0;
     for (;;) {
-        if (_issym(op)) {
+        if (issym(op)) {
             x.type = op->type;
             if (x.type == 0 && passno) {
                 _error("u");

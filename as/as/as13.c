@@ -1,6 +1,6 @@
 /* translated from as13.s */
 
-struct Op { int type, value; };
+struct Op { char type, num; int value; };
 
 char *savop, fbfil, curfbr[];
 int ifflg, line, numval, curfb[];

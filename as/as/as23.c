@@ -50,7 +50,7 @@ _assem()
                     op->value = x.value;
                 }
             } else if (op2 == ':') {
-                if (!_issym(op)) {
+                if (!issym(op)) {
                     if (op == 2) {
                         fbadv(numval);
                         fb = curfb[numval];
