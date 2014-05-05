@@ -56,6 +56,7 @@ _go()
     _setup();
 
     /* do pass 1 */
+    ibufc = 0;
     fin = ofile(_atmp1);
     _assem();
     close(fin);
@@ -91,6 +92,7 @@ _go()
     }
 
     /* do pass 2 */
+    ibufc = 0;
     fin = ofile(_atmp1);
     _assem();
     close(fin);
@@ -100,9 +102,9 @@ _go()
     aflush(relp);
 
     /* append full symbol table */
-    ibufc = 0;
     oset(txtp, symseek);
     p = usymtab;
+    ibufc = 0;
     fin = ofile(_atmp3);
     while ((w = getw()) != 4/*EOT*/) {
         _putw(txtp, w);
@@ -172,7 +174,6 @@ _setup()
     *_dot    = 0;
     *_dotdot = 0; /* .. */
     brtabi   = 0;
-    ibufc    = 0;
     memset(curfb, 0, 20);
     memset(nxtfb, 0, 20);
     for (i = 0; i < 10; ++i) {
