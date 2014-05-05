@@ -3,7 +3,7 @@
 char *aout "a.out";
 char *atmp1, *atmp2, *atmp3;
 
-int header[8] { 00407 /* br .+20 */ };
+int header[8];
 int *txtmagic &header[0];
 int *txtsiz   &header[1];
 int *datsiz   &header[2];

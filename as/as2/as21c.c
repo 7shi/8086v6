@@ -6,7 +6,7 @@ struct Op *curfb[], *nxtfb[], *fbbufp;
 int outmod 0777;
 int savdot[], datbase, bssbase, ibufc;
 int *dotrel, *dot, *dotdot, brtabi, passno;
-int header[], *txtsiz, *datsiz, *bsssiz, *symsiz;
+int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
 int *txtseek, *datseek, *trelseek, *drelseek, symseek;
 char fin, *txtp[], *relp[], *atmp1, *atmp2, *atmp3;
 char *usymtab, *endtable, *memend;
@@ -70,17 +70,22 @@ go()
     ibufc = 0;
     setup();
     ++passno;
-    ++*bsssiz;
-    *bsssiz =& ~1;
+
+    /* header */
+    *txtmagic = 0407; /* br .+20 */
     *txtsiz = (*txtsiz + 1) & ~1;
     *datsiz = (*datsiz + 1) & ~1;
+    *bsssiz = (*bsssiz + 1) & ~1;
+
     savdot[1] = datbase = *txtsiz;
     savdot[2] = bssbase = *txtsiz + *datsiz;
+
     *txtseek  = 16;
     *datseek  = 16 + *txtsiz;
     *trelseek = 16 + *txtsiz + *datsiz;
     *drelseek = 16 + *txtsiz + *datsiz + *txtsiz;
     symseek   = 16 + *txtsiz + *datsiz + *txtsiz + *datsiz;
+
     for (p = usymtab; p < endtable; p =+ 2) {
         doreloc(p);
     }
