@@ -60,16 +60,11 @@ _go()
     _assem();
     close(fin);
 
-    /* prepare for pass 2 */
     if (outmod != 0777) _aexit();
 
-    *_dot = 0;
-    *_dotrel = 2;
-    *_dotdot = 0; /* .. */
-    brtabi = 0;
-    ibufc = 0;
-    _setup();
+    /* prepare for pass 2 */
     ++passno;
+    _setup();
 
     /* header */
     *txtmagic = 0407; /* br .+20 */
@@ -173,9 +168,13 @@ char *p;
 _setup()
 {
     int i;
+    *_dotrel = 2;
+    *_dot    = 0;
+    *_dotdot = 0; /* .. */
+    brtabi   = 0;
+    ibufc    = 0;
     memset(curfb, 0, 20);
     memset(nxtfb, 0, 20);
-    ibufc = 0;
     for (i = 0; i < 10; ++i) {
         fbadv(i);
     }
