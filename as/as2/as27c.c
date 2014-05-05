@@ -1,7 +1,7 @@
 /* translated from as27.s */
 
 struct Op { char type, num; int value; };
-struct Op *curfb[];
+struct Op *curfb[], *nxtfb[];
 
 int savop;
 char *xsymbol;
@@ -37,8 +37,12 @@ struct Op *this;
             } else {
                 x.value = op->value;
             }
-        } else if (op >= 'a') {
+        } else if ('a' <= op && op <= 'j') { /* 0b-9b */
             fb = curfb[op - 'a'];
+            x.type  = fb->type;
+            x.value = fb->value;
+        } else if ('k' <= op && op <= 't') { /* 0f-9f */
+            fb = nxtfb[op - 'k'];
             x.type  = fb->type;
             x.value = fb->value;
         } else {
