@@ -117,9 +117,7 @@ opline(op)
     case 21: /* .text */
     case 22: /* .data */
     case 23: /* .bss  */
-        ++*dot;
-        *dot =& ~1;
-        savdot[*dotrel - 2] = *dot;
+        savdot[*dotrel - 2] = (*dot + 1) & ~1;
         if (passno) {
             aflush(txtp);
             aflush(relp);

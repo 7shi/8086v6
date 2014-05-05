@@ -117,9 +117,7 @@ _opline(op)
     case 21: /* .text */
     case 22: /* .data */
     case 23: /* .bss  */
-        ++*_dot;
-        *_dot =& ~1;
-        _savdot[*_dotrel - 2] = *_dot;
+        _savdot[*_dotrel - 2] = (*_dot + 1) & ~1;
         if (passno) {
             aflush(txtp);
             aflush(relp);
