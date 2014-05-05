@@ -7,7 +7,7 @@ int outmod 0777;
 int savdot[], datbase, bssbase, ibufc;
 int *dotrel, *dot, *dotdot, brtabi, passno;
 int header[], *txtsiz, *datsiz, *bsssiz, *symsiz;
-int *datseek, *trelseek, *drelseek, symseek;
+int *txtseek, *datseek, *trelseek, *drelseek, symseek;
 char fin, *txtp[], *relp[], *atmp1, *atmp2, *atmp3;
 char *usymtab, *endtable, *memend;
 
@@ -76,6 +76,7 @@ go()
     *datsiz = (*datsiz + 1) & ~1;
     savdot[1] = datbase = *txtsiz;
     savdot[2] = bssbase = *txtsiz + *datsiz;
+    *txtseek  = 16;
     *datseek  = 16 + *txtsiz;
     *trelseek = 16 + *txtsiz + *datsiz;
     *drelseek = 16 + *txtsiz + *datsiz + *txtsiz;

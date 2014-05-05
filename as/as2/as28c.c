@@ -12,8 +12,7 @@ int *symsiz   &header[4];
 int *stksiz   &header[5];
 int *exorig   &header[6];
 
-int tseeks[3] { 16 };
-int rseeks[3], symseek;
+int tseeks[3], rseeks[3], symseek;
 
 int *txtseek &tseeks[0];
 int *datseek &tseeks[1];
