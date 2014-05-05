@@ -91,6 +91,6 @@ fbadv(num)
     if (!fb) fb = fbbufp - 1;
     do {
         ++fb;
-    } while (fb->type >= 0 && (fb->num >> 1) != num);
+    } while (fb->type >= 0 && fb->num != num);
     nxtfb[num] = fb;
 }

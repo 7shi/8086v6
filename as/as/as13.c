@@ -45,7 +45,6 @@ assem() {
                     num = fbcheck(numval);
                     curfbr[num] = *dotrel;
                     curfb [num] = *dot;
-                    num =<< 1;
                     write(fbfil, dotrel, 1);
                     write(fbfil, &num  , 1);
                     write(fbfil, dot   , 2);
