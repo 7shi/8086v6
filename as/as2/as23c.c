@@ -1,7 +1,7 @@
 /* translated from as23.s */
 
 struct Op { char type, num; int value; };
-struct Op *curfb[10], *nxtfb[10], *fbbufp;
+struct Op *curfb[], *nxtfb[], *fbbufp;
 
 int line, savop, passno, *dotrel, *dot, numval;
 int header[];

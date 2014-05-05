@@ -1,7 +1,7 @@
 /* translated from as21.s */
 
 struct Op { char type, num; int value; };
-struct Op *curfb[10], *nxtfb[10], *fbbufp;
+struct Op *curfb[], *nxtfb[], *fbbufp;
 
 int outmod 0777;
 int savdot[], datbase, bssbase, ibufc;

@@ -1,7 +1,7 @@
 /* translated from as27.s */
 
 struct Op { char type, num; int value; };
-struct Op *curfb[10];
+struct Op *curfb[];
 
 int savop;
 char *xsymbol;
