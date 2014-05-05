@@ -93,7 +93,6 @@ opline(op)
         /* not used */
         break;
     case 16: /* .even */
-        readop();
         if (*dot & 1) {
             if (*dotrel == 4) {
                 /* bss mode */
@@ -118,7 +117,6 @@ opline(op)
     case 21: /* .text */
     case 22: /* .data */
     case 23: /* .bss  */
-        readop();
         ++*dot;
         *dot =& ~1;
         savdot[*dotrel - 2] = *dot;
