@@ -1,7 +1,7 @@
 /* translated from as28.s */
 
 char *aout "a.out";
-char *atmp1, *astmp2, *atmp3;
+char *atmp1, *atmp2, *atmp3;
 
 int header[8] { 00407 /* br .+20 */ };
 int *txtmagic &header[0];
