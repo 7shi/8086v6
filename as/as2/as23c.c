@@ -3,7 +3,7 @@
 struct Op { char type, num; int value; };
 struct Op *curfb[10], *nxtfb[10], *fbbufp;
 
-int line, savop, passno, *dotrel, *dot, brdelt, numval;
+int line, savop, passno, *dotrel, *dot, numval;
 int header[];
 char symtab[];
 
@@ -54,7 +54,6 @@ assem()
                     if (op == 2) {
                         fbadv(numval);
                         fb = curfb[numval];
-                        brdelt = fb->value - *dot;
                         fb->type  = *dotrel;
                         fb->value = *dot;
                     } else {
@@ -67,7 +66,6 @@ assem()
                     }
                     op->type =& ~31;
                     op->type =| *dotrel;
-                    brdelt = op->value - *dot;
                     op->value = *dot;
                 } else if (op->value != *dot) {
                     error("p");

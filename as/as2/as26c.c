@@ -9,7 +9,7 @@ char argb[], *txtp[], *relp[], *xsymbol;
 opline(op)
 {
     struct Op x;
-    int w, i, optype, opcode, opr;
+    int w, i, optype, opcode, opr, len;
     if (op == 5) {
         /* file name */
         line = 1;
@@ -164,14 +164,13 @@ opline(op)
     case 30: /* jeq, jne, etc */
         expres(&x, readop());
         if (!passno) {
-            if (setbr(x.value)) {
+            len = op->type == 29 ? 4 : 6;
+            x.value =- *dot + 2; /* pc relative */
+            if (setbr(x.value, len)) {
                 *dot =+ 2;
             } else {
                 /* if doesn't fit */
-                if (optype != 29/*jbr*/) {
-                    *dot =+ 2;
-                }
-                *dot =+ 4;
+                *dot =+ len;
             }
         } else {
             if (getbr()) {
@@ -183,7 +182,7 @@ opline(op)
                     outw(1, opcode ^ 0402);
                 }
                 outw(1, 0000137); /* jmp *$A */
-                outw(x.type, x.value);
+                outw(x.type, x.value); /* absolute */
             }
         }
         break;
@@ -312,15 +311,17 @@ int brtabi, brlen, brdelt;
 char brtab[];
 
 /* 戻り値の意味をオリジナルと逆転 */
-setbr(ad)
+setbr(rel, len)
 {
-    int i, rel;
+    int i;
     i = brtabi;
     if (i >= brlen) return 0; /* not fit */
     ++brtabi;
-    rel = ad - *dot;
-    if (rel > 0) rel =- brdelt;
+    /* 前方参照の誤差を補正 */
+    if (rel > -2) rel =- brdelt;
     if (rel < -254 || 256 < rel) return 0; /* not fit */
+    /* 前方参照の短縮による誤差を計上 */
+    if (rel > -2) brdelt =+ len - 2;
     /* set bitmap */
     brtab[i >> 3] =| 1 << (i & 7);
     return 1; /* fit */
