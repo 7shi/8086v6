@@ -38,7 +38,6 @@ struct Buf *this;
 }
 
 int savop;
-char symtab[], *usymtab;
 
 _readop()
 {
@@ -48,13 +47,7 @@ _readop()
         savop = 0;
         return op;
     }
-    op = getw();
-    if (op >= 04000) {
-        return usymtab + (op - 04000);
-    } else if (op >= 01000) {
-        return symtab + (op - 01000) * 3 / 2 + 2;
-    }
-    return op;
+    return getw();
 }
 
 int inbuf[256], ibufi, ibufc;

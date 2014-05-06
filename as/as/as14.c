@@ -84,11 +84,11 @@ rname()
 
     if (sym < usymtab) {
         /* builtin symbol */
-        putw((sym - symtab) * 2 / 3 + 01000);
+        putw(sym + 2);
         return sym + 2;
     } else {
         /* user symbol */
-        putw((sym - usymtab) / 3 + 04000);
+        putw((sym - usymtab) / 3 + usymtab);
         return sym + 8;
     }
 }
