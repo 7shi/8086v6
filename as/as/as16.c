@@ -98,12 +98,21 @@ opline(op)
         /* not used */
         break;
     case 16: /* .even */
-        *dot = (*dot + 1) & ~1;
+        if (*dot & 1) {
+            if (*dotrel == 4) {
+                /* bss mode */
+                ++*dot;
+            } else {
+                outb(0, 0);
+            }
+        }
         break;
     case 17: /* .if */
         expres(&x, readop());
-        if (x.type  == 0) error("U");
-        if (x.value == 0) ++ifflg;
+        if (passno == 0) {
+            if (x.type  == 0) error("U");
+            if (x.value == 0) ++ifflg;
+        }
         break;
     case 18: /* endif */
         break;

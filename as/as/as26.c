@@ -107,15 +107,21 @@ _opline(op)
             }
         }
         break;
-    case 17: /* if */
+    case 17: /* .if */
         expres(&x, readop());
+        if (passno == 0) {
+            if (x.type  == 0) error("U");
+            if (x.value == 0) ++ifflg;
+        }
         break;
     case 18: /* .endif */
         break;
     case 19: /* .globl */
         do {
-            op = readop();
-            if (!issym(op)) break;
+            if (!issym(op = readop())) {
+                savop = op;
+                break;
+            }
             op->type =| 32;
         } while (checkop(','));
         break;
