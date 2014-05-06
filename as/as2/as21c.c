@@ -63,6 +63,7 @@ go()
     close(fin);
 
     if (outmod != 0777) aexit();
+    savdot[*dotrel - 2] = *dot;
 
     /* prepare for pass 2 */
     passno = 2;
@@ -70,10 +71,11 @@ go()
 
     /* header */
     *txtmagic = 0407; /* br .+20 */
-    *txtsiz = (*txtsiz + 1) & ~1;
-    *datsiz = (*datsiz + 1) & ~1;
-    *bsssiz = (*bsssiz + 1) & ~1;
+    *txtsiz = (savdot[0] + 1) & ~1;
+    *datsiz = (savdot[1] + 1) & ~1;
+    *bsssiz = (savdot[2] + 1) & ~1;
 
+    savdot[0] = 0;
     savdot[1] = datbase = *txtsiz;
     savdot[2] = bssbase = *txtsiz + *datsiz;
 

@@ -74,12 +74,6 @@ assem()
                 opline(op);
             }
         }
-        if (passno < 2) {
-            /* txtsiz, datsiz, bsssiz */
-            if (header[*dotrel - 1] < *dot) {
-                header[*dotrel - 1] = *dot;
-            }
-        }
     }
 }
 
