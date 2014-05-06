@@ -47,7 +47,7 @@ struct Op *this;
         } else {
             switch (op) {
             case '[':
-                expres1(&x, _readop());
+                expres1(&x, readop());
                 if (!_checkop(']')) _error("]");
                 break;
             case   1:
@@ -71,7 +71,7 @@ struct Op *this;
             case '!':
                 if (opr != '+') _error("e");
                 opr = op;
-                op = _readop();
+                op = readop();
                 continue;
             default:
                 savop = op;
@@ -97,7 +97,7 @@ struct Op *this;
             }
         }
         opr = '+';
-        op = _readop();
+        op = readop();
     }
 }
 

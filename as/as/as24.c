@@ -37,20 +37,7 @@ struct Buf *this;
     oset(this, this->addr + len);
 }
 
-int savop;
-
-_readop()
-{
-    int op;
-    if (savop) {
-        op = savop;
-        savop = 0;
-        return op;
-    }
-    return getw();
-}
-
-int inbuf[256], ibufi, ibufc;
+int inbuf[256], ibufi, ibufc, savop;
 char fin;
 
 getw()

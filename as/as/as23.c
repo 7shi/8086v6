@@ -11,7 +11,7 @@ _assem()
     struct Op x, *fb;
     int t, op, op2, i;
     for (;;) {
-        op = _readop();
+        op = readop();
         if (op == 4/*EOT*/) {
             break;
         } else if (op == '\n') {
@@ -23,9 +23,9 @@ _assem()
                 op = 2;
                 numval = getw();
             }
-            op2 = _readop();
+            op2 = readop();
             if (op2 == '=') {
-                _expres(&x, _readop());
+                _expres(&x, readop());
                 if (&op->value == dot) { /* test for dot */
                     x.type =& ~32;
                     if (x.type != *dotrel) {

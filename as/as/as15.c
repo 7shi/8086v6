@@ -1,10 +1,11 @@
 /* translated from as15.s */
 
-int savop, numval;
+int savop, numval, passno;
 char ch, chartab[];
 
 readop() {
     int c, num, type, ret;
+    if (passno) return getw();
     if (savop) {
         ret = savop;
         savop = 0;
