@@ -85,19 +85,3 @@ struct Op *this;
         op = readop();
     }
 }
-
-combin(this, x, opr)
-struct Op *this, *x;
-{
-    int globl;
-    globl = (this->type | x->type) & 32;
-    this->type =& 31;
-    x   ->type =& 31;
-    if (this->type == 0 || x->type == 0) {
-        this->type = globl;
-    } else if (opr == '-' && this->type == x->type) {
-        this->type = globl | 1;
-    } else {
-        this->type = globl | max(this->type, x->type);
-    }
-}

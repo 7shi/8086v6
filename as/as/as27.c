@@ -82,7 +82,7 @@ struct Op *this;
         if (opr == '^') {
             this->type = x.type;
         } else {
-            _combin(this, &x, opr);
+            combin(this, &x, opr);
             switch (opr) {
             case  29: this->value =<< x.value; break;
             case  30: this->value =>> x.value; break;
@@ -101,7 +101,7 @@ struct Op *this;
     }
 }
 
-_combin(this, x, opr)
+combin(this, x, opr)
 struct Op *this, *x;
 {
     int rel1, rel2, globl, maxtyp;
