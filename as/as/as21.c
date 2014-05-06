@@ -122,7 +122,7 @@ _go()
 }
 
 int errflg;
-char *_atmp2, *_atmp3, *aout;
+char *aout;
 
 _aexit()
 {
