@@ -38,7 +38,7 @@ struct Buf *this;
 }
 
 int savop;
-char _symtab[], *usymtab;
+char symtab[], *usymtab;
 
 _readop()
 {
@@ -52,7 +52,7 @@ _readop()
     if (op >= 04000) {
         return usymtab + (op - 04000);
     } else if (op >= 01000) {
-        return  _symtab + (op - 01000);
+        return symtab + (op - 01000) * 3 / 2 + 2;
     }
     return op;
 }
