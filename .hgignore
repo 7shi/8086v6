@@ -12,3 +12,6 @@ sys/conf/c.c
 sys/conf/l.s
 sys/conf/mkconf
 sys/*unix
+GPATH
+GRTAGS
+GTAGS
