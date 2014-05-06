@@ -2,23 +2,43 @@
 
 struct Op { char type, num; int value; };
 
-int *dot, *dotrel, savdot[], savop, ifflg, numval;
+int passno, line, *dotrel, *dot, abufi;
+int savop, numval, ifflg;
+int adrbuf[], savdot[], tseeks[], rseeks[];
+char argb[], *txtp[], *relp[], *xsymbol;
 
 opline(op)
 {
     struct Op x;
-    int len;
-
-    if (op == '<') {
-        *dot =+ numval;
+    int w, i, optype, opcode, opr, len;
+    if (passno && op == 5) {
+        /* file name */
+        line = 1;
+        memset(argb, 0, 22);
+        for (i = 0;; ++i) {
+            w = getw();
+            if (w < 0) break;
+            if (i < 21) argb[i] = w;
+        }
+        return;
+    } else if (op == '<') {
+        if (passno == 0) {
+            *dot =+ numval;
+        } else {
+            while ((w = getw()) != -1) {
+                outb(1, w & 255);
+            }
+        }
         return;
     } else if (!issym(op)) {
         expres(&x, op);
-        *dot =+ 2;
+        outw(x.type, x.value);
         return;
     }
-
-    switch (op->type) {
+    optype = op->type;
+    opcode = op->value;
+    abufi = 0;
+    switch (optype) {
     case  5: /* map fop freg,fdst to double */
     case  7: /* jsr */
     case 10: /* map fld/fst to double */

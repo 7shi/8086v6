@@ -3,6 +3,7 @@
 struct Op { char type, num; int value; };
 
 int passno, line, *dotrel, *dot, abufi;
+int savop, numval, ifflg;
 int adrbuf[], savdot[], tseeks[], rseeks[];
 char argb[], *txtp[], *relp[], *xsymbol;
 
@@ -10,7 +11,7 @@ _opline(op)
 {
     struct Op x;
     int w, i, optype, opcode, opr, len;
-    if (op == 5) {
+    if (passno && op == 5) {
         /* file name */
         line = 1;
         memset(argb, 0, 22);
@@ -21,8 +22,12 @@ _opline(op)
         }
         return;
     } else if (op == '<') {
-        while ((w = getw()) != -1) {
-            outb(1, w & 255);
+        if (passno == 0) {
+            *dot =+ numval;
+        } else {
+            while ((w = getw()) != -1) {
+                outb(1, w & 255);
+            }
         }
         return;
     } else if (!issym(op)) {
