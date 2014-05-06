@@ -55,7 +55,10 @@ opline(op)
     case 7: /* jsr */
         expres(&x, readop());
         _checkreg(&x);
-        checkop(','); /* skip , */
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, x.value, _addres(), -1);
         break;
     case 8: /* rts */
@@ -128,9 +131,15 @@ opline(op)
     case 21: /* .text */
     case 22: /* .data */
     case 23: /* .bss */
-        savdot[*dotrel - 2] = *dot;
-        *dot = savdot[op->type - 21];
-        *dotrel = op->type - 19;
+        savdot[*dotrel - 2] = (*dot + 1) & ~1;
+        if (passno == 2) {
+            aflush(txtp);
+            aflush(relp);
+            oset(txtp, tseeks[optype - 21]);
+            oset(relp, rseeks[optype - 21]);
+        }
+        *dot = savdot[optype - 21];
+        *dotrel = optype - 19; /* new . relocation */
         break;
     case 24: /* mpy, dvd etc */
         opr = _addres();
