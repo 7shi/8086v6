@@ -74,6 +74,8 @@ char *e;
     int i, ln;
     char *p, buf[5];
 
+    if (passno == 0) return error(e);
+
     ++errflg;
 
     /* make nonexecutable */

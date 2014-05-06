@@ -25,7 +25,7 @@ _assem()
             }
             op2 = readop();
             if (op2 == '=') {
-                _expres(&x, readop());
+                expres(&x, readop());
                 if (&op->value == dot) { /* test for dot */
                     x.type =& ~32;
                     if (x.type != *dotrel) {
