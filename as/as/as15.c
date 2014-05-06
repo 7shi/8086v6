@@ -1,7 +1,7 @@
 /* translated from as15.s */
 
 int savop, numval, passno;
-char ch, chartab[];
+char ch, chartab[], *txtp[];
 
 readop() {
     int c, num, type, ret;
@@ -51,11 +51,11 @@ readop() {
         } while (ret != 4/*EOT*/ && ret != '\n');
         break;
     case 0: /* string: < */
-        putw('<');
+        putw(txtp, '<');
         for (numval = 0; (c = rsch(1)) >= 0; ++numval) {
-            putw(c | 256);
+            putw(txtp, c | 256);
         }
-        putw(-1);
+        putw(txtp, -1);
         return '<';
     default: /* ASCII */
         ch = c;
@@ -65,10 +65,10 @@ readop() {
         }
         return rname();
     }
-    putw(ret);
+    putw(txtp, ret);
     if (ret == 1) {
         /* default(数字), squote, dquote */
-        putw(numval = num);
+        putw(txtp, numval = num);
     }
     return ret;
 }

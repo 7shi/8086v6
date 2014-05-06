@@ -95,7 +95,7 @@ go2()
     oset(txtp, 0);
     oset(relp, *trelseek);
     for (i = 0; i < 8; ++i) {
-        _putw(txtp, header[i]);
+        putw(txtp, header[i]);
     }
 
     /* do pass 2 */
@@ -114,12 +114,12 @@ go2()
     ibufc = 0;
     fin = ofile(atmp3);
     while ((w = getw()) != 4/*EOT*/) {
-        _putw(txtp, w);
-        _putw(txtp, getw());
-        _putw(txtp, getw());
-        _putw(txtp, getw());
-        _putw(txtp, *(p++));
-        _putw(txtp, *(p++));
+        putw(txtp, w);
+        putw(txtp, getw());
+        putw(txtp, getw());
+        putw(txtp, getw());
+        putw(txtp, *(p++));
+        putw(txtp, *(p++));
         getw();
         getw();
     }

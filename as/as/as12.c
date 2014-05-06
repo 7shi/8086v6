@@ -26,17 +26,3 @@ char *e;
 
     printf("%s %s\n", e, buf);
 }
-
-int ifflg, obufi, outbuf[];
-char pof;
-
-putw(w)
-{
-    if (!ifflg || w == '\n') {
-        outbuf[obufi++] = w;
-        if (obufi >= 256) {
-            write(pof, outbuf, 512);
-            obufi = 0;
-        }
-    }
-}

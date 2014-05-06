@@ -37,10 +37,6 @@ char atmp1[] "/tmp/atm1a";
 char atmp2[] "/tmp/atm2a";
 char atmp3[] "/tmp/atm3a";
 
-/* atmp1 */
-char pof;
-int outbuf[256], obufi;
-
 /* atmp2 */
 char fbfil;
 

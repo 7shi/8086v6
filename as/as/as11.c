@@ -1,8 +1,8 @@
 /* translated from as11.s */
 
-int outbuf[], outmod, passno;
+int outmod, passno;
 char atmp1[], atmp2[], atmp3[], faout, *aout;
-char errflg, pof, fbfil;
+char errflg, faout, fbfil, *txtp[];
 char *usymtab, *symend, *memend;
 
 int aexit();
@@ -14,7 +14,7 @@ go1()
     usymtab = symend = memend = sbrk(0);
 
     /* as2へ引き継ぐ一時ファイルを作成 */
-    pof   = fcreat(atmp1);
+    faout = fcreat(atmp1);
     fbfil = fcreat(atmp2);
     fp    = fcreat(atmp3);
 
@@ -23,10 +23,9 @@ go1()
         signal(2, aexit);
     }
 
+    oset(txtp, 0);
     assem();
-
-    /* 出力バッファをフラッシュ */
-    write(pof, outbuf, 512);
+    aflush(txtp);
 
     /* シンボルテーブルをダンプ */
     write(fp, usymtab, symend - usymtab);
@@ -34,7 +33,7 @@ go1()
     /* ファイルを閉じる */
     close(fp);
     close(fbfil);
-    close(pof);
+    close(faout);
 
     /* エラーが発生していれば終了 */
     if (errflg) aexit(); 
@@ -58,9 +57,9 @@ char *fname, *msg;
 fcreat(atmp)
 char *atmp;
 {
-    int ret;
+    int ret, st[20];
     do {
-        if(stat(atmp, outbuf) < 0) {
+        if(stat(atmp, st) < 0) {
             ret = creat(atmp, 0444);
             if(ret > 0) return ret;
         }

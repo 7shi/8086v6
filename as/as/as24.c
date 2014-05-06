@@ -15,9 +15,12 @@ struct Buf *this;
     this->addr = ad;
 }
 
-_putw(this, w)
+int passno, ifflg;
+
+putw(this, w)
 struct Buf *this;
 {
+    if (passno == 0 && ifflg && w != '\n') return;
     if (this->next >= this->max) {
         /* buf max */
         aflush(this);

@@ -31,7 +31,7 @@ int *retval;
     return 1;
 }
 
-char *hshtab[], symtab[], chartab[];
+char *hshtab[], symtab[], chartab[], *txtp[];
 char *usymtab, *symend, *memend;
 
 rname()
@@ -81,11 +81,11 @@ rname()
 
     if (sym < usymtab) {
         /* builtin symbol */
-        putw(sym + 2);
+        putw(txtp, sym + 2);
         return sym + 2;
     } else {
         /* user symbol */
-        putw((sym - usymtab) / 3 + usymtab);
+        putw(txtp, (sym - usymtab) / 3 + usymtab);
         return sym + 8;
     }
 }
@@ -150,10 +150,10 @@ rch() {
         fin = open(*curarg, 0);
         line = 1;
 
-        putw(5);
+        putw(txtp, 5);
         for (i = 0; c = (*curarg)[i]; ++i) {
-            putw(c);
+            putw(txtp, c);
         }
-        putw(-1);
+        putw(txtp, -1);
     }
 }
