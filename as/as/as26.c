@@ -182,20 +182,31 @@ _opline(op)
         }
         break;
     case 26: /* .comm */
-        op = readop();
-        if (!issym(op)) break; /* checked by as1 */
-        checkop(','); /* skip , */
+        if (!issym(op = readop()) || !checkop(',')) {
+            error("x");
+            break;
+        }
         expres(&x, readop());
-        if ((op->type & 31) == 0) {
+        if (passno == 0) {
+            op->type =| 32;
+        } else if ((op->type & 31) == 0) {
             op->type =| 32;
             op->value = x.value;
         }
         break;
     case 29: /* jbr */
     case 30: /* jeq, jne, etc */
+        len = op->type == 29 ? 4 : 6;
         expres(&x, readop());
-        if (passno < 2) {
-            len = op->type == 29 ? 4 : 6;
+        if (passno == 0) {
+            if (x.type == *dotrel) {
+                x.value =- *dot;
+                if (-254 <= x.value && x.value < 0) {
+                    len = 2;
+                }
+            }
+            *dot =+ len;
+        } else if (passno == 1) {
             x.value =- *dot + 2; /* pc relative */
             if (setbr(x.value, len)) {
                 *dot =+ 2;
@@ -217,9 +228,10 @@ _opline(op)
             }
         }
         break;
+    case 27: /* estimated text */
+    case 28: /* estimated data */
+        if (passno == 0) break;
     case 20: /* reg */
-    case 27: /* est text */
-    case 28: /* est data */
     default:
         expres(&x, op);
         outw(x.type, x.value);

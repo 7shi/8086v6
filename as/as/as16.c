@@ -181,33 +181,60 @@ opline(op)
             dobranch(&x, opcode, 0, 126);
         }
         break;
-    case 26: /* .common */
+    case 26: /* .comm */
         if (!issym(op = readop()) || !checkop(',')) {
             error("x");
-        } else {
+            break;
+        }
+        expres(&x, readop());
+        if (passno == 0) {
             op->type =| 32;
-            expres(&x, readop());
+        } else if ((op->type & 31) == 0) {
+            op->type =| 32;
+            op->value = x.value;
+        }
+        break;
+    case 29: /* jbr */
+    case 30: /* jeq, jne, etc */
+        len = op->type == 29 ? 4 : 6;
+        expres(&x, readop());
+        if (passno == 0) {
+            if (x.type == *dotrel) {
+                x.value =- *dot;
+                if (-254 <= x.value && x.value < 0) {
+                    len = 2;
+                }
+            }
+            *dot =+ len;
+        } else if (passno == 1) {
+            x.value =- *dot + 2; /* pc relative */
+            if (setbr(x.value, len)) {
+                *dot =+ 2;
+            } else {
+                /* if doesn't fit */
+                *dot =+ len;
+            }
+        } else {
+            if (getbr()) {
+                x.value =- *dot + 2; /* pc relative */
+                dobranch(&x, opcode, -256, 254);
+            } else {
+                if (optype != 29/*jbr*/) {
+                    /* flip cond, add ".+6" */
+                    outw(1, opcode ^ 0402);
+                }
+                outw(1, 0000137); /* jmp *$A */
+                outw(x.type, x.value); /* absolute */
+            }
         }
         break;
     case 27: /* estimated text */
     case 28: /* estimated data */
-        /* used in as2 only */
-        break;
-    case 29: /* jbr */
-    case 30: /* jeq, etc */
-        len = op->type == 29 ? 4 : 6;
-        expres(&x, readop());
-        if (x.type == *dotrel) {
-            x.value =- *dot;
-            if (-254 <= x.value && x.value < 0) {
-                len = 2;
-            }
-        }
-        *dot =+ len;
-        break;
+        if (passno == 0) break;
+    case 20: /* reg */
     default:
         expres(&x, op);
-        *dot =+ 2;
+        outw(x.type, x.value);
         break;
     }
 }
