@@ -13,8 +13,7 @@ struct Op *this;
     expres1(this, op);
 }
 
-int numval, esw1, passno;
-char reltp2[], reltm2[], relte2[];
+int numval, passno;
 
 expres1(this, op)
 struct Op *this;

@@ -27,7 +27,7 @@ int brtabi, brdelt, defund, datbase, bssbase;
 int abufi, ibufi, ibufc, line, savop, numval, passno;
 
 char argb[22], *txtp[259], *relp[259];
-char fin, faout, wordf, ch;
+char fin, faout;
 char *usymtab, *endtable, *xsymbol;
 
 struct Op { char type, num; int value; };

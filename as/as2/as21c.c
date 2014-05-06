@@ -133,8 +133,6 @@ aexit()
     exit(errflg);
 }
 
-char ch;
-
 filerr(fn)
 char *fn;
 {

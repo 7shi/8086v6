@@ -126,7 +126,6 @@ go2()
 }
 
 int errflg;
-char ch;
 
 _filerr(fn)
 char *fn;
