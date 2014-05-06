@@ -11,8 +11,6 @@ int *txtseek, *datseek, *trelseek, *drelseek, symseek;
 char fin, *txtp[], *relp[], atmp1[], atmp2[], atmp3[];
 char *usymtab, *endtable, *memend, *unglob, faout, *aout;
 
-_aexit();
-
 /* set up sizes and origins */
 go2()
 {
@@ -21,9 +19,6 @@ go2()
     if (unglob) {
         /* globalize all undefineds (-g) */
         defund = 040;
-    }
-    if (!(signal(2, 1) & 1)) {
-        signal(2, _aexit);
     }
     if ((faout = creat(aout, 0)) < 0) {
         _filerr(aout);
@@ -74,7 +69,7 @@ go2()
     _assem();
     close(fin);
 
-    if (outmod != 0777) _aexit();
+    if (outmod != 0777) aexit();
 
     /* prepare for pass 2 */
     ++passno;
@@ -131,20 +126,10 @@ go2()
     }
     close(fin);
     aflush(txtp);
-    _aexit();
+    aexit();
 }
 
 int errflg;
-
-_aexit()
-{
-    unlink(atmp1);
-    unlink(atmp2);
-    unlink(atmp3);
-    chmod(aout, outmod);
-    exit(errflg);
-}
-
 char ch;
 
 _filerr(fn)
@@ -152,7 +137,7 @@ char *fn;
 {
     if (!errflg) ++errflg;
     printf("%s?\n", fn);
-    _aexit();
+    aexit();
 }
 
 doreloc(sym)
