@@ -57,6 +57,7 @@ go2()
     *(p++) = -1;
 
     /* set up input text file; initialize f-b table */
+    passno = 1;
     _setup();
 
     /* do pass 1 */
@@ -68,7 +69,7 @@ go2()
     if (outmod != 0777) aexit();
 
     /* prepare for pass 2 */
-    ++passno;
+    passno = 2;
     _setup();
 
     /* header */

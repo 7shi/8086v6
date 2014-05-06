@@ -27,7 +27,7 @@ struct Op *this;
     for (;;) {
         if (issym(op)) {
             x.type = op->type;
-            if (x.type == 0 && passno) {
+            if (x.type == 0 && passno == 2) {
                 _error("u");
             }
             if (x.type == 32) {
@@ -105,7 +105,7 @@ _combin(this, x, opr)
 struct Op *this, *x;
 {
     int rel1, rel2, globl, maxtyp;
-    if (!passno) {
+    if (passno < 2) {
         globl = (this->type | x->type) & 32;
         this->type =& 31;
         x   ->type =& 31;

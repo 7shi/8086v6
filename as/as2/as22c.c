@@ -16,7 +16,7 @@ outw(type, value)
         return;
     }
     *dot =+ 2;
-    if (!passno) return;
+    if (passno < 2) return;
     t = abs(type); /* type < 0: relative pc */
     if (t == 32) {
         /* external references */
@@ -52,7 +52,7 @@ outb(type, value)
         return;
     }
     if (type > 1) error("r");
-    if (passno) {
+    if (passno == 2) {
         if ((*dot & 1) == 0) {
             putw(txtp, value);
             putw(relp, 0);

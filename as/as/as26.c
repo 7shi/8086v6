@@ -40,7 +40,7 @@ _opline(op)
         break;
     case 6: /* branch */
         _expres(&x, _readop());
-        if (!passno) {
+        if (passno < 2) {
             *dot =+ 2;
         } else {
             x.value =- *dot + 2; /* pc relative */
@@ -118,7 +118,7 @@ _opline(op)
     case 22: /* .data */
     case 23: /* .bss  */
         _savdot[*dotrel - 2] = (*dot + 1) & ~1;
-        if (passno) {
+        if (passno == 2) {
             aflush(txtp);
             aflush(relp);
             oset(txtp, tseeks[optype - 21]);
@@ -137,7 +137,7 @@ _opline(op)
         opcode =| x.value << 6;
         _checkop(','); /* skip , */
         _expres(&x, _readop());
-        if (!passno) {
+        if (passno < 2) {
             *dot =+ 2;
         } else {
             x.value = (*dot + 2) - x.value; /* back only */
@@ -157,7 +157,7 @@ _opline(op)
     case 29: /* jbr */
     case 30: /* jeq, jne, etc */
         _expres(&x, _readop());
-        if (!passno) {
+        if (passno < 2) {
             len = op->type == 29 ? 4 : 6;
             x.value =- *dot + 2; /* pc relative */
             if (setbr(x.value, len)) {

@@ -58,7 +58,7 @@ _assem()
                     } else {
                         _error("x");
                     }
-                } else if (!passno) {
+                } else if (passno < 2) {
                     t = op->type & 31;
                     if (t != 0 && t != 27 && t != 28) {
                         _error("m");
@@ -74,7 +74,7 @@ _assem()
                 _opline(op);
             }
         }
-        if (!passno) {
+        if (passno < 2) {
             /* txtsiz, datsiz, bsssiz */
             if (header[*dotrel - 1] < *dot) {
                 header[*dotrel - 1] = *dot;
