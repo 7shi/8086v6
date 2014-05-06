@@ -39,21 +39,54 @@ opline(op)
     opcode = op->value;
     abufi = 0;
     switch (optype) {
-    case  5: /* map fop freg,fdst to double */
-    case  7: /* jsr */
-    case 10: /* map fld/fst to double */
-    case 11: /* double operand (mov) */
-    case 12: /* map fop fsrc,freg to double */
-    case 24: /* map mul s,r to double */
-        /* double */
-        addres();
-        if (!checkop(',')) {
-            error("a");
-            break;
+    case 5: /* flop src,freg */
+        opr = _addres();
+        op2b(opcode, opr, _addres(), 4);
+        break;
+    case 6: /* branch */
+        expres(&x, readop());
+        if (passno < 2) {
+            *dot =+ 2;
+        } else {
+            x.value =- *dot + 2; /* pc relative */
+            dobranch(&x, opcode, -256, 254);
         }
+        break;
+    case 7: /* jsr */
+        expres(&x, readop());
+        _checkreg(&x);
+        checkop(','); /* skip , */
+        op2b(opcode, x.value, _addres(), -1);
+        break;
+    case 8: /* rts */
+        expres(&x, readop());
+        _checkreg(&x);
+        outw(x.type, opcode | x.value);
+        break;
+    case 9: /* sys, emt etc */
+        expres(&x, readop());
+        if (x.value >= 64 || x.type > 1) _error("a");
+        outw(x.type, opcode | x.value);
+        break;
+    case 10: /* movf */
+        opr = _addres();
+        if (opr >= 4) {
+            /* see if source is fregister */
+            op2b(opcode, _addres(), opr, 4);
+        } else {
+            op2b(0174000, opr, _addres(), -1);
+        }
+        break;
+    case 11: /* double */
+        opr = _addres();
+        op2b(opcode, opr, _addres(), -1);
+        break;
+    case 12: /* flop freg,fsrc */
+        opr = _addres();
+        op2b(opcode, _addres(), opr, 4);
+        break;
     case 13: /* single operand */
-        addres();
-        *dot =+ 2;
+        op2b(opcode, 0, _addres(), -1);
         break;
     case 14: /* .byte */
         do {
@@ -90,6 +123,10 @@ opline(op)
         *dot = savdot[op->type - 21];
         *dotrel = op->type - 19;
         break;
+    case 24: /* mpy, dvd etc */
+        opr = _addres();
+        op2b(opcode, _addres(), opr, 010);
+        break;
     case 25: /* sob */
         expres(&x, readop());
         if (!checkop(',')) {
@@ -123,10 +160,6 @@ opline(op)
         }
         *dot =+ len;
         break;
-    case  6: /* branch */
-    case  8: /* rts */
-    case  9: /* sys */
-        op = readop();
     default:
         expres(&x, op);
         *dot =+ 2;
