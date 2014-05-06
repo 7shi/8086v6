@@ -28,7 +28,7 @@ assem() {
                 expres(&x, readop());
                 if (!issym(op)) {
                     error("x");
-                } else if (op == dotrel && (x.type & 31) != *dotrel) {
+                } else if (&op->value == dot && (x.type & 31) != *dotrel) {
                     error(".");
                     *dotrel = 2;
                 } else {

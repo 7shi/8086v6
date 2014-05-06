@@ -5,7 +5,6 @@ struct Op *curfb[], *nxtfb[], *fbbufp;
 
 int line, savop, passno, *_dotrel, *_dot, numval;
 int header[];
-char _symtab[];
 
 _assem()
 {
@@ -27,7 +26,7 @@ _assem()
             op2 = _readop();
             if (op2 == '=') {
                 _expres(&x, _readop());
-                if (op == _symtab) { /* test for _dot */
+                if (&op->value == _dot) { /* test for _dot */
                     x.type =& ~32;
                     if (x.type != *_dotrel) {
                         /* can't change relocation */
