@@ -3,7 +3,7 @@
 struct Op { char type, num; int value; };
 
 int passno, line, *dotrel, *dot, abufi;
-int adrbuf[], _savdot[], tseeks[], rseeks[];
+int adrbuf[], savdot[], tseeks[], rseeks[];
 char argb[], *txtp[], *relp[], *xsymbol;
 
 _opline(op)
@@ -117,14 +117,14 @@ _opline(op)
     case 21: /* .text */
     case 22: /* .data */
     case 23: /* .bss  */
-        _savdot[*dotrel - 2] = (*dot + 1) & ~1;
+        savdot[*dotrel - 2] = (*dot + 1) & ~1;
         if (passno == 2) {
             aflush(txtp);
             aflush(relp);
             oset(txtp, tseeks[optype - 21]);
             oset(relp, rseeks[optype - 21]);
         }
-        *dot = _savdot[optype - 21];
+        *dot = savdot[optype - 21];
         *dotrel = optype - 19; /* new . relocation */
         break;
     case 24: /* mpy, dvd etc */

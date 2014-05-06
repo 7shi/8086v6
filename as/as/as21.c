@@ -4,7 +4,7 @@ struct Op { char type, num; int value; };
 struct Op *curfb[], *nxtfb[], *fbbufp;
 
 int outmod 0777;
-int _savdot[], datbase, bssbase, ibufc, defund;
+int savdot[], datbase, bssbase, ibufc, defund;
 int *dotrel, *dot, *dotdot, brtabi, passno;
 int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
 int *txtseek, *datseek, *trelseek, *drelseek, symseek;
@@ -59,6 +59,7 @@ go2()
 
     /* set up input text file; initialize f-b table */
     _setup();
+    memset(savdot, 0, 6);
 
     /* do pass 1 */
     ibufc = 0;
@@ -67,7 +68,7 @@ go2()
     close(fin);
 
     if (outmod != 0777) aexit();
-    _savdot[*dotrel - 2] = *dot;
+    savdot[*dotrel - 2] = *dot;
 
     /* prepare for pass 2 */
     passno = 2;
@@ -75,13 +76,13 @@ go2()
 
     /* header */
     *txtmagic = 0407; /* br .+20 */
-    *txtsiz = (_savdot[0] + 1) & ~1;
-    *datsiz = (_savdot[1] + 1) & ~1;
-    *bsssiz = (_savdot[2] + 1) & ~1;
+    *txtsiz = (savdot[0] + 1) & ~1;
+    *datsiz = (savdot[1] + 1) & ~1;
+    *bsssiz = (savdot[2] + 1) & ~1;
 
-    _savdot[0] = 0;
-    _savdot[1] = datbase = *txtsiz;
-    _savdot[2] = bssbase = *txtsiz + *datsiz;
+    savdot[0] = 0;
+    savdot[1] = datbase = *txtsiz;
+    savdot[2] = bssbase = *txtsiz + *datsiz;
 
     *txtseek  = 16;
     *datseek  = 16 + *txtsiz;

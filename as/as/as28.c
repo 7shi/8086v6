@@ -22,7 +22,7 @@ int *drelseek &rseeks[1];
 int brlen 1024;
 char brtab[128]; /* bitmap: brlen / 8 */
 
-int _savdot[3], adrbuf[6];
+int adrbuf[6];
 int brtabi, brdelt, defund, datbase, bssbase;
 int abufi, ibufi, ibufc, line, savop, numval, passno;
 
