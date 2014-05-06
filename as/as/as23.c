@@ -17,7 +17,7 @@ _assem()
         } else if (op == '\n') {
             ++line;
         } else if (op == 5/*file name*/ || op == '<'/*string*/) {
-            _opline(op);
+            opline(op);
         } else if (op != ';') {
             if (op == 1) {
                 op = 2;
@@ -71,7 +71,7 @@ _assem()
                 }
             } else {
                 savop = op2;
-                _opline(op);
+                opline(op);
             }
         }
     }

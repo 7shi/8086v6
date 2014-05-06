@@ -3,14 +3,15 @@
 struct Op { char type, num; int value; };
 
 int passno, line, *dotrel, *dot, abufi;
+int savop, numval, ifflg;
 int adrbuf[], savdot[], tseeks[], rseeks[];
 char argb[], *txtp[], *relp[], *xsymbol;
 
-_opline(op)
+opline(op)
 {
     struct Op x;
     int w, i, optype, opcode, opr, len;
-    if (op == 5) {
+    if (passno && op == 5) {
         /* file name */
         line = 1;
         memset(argb, 0, 22);
@@ -21,8 +22,12 @@ _opline(op)
         }
         return;
     } else if (op == '<') {
-        while ((w = getw()) != -1) {
-            outb(1, w & 255);
+        if (passno == 0) {
+            *dot =+ numval;
+        } else {
+            while ((w = getw()) != -1) {
+                outb(1, w & 255);
+            }
         }
         return;
     } else if (!issym(op)) {
@@ -36,6 +41,10 @@ _opline(op)
     switch (optype) {
     case 5: /* flop src,freg */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, opr, _addres(), 4);
         break;
     case 6: /* branch */
@@ -50,7 +59,10 @@ _opline(op)
     case 7: /* jsr */
         expres(&x, readop());
         _checkreg(&x);
-        checkop(','); /* skip , */
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, x.value, _addres(), -1);
         break;
     case 8: /* rts */
@@ -65,6 +77,10 @@ _opline(op)
         break;
     case 10: /* movf */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         if (opr >= 4) {
             /* see if source is fregister */
             op2b(opcode, _addres(), opr, 4);
@@ -74,10 +90,18 @@ _opline(op)
         break;
     case 11: /* double */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, opr, _addres(), -1);
         break;
     case 12: /* flop freg,fsrc */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, _addres(), opr, 4);
         break;
     case 13: /* single operand */
@@ -102,15 +126,21 @@ _opline(op)
             }
         }
         break;
-    case 17: /* if */
+    case 17: /* .if */
         expres(&x, readop());
+        if (passno == 0) {
+            if (x.type  == 0) error("U");
+            if (x.value == 0) ++ifflg;
+        }
         break;
     case 18: /* .endif */
         break;
     case 19: /* .globl */
         do {
-            op = readop();
-            if (!issym(op)) break;
+            if (!issym(op = readop())) {
+                savop = op;
+                break;
+            }
             op->type =| 32;
         } while (checkop(','));
         break;
@@ -129,13 +159,20 @@ _opline(op)
         break;
     case 24: /* mpy, dvd etc */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, _addres(), opr, 010);
         break;
     case 25: /* sob */
         expres(&x, readop());
         _checkreg(&x);
         opcode =| x.value << 6;
-        checkop(','); /* skip , */
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         expres(&x, readop());
         if (passno < 2) {
             *dot =+ 2;
@@ -145,20 +182,31 @@ _opline(op)
         }
         break;
     case 26: /* .comm */
-        op = readop();
-        if (!issym(op)) break; /* checked by as1 */
-        checkop(','); /* skip , */
+        if (!issym(op = readop()) || !checkop(',')) {
+            error("x");
+            break;
+        }
         expres(&x, readop());
-        if ((op->type & 31) == 0) {
+        if (passno == 0) {
+            op->type =| 32;
+        } else if ((op->type & 31) == 0) {
             op->type =| 32;
             op->value = x.value;
         }
         break;
     case 29: /* jbr */
     case 30: /* jeq, jne, etc */
+        len = op->type == 29 ? 4 : 6;
         expres(&x, readop());
-        if (passno < 2) {
-            len = op->type == 29 ? 4 : 6;
+        if (passno == 0) {
+            if (x.type == *dotrel) {
+                x.value =- *dot;
+                if (-254 <= x.value && x.value < 0) {
+                    len = 2;
+                }
+            }
+            *dot =+ len;
+        } else if (passno == 1) {
             x.value =- *dot + 2; /* pc relative */
             if (setbr(x.value, len)) {
                 *dot =+ 2;
@@ -180,9 +228,10 @@ _opline(op)
             }
         }
         break;
+    case 27: /* estimated text */
+    case 28: /* estimated data */
+        if (passno == 0) break;
     case 20: /* reg */
-    case 27: /* est text */
-    case 28: /* est data */
     default:
         expres(&x, op);
         outw(x.type, x.value);
@@ -219,10 +268,7 @@ int savop;
 
 _addres()
 {
-    int ret;
-    ret = addres1(0);
-    checkop(','); /* skip , */
-    return ret;
+    return addres1(0);
 }
 
 addres1(astar)
