@@ -8,7 +8,7 @@ int _savdot[], datbase, bssbase, ibufc;
 int *dotrel, *dot, *dotdot, brtabi, passno;
 int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
 int *txtseek, *datseek, *trelseek, *drelseek, symseek;
-char fin, *txtp[], *relp[], *_atmp1, *_atmp2, *_atmp3;
+char fin, *txtp[], *relp[], atmp1[], atmp2[], atmp3[];
 char *usymtab, *endtable, *memend;
 
 /* set up sizes and origins */
@@ -18,7 +18,7 @@ _go()
 
     /* read in symbol table */
     p = usymtab;
-    fin = ofile(_atmp3);
+    fin = ofile(atmp3);
     while (getw() != 4/*EOT*/) {
         setbrk(p + 6);
         *symsiz =+ 12; /* count symbols */
@@ -41,7 +41,7 @@ _go()
     /* read in f-b definitions */
     fbbufp = p;
     ibufc = 0;
-    fin = ofile(_atmp2);
+    fin = ofile(atmp2);
     while ((w = getw()) != 4/*EOT*/) {
         setbrk(p + 2);
         *(p++) = w + 25; /* "estimated" */
@@ -57,7 +57,7 @@ _go()
 
     /* do pass 1 */
     ibufc = 0;
-    fin = ofile(_atmp1);
+    fin = ofile(atmp1);
     _assem();
     close(fin);
 
@@ -93,7 +93,7 @@ _go()
 
     /* do pass 2 */
     ibufc = 0;
-    fin = ofile(_atmp1);
+    fin = ofile(atmp1);
     _assem();
     close(fin);
 
@@ -105,7 +105,7 @@ _go()
     oset(txtp, symseek);
     p = usymtab;
     ibufc = 0;
-    fin = ofile(_atmp3);
+    fin = ofile(atmp3);
     while ((w = getw()) != 4/*EOT*/) {
         _putw(txtp, w);
         _putw(txtp, getw());
@@ -126,9 +126,9 @@ char *aout;
 
 _aexit()
 {
-    unlink(_atmp1);
-    unlink(_atmp2);
-    unlink(_atmp3);
+    unlink(atmp1);
+    unlink(atmp2);
+    unlink(atmp3);
     chmod(aout, outmod);
     exit(errflg);
 }

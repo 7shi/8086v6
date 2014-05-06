@@ -1,7 +1,6 @@
 /* translated from as28.s */
 
 char *aout "a.out";
-char *_atmp1, *_atmp2, *_atmp3;
 
 int header[8];
 int *txtmagic &header[0];

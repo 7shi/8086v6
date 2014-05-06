@@ -40,7 +40,7 @@ go()
     /* エラーが発生していれば終了 */
     if (errflg) aexit(); 
 
-    _main(atmp1, atmp2, atmp3, unglob);
+    _main();
 }
 
 aexit()

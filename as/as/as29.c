@@ -1,20 +1,16 @@
 /* translated from as29.s */
 
 int defund;
-char *_atmp1, *_atmp2, *_atmp3, *aout, faout;
+char *unglob, *aout, faout;
 
 _aexit();
 
-_main(argv1, argv2, argv3, argv4)
-char *argv1, *argv2, *argv3, *argv4;
+_main()
 {
-    if (argv4) {
+    if (unglob) {
         /* globalize all undefineds (-g) */
         defund = 040;
     }
-    _atmp1 = argv1;
-    _atmp2 = argv2;
-    _atmp3 = argv3;
     if (!(signal(2, 1) & 1)) {
         signal(2, _aexit);
     }
