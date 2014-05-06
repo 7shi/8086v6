@@ -40,7 +40,7 @@ go()
     /* エラーが発生していれば終了 */
     if (errflg) aexit(); 
 
-    _main();
+    _go();
 }
 
 aexit()

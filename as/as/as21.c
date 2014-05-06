@@ -4,17 +4,30 @@ struct Op { char type, num; int value; };
 struct Op *curfb[], *nxtfb[], *fbbufp;
 
 int outmod 0777;
-int _savdot[], datbase, bssbase, ibufc;
+int _savdot[], datbase, bssbase, ibufc, defund;
 int *dotrel, *dot, *dotdot, brtabi, passno;
 int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
 int *txtseek, *datseek, *trelseek, *drelseek, symseek;
 char fin, *txtp[], *relp[], atmp1[], atmp2[], atmp3[];
-char *usymtab, *endtable, *memend;
+char *usymtab, *endtable, *memend, *unglob, faout, *aout;
+
+_aexit();
 
 /* set up sizes and origins */
 _go()
 {
     int t, *p, i, w;
+
+    if (unglob) {
+        /* globalize all undefineds (-g) */
+        defund = 040;
+    }
+    if (!(signal(2, 1) & 1)) {
+        signal(2, _aexit);
+    }
+    if ((faout = creat(aout, 0)) < 0) {
+        _filerr(aout);
+    }
 
     /* read in symbol table */
     p = usymtab;
@@ -122,7 +135,6 @@ _go()
 }
 
 int errflg;
-char *aout;
 
 _aexit()
 {
@@ -142,8 +154,6 @@ char *fn;
     printf("%s?\n", fn);
     _aexit();
 }
-
-int defund;
 
 doreloc(sym)
 int *sym;
