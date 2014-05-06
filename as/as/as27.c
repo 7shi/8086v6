@@ -48,7 +48,7 @@ struct Op *this;
             switch (op) {
             case '[':
                 expres1(&x, readop());
-                if (!_checkop(']')) _error("]");
+                if (!checkop(']')) _error("]");
                 break;
             case   1:
                 x.type  = 1;

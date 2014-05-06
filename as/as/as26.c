@@ -50,7 +50,7 @@ _opline(op)
     case 7: /* jsr */
         _expres(&x, readop());
         _checkreg(&x);
-        _checkop(','); /* skip , */
+        checkop(','); /* skip , */
         op2b(opcode, x.value, _addres(), -1);
         break;
     case 8: /* rts */
@@ -87,7 +87,7 @@ _opline(op)
         do {
             _expres(&x, readop());
             outb(x.type, x.value);
-        } while (_checkop(','));
+        } while (checkop(','));
         break;
     case 15: /* < (.ascii) */
         /* not used */
@@ -112,7 +112,7 @@ _opline(op)
             op = readop();
             if (!issym(op)) break;
             op->type =| 32;
-        } while (_checkop(','));
+        } while (checkop(','));
         break;
     case 21: /* .text */
     case 22: /* .data */
@@ -135,7 +135,7 @@ _opline(op)
         _expres(&x, readop());
         _checkreg(&x);
         opcode =| x.value << 6;
-        _checkop(','); /* skip , */
+        checkop(','); /* skip , */
         _expres(&x, readop());
         if (passno < 2) {
             *dot =+ 2;
@@ -147,7 +147,7 @@ _opline(op)
     case 26: /* .comm */
         op = readop();
         if (!issym(op)) break; /* checked by as1 */
-        _checkop(','); /* skip , */
+        checkop(','); /* skip , */
         _expres(&x, readop());
         if ((op->type & 31) == 0) {
             op->type =| 32;
@@ -221,7 +221,7 @@ _addres()
 {
     int ret;
     ret = addres1(0);
-    _checkop(','); /* skip , */
+    checkop(','); /* skip , */
     return ret;
 }
 
@@ -232,9 +232,9 @@ addres1(astar)
     switch (op = readop()) {
     case '(':
         _expres(&x, readop());
-        if (!_checkop(')')) _error(")");
+        if (!checkop(')')) _error(")");
         _checkreg(&x);
-        if (_checkop('+')) {
+        if (checkop('+')) {
             return x.value | 020;
         }
         if (astar) {
@@ -245,12 +245,12 @@ addres1(astar)
         }
         return x.value | 010;
     case '-':
-        if (!_checkop('(')) {
+        if (!checkop('(')) {
             op = '-';
             break;
         }
         _expres(&x, readop());
-        if (!_checkop(')')) _error(")");
+        if (!checkop(')')) _error(")");
         _checkreg(&x);
         return x.value | 040;
     case '$':
@@ -264,12 +264,12 @@ addres1(astar)
         return addres1(1) | 010;
     }
     _expres(&x, op);
-    if (_checkop('(')) {
+    if (checkop('(')) {
         adrbuf[abufi++] = x.value;
         adrbuf[abufi++] = x.type;
         adrbuf[abufi++] = xsymbol;
         _expres(&x, readop());
-        if (!_checkop(')')) _error(")");
+        if (!checkop(')')) _error(")");
         _checkreg(&x);
         return x.value | 060;
     } else if (x.type == 20) {
@@ -291,15 +291,6 @@ struct Op *this;
         _error("a");
         this->type = this->value = 0;
     }
-}
-
-/* checkrp()を汎用化（独自関数） */
-_checkop(ch)
-{
-    int op;
-    if ((op = readop()) == ch) return 1;
-    savop = op;
-    return 0;
 }
 
 int brtabi, brlen, brdelt;
