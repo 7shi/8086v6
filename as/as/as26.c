@@ -7,7 +7,7 @@ int savop, numval, ifflg;
 int adrbuf[], savdot[], tseeks[], rseeks[];
 char argb[], *txtp[], *relp[], *xsymbol;
 
-_opline(op)
+opline(op)
 {
     struct Op x;
     int w, i, optype, opcode, opr, len;
