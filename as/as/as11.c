@@ -1,6 +1,6 @@
 /* translated from as11.s */
 
-int outbuf[], outmod;
+int outbuf[], outmod, passno;
 char atmp1[], atmp2[], atmp3[], faout, *aout;
 char errflg, pof, fbfil;
 char *usymtab, *symend, *memend;
@@ -45,7 +45,7 @@ aexit()
     unlink(atmp1);
     unlink(atmp2);
     unlink(atmp3);
-    if (faout) chmod(aout, outmod);
+    if (passno) chmod(aout, outmod);
     exit(errflg);
 }
 

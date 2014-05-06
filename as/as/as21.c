@@ -19,6 +19,7 @@ go2()
     if ((faout = creat(aout, 0)) < 0) {
         _filerr(aout);
     }
+    passno = 1;
 
     /* read in symbol table */
     p = usymtab;
@@ -57,7 +58,6 @@ go2()
     *(p++) = -1;
 
     /* set up input text file; initialize f-b table */
-    passno = 1;
     _setup();
 
     /* do pass 1 */

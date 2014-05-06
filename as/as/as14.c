@@ -71,10 +71,7 @@ rname()
         sym = symend;
         symend =+ 12;
         /* メモリが足りなければ拡張 */
-        if (symend > memend) {
-            sbrk(512);
-            memend =+ 512;
-        }
+        setbrk(symend);
         /* シンボルを初期化 */
         memcpy(sym, symbol, 8);
         memset(sym + 8, 0, 4);
