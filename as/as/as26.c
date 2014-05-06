@@ -41,6 +41,10 @@ _opline(op)
     switch (optype) {
     case 5: /* flop src,freg */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, opr, _addres(), 4);
         break;
     case 6: /* branch */
@@ -55,7 +59,10 @@ _opline(op)
     case 7: /* jsr */
         expres(&x, readop());
         _checkreg(&x);
-        checkop(','); /* skip , */
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, x.value, _addres(), -1);
         break;
     case 8: /* rts */
@@ -70,6 +77,10 @@ _opline(op)
         break;
     case 10: /* movf */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         if (opr >= 4) {
             /* see if source is fregister */
             op2b(opcode, _addres(), opr, 4);
@@ -79,10 +90,18 @@ _opline(op)
         break;
     case 11: /* double */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, opr, _addres(), -1);
         break;
     case 12: /* flop freg,fsrc */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, _addres(), opr, 4);
         break;
     case 13: /* single operand */
@@ -140,13 +159,20 @@ _opline(op)
         break;
     case 24: /* mpy, dvd etc */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, _addres(), opr, 010);
         break;
     case 25: /* sob */
         expres(&x, readop());
         _checkreg(&x);
         opcode =| x.value << 6;
-        checkop(','); /* skip , */
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         expres(&x, readop());
         if (passno < 2) {
             *dot =+ 2;
@@ -230,10 +256,7 @@ int savop;
 
 _addres()
 {
-    int ret;
-    ret = addres1(0);
-    checkop(','); /* skip , */
-    return ret;
+    return addres1(0);
 }
 
 addres1(astar)

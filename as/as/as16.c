@@ -41,6 +41,10 @@ opline(op)
     switch (optype) {
     case 5: /* flop src,freg */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, opr, _addres(), 4);
         break;
     case 6: /* branch */
@@ -73,6 +77,10 @@ opline(op)
         break;
     case 10: /* movf */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         if (opr >= 4) {
             /* see if source is fregister */
             op2b(opcode, _addres(), opr, 4);
@@ -82,10 +90,18 @@ opline(op)
         break;
     case 11: /* double */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, opr, _addres(), -1);
         break;
     case 12: /* flop freg,fsrc */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, _addres(), opr, 4);
         break;
     case 13: /* single operand */
@@ -94,7 +110,7 @@ opline(op)
     case 14: /* .byte */
         do {
             expres(&x, readop());
-            ++*dot;
+            outb(x.type, x.value);
         } while (checkop(','));
         break;
     case 15: /* < (.ascii) */
@@ -117,7 +133,7 @@ opline(op)
             if (x.value == 0) ++ifflg;
         }
         break;
-    case 18: /* endif */
+    case 18: /* .endif */
         break;
     case 19: /* .globl */
         do {
@@ -130,7 +146,7 @@ opline(op)
         break;
     case 21: /* .text */
     case 22: /* .data */
-    case 23: /* .bss */
+    case 23: /* .bss  */
         savdot[*dotrel - 2] = (*dot + 1) & ~1;
         if (passno == 2) {
             aflush(txtp);
@@ -143,15 +159,26 @@ opline(op)
         break;
     case 24: /* mpy, dvd etc */
         opr = _addres();
+        if (!checkop(',')) {
+            error("a");
+            break;
+        }
         op2b(opcode, _addres(), opr, 010);
         break;
     case 25: /* sob */
         expres(&x, readop());
+        _checkreg(&x);
+        opcode =| x.value << 6;
         if (!checkop(',')) {
             error("a");
-        } else {
-            expres(&x, readop());
+            break;
+        }
+        expres(&x, readop());
+        if (passno < 2) {
             *dot =+ 2;
+        } else {
+            x.value = (*dot + 2) - x.value; /* back only */
+            dobranch(&x, opcode, 0, 126);
         }
         break;
     case 26: /* .common */
