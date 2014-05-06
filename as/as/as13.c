@@ -1,9 +1,10 @@
 /* translated from as13.s */
 
 struct Op { char type, num; int value; };
+struct Op curfbr[];
 
-char *savop, fbfil, curfbr[];
-int ifflg, line, numval, curfb[];
+char *savop, fbfil;
+int ifflg, line, numval;
 int *dotrel, *dot;
 
 assem() {
@@ -43,8 +44,8 @@ assem() {
                     op->value = *dot;
                 } else if (op == 1/*digit*/) {
                     num = fbcheck(numval);
-                    curfbr[num] = *dotrel;
-                    curfb [num] = *dot;
+                    curfbr[num].type  = *dotrel;
+                    curfbr[num].value = *dot;
                     write(fbfil, dotrel, 1);
                     write(fbfil, &num  , 1);
                     write(fbfil, dot   , 2);

@@ -31,4 +31,6 @@ char fin, faout;
 char *usymtab, *endtable, *xsymbol;
 
 struct Op { char type, num; int value; };
-struct Op *curfb[10], *nxtfb[10], *fbbufp;
+
+/* 0: .. 9: */
+struct Op curfbr[10], *curfb[10], *nxtfb[10], *fbbufp;

@@ -1,10 +1,10 @@
 /* translated from as27.s */
 
 struct Op { char type, num; int value; };
-struct Op *curfb[], *nxtfb[];
+struct Op curfbr[], *curfb[], *nxtfb[];
 
 int savop;
-char *xsymbol, curfbr[];
+char *xsymbol;
 
 expres(this, op)
 struct Op *this;
@@ -43,8 +43,9 @@ struct Op *this;
             }
         } else if ('a' <= op && op <= 'j') { /* 0b-9b */
             if (passno == 0) {
-                x.type  = curfbr[op - 'a'];
-                x.value = curfb [op - 'a'];
+                fb = &curfbr[op - 'a'];
+                x.type  = fb->type;
+                x.value = fb->value;
                 if (x.value == -1) error("f");
             } else {
                 fb = curfb[op - 'a'];

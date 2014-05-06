@@ -1,5 +1,8 @@
 /* translated from as11.s */
 
+struct Op { char type, num; int value; };
+struct Op curfbr[];
+
 int outmod, passno;
 char atmp1[], atmp2[], atmp3[], faout, *aout;
 char errflg, faout, fbfil, *txtp[];
@@ -9,9 +12,12 @@ int aexit();
 
 go1()
 {
-    int fp;
+    int fp, i;
 
     usymtab = symend = memend = sbrk(0);
+    for (i = 0; i < 10; ++i) {
+        curfbr[i].value = -1;
+    }
 
     /* as2へ引き継ぐ一時ファイルを作成 */
     faout = fcreat(atmp1);

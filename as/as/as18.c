@@ -44,10 +44,6 @@ char fbfil;
 char fin, inbuf[512];
 int inbfi, inbfcnt;
 
-/* 0: .. 9: */
-int curfbr[10];
-int curfb[] {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-
 /* .text, .data, .bss */
 int savdot[3];
 
