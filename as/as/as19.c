@@ -265,8 +265,8 @@ int *dotrel &symtab[1];
 int *dot    &symtab[2];
 int *dotdot &symtab[5];
 
-int nargs;
-char **curarg, *unglob;
+int nargs, defund;
+char **curarg;
 
 main(argc, argv)
 char *argv[];
@@ -275,7 +275,8 @@ char *argv[];
     curarg = argv;
 
     if (argv[1][0] == '-') {
-        unglob = "-g";
+        /* globalize all undefineds */
+        defund = 040;
         nargs--;
         curarg++;
     }

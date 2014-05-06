@@ -9,17 +9,13 @@ int *dotrel, *dot, *dotdot, brtabi, passno;
 int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
 int *txtseek, *datseek, *trelseek, *drelseek, symseek;
 char fin, *txtp[], *relp[], atmp1[], atmp2[], atmp3[];
-char *usymtab, *endtable, *memend, *unglob, faout, *aout;
+char *usymtab, *endtable, *memend, faout, *aout;
 
 /* set up sizes and origins */
 go2()
 {
     int t, *p, i, w;
 
-    if (unglob) {
-        /* globalize all undefineds (-g) */
-        defund = 040;
-    }
     if ((faout = creat(aout, 0)) < 0) {
         _filerr(aout);
     }

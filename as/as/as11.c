@@ -4,7 +4,6 @@ int outbuf[], outmod;
 char atmp1[], atmp2[], atmp3[], faout, *aout;
 char errflg, pof, fbfil;
 char *usymtab, *symend, *memend;
-char *unglob;
 
 int aexit();
 
