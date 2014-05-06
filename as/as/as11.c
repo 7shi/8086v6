@@ -8,7 +8,7 @@ char *unglob;
 
 int aexit();
 
-go()
+go1()
 {
     int fp;
 
@@ -39,8 +39,6 @@ go()
 
     /* エラーが発生していれば終了 */
     if (errflg) aexit(); 
-
-    _go();
 }
 
 aexit()

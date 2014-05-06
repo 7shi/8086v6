@@ -281,7 +281,8 @@ char *argv[];
     }
 
     setup();
-    go();
+    go1();
+    go2();
 }
 
 int hshsiz;

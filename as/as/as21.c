@@ -14,7 +14,7 @@ char *usymtab, *endtable, *memend, *unglob, faout, *aout;
 _aexit();
 
 /* set up sizes and origins */
-_go()
+go2()
 {
     int t, *p, i, w;
 
