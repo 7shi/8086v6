@@ -1,21 +1,21 @@
 /* translated from as22.s */
 
-int outmod, *_dotrel, *_dot, *_dotdot, passno, tseeks[], rseeks[];
+int outmod, *dotrel, *dot, *dotdot, passno, tseeks[], rseeks[];
 char *xsymbol, *usymtab, *txtp[], *relp[];
 
 outw(type, value)
 {
     int t;
-    if (*_dotrel == 4) { /* test bss mode */
+    if (*dotrel == 4) { /* test bss mode */
         _error("x");
         return;
     }
-    if (*_dot & 1) {
+    if (*dot & 1) {
         _error("o");
         outb(0, value);
         return;
     }
-    *_dot =+ 2;
+    *dot =+ 2;
     if (!passno) return;
     t = abs(type); /* type < 0: relative pc */
     if (t == 32) {
@@ -33,36 +33,36 @@ outw(type, value)
             t = 1; /* make absolute */
         }
         if (t < 2 || t > 4) {
-            if (type < 0) value =- *_dotdot;
+            if (type < 0) value =- *dotdot;
         } else {
-            if (type >= 0) value =+ *_dotdot;
+            if (type >= 0) value =+ *dotdot;
         }
         if (--t < 0) t = 0;
     }
     _putw(txtp, value);
     _putw(relp, (t << 1) | (type < 0));
-    tseeks[*_dotrel - 2] =+ 2;
-    rseeks[*_dotrel - 2] =+ 2;
+    tseeks[*dotrel - 2] =+ 2;
+    rseeks[*dotrel - 2] =+ 2;
 }
 
 outb(type, value)
 {
-    if (*_dotrel == 4) { /* test bss mode */
+    if (*dotrel == 4) { /* test bss mode */
         _error("x");
         return;
     }
     if (type > 1) _error("r");
     if (passno) {
-        if ((*_dot & 1) == 0) {
+        if ((*dot & 1) == 0) {
             _putw(txtp, value);
             _putw(relp, 0);
-            tseeks[*_dotrel - 2] =+ 2;
-            rseeks[*_dotrel - 2] =+ 2;
+            tseeks[*dotrel - 2] =+ 2;
+            rseeks[*dotrel - 2] =+ 2;
         } else {
             txtp[0][-1] = value;
         }
     }
-    ++*_dot;
+    ++*dot;
 }
 
 char argb[];

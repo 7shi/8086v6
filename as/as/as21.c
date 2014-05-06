@@ -5,7 +5,7 @@ struct Op *curfb[], *nxtfb[], *fbbufp;
 
 int outmod 0777;
 int _savdot[], datbase, bssbase, ibufc;
-int *_dotrel, *_dot, *_dotdot, brtabi, passno;
+int *dotrel, *dot, *dotdot, brtabi, passno;
 int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
 int *txtseek, *datseek, *trelseek, *drelseek, symseek;
 char fin, *txtp[], *relp[], *_atmp1, *_atmp2, *_atmp3;
@@ -170,10 +170,10 @@ char *p;
 _setup()
 {
     int i;
-    *_dotrel = 2;
-    *_dot    = 0;
-    *_dotdot = 0; /* .. */
-    brtabi   = 0;
+    *dotrel = 2;
+    *dot    = 0;
+    *dotdot = 0; /* .. */
+    brtabi  = 0;
     memset(curfb, 0, 20);
     memset(nxtfb, 0, 20);
     for (i = 0; i < 10; ++i) {

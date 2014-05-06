@@ -1,11 +1,5 @@
 /* translated from as29.s */
 
-int symtab[];
-
-int *_dotrel &symtab[1];
-int *_dot    &symtab[2];
-int *_dotdot &symtab[5];
-
 int defund;
 char *_atmp1, *_atmp2, *_atmp3, *aout, faout;
 

@@ -2,7 +2,7 @@
 
 struct Op { char type, num; int value; };
 
-int passno, line, *_dotrel, *_dot, abufi;
+int passno, line, *dotrel, *dot, abufi;
 int adrbuf[], _savdot[], tseeks[], rseeks[];
 char argb[], *txtp[], *relp[], *xsymbol;
 
@@ -41,9 +41,9 @@ _opline(op)
     case 6: /* branch */
         _expres(&x, _readop());
         if (!passno) {
-            *_dot =+ 2;
+            *dot =+ 2;
         } else {
-            x.value =- *_dot + 2; /* pc relative */
+            x.value =- *dot + 2; /* pc relative */
             dobranch(&x, opcode, -256, 254);
         }
         break;
@@ -93,10 +93,10 @@ _opline(op)
         /* not used */
         break;
     case 16: /* .even */
-        if (*_dot & 1) {
-            if (*_dotrel == 4) {
+        if (*dot & 1) {
+            if (*dotrel == 4) {
                 /* bss mode */
-                ++*_dot;
+                ++*dot;
             } else {
                 outb(0, 0);
             }
@@ -117,15 +117,15 @@ _opline(op)
     case 21: /* .text */
     case 22: /* .data */
     case 23: /* .bss  */
-        _savdot[*_dotrel - 2] = (*_dot + 1) & ~1;
+        _savdot[*dotrel - 2] = (*dot + 1) & ~1;
         if (passno) {
             aflush(txtp);
             aflush(relp);
             oset(txtp, tseeks[optype - 21]);
             oset(relp, rseeks[optype - 21]);
         }
-        *_dot = _savdot[optype - 21];
-        *_dotrel = optype - 19; /* new . relocation */
+        *dot = _savdot[optype - 21];
+        *dotrel = optype - 19; /* new . relocation */
         break;
     case 24: /* mpy, dvd etc */
         opr = _addres();
@@ -138,9 +138,9 @@ _opline(op)
         _checkop(','); /* skip , */
         _expres(&x, _readop());
         if (!passno) {
-            *_dot =+ 2;
+            *dot =+ 2;
         } else {
-            x.value = (*_dot + 2) - x.value; /* back only */
+            x.value = (*dot + 2) - x.value; /* back only */
             dobranch(&x, opcode, 0, 126);
         }
         break;
@@ -159,16 +159,16 @@ _opline(op)
         _expres(&x, _readop());
         if (!passno) {
             len = op->type == 29 ? 4 : 6;
-            x.value =- *_dot + 2; /* pc relative */
+            x.value =- *dot + 2; /* pc relative */
             if (setbr(x.value, len)) {
-                *_dot =+ 2;
+                *dot =+ 2;
             } else {
                 /* if doesn't fit */
-                *_dot =+ len;
+                *dot =+ len;
             }
         } else {
             if (getbr()) {
-                x.value =- *_dot + 2; /* pc relative */
+                x.value =- *dot + 2; /* pc relative */
                 dobranch(&x, opcode, -256, 254);
             } else {
                 if (optype != 29/*jbr*/) {
@@ -207,7 +207,7 @@ struct Op *this;
     int i;
     if (this->value < min || max < this->value
             || this->value & 1 /* (must) even */
-            || this->type != *_dotrel /* (must) same relocation as . */) {
+            || this->type != *dotrel /* (must) same relocation as . */) {
         _error("b");
         outw(0, opcode);
     } else {
@@ -276,7 +276,7 @@ addres1(astar)
         _checkreg(&x);
         return x.value;
     }
-    x.value =- *_dot + 4;
+    x.value =- *dot + 4;
     if (abufi) x.value =- 2;
     adrbuf[abufi++] = x.value; /* index */
     adrbuf[abufi++] = -x.type; /* index reloc. */

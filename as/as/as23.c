@@ -3,7 +3,7 @@
 struct Op { char type, num; int value; };
 struct Op *curfb[], *nxtfb[], *fbbufp;
 
-int line, savop, passno, *_dotrel, *_dot, numval;
+int line, savop, passno, *dotrel, *dot, numval;
 int header[];
 
 _assem()
@@ -26,15 +26,15 @@ _assem()
             op2 = _readop();
             if (op2 == '=') {
                 _expres(&x, _readop());
-                if (&op->value == _dot) { /* test for _dot */
+                if (&op->value == dot) { /* test for dot */
                     x.type =& ~32;
-                    if (x.type != *_dotrel) {
+                    if (x.type != *dotrel) {
                         /* can't change relocation */
                         _error(".");
                     } else if (x.type == 4) { /* bss */
-                        *_dot = x.value;
-                    } else if (*_dot <= x.value) {
-                        for (i = *_dot; i < x.value; ++i) {
+                        *dot = x.value;
+                    } else if (*dot <= x.value) {
+                        for (i = *dot; i < x.value; ++i) {
                             outb(1, 0);
                         }
                     } else {
@@ -53,8 +53,8 @@ _assem()
                     if (op == 2) {
                         fbadv(numval);
                         fb = curfb[numval];
-                        fb->type  = *_dotrel;
-                        fb->value = *_dot;
+                        fb->type  = *dotrel;
+                        fb->value = *dot;
                     } else {
                         _error("x");
                     }
@@ -64,9 +64,9 @@ _assem()
                         _error("m");
                     }
                     op->type =& ~31;
-                    op->type =| *_dotrel;
-                    op->value = *_dot;
-                } else if (op->value != *_dot) {
+                    op->type =| *dotrel;
+                    op->value = *dot;
+                } else if (op->value != *dot) {
                     _error("p");
                 }
             } else {
@@ -76,8 +76,8 @@ _assem()
         }
         if (!passno) {
             /* txtsiz, datsiz, bsssiz */
-            if (header[*_dotrel - 1] < *_dot) {
-                header[*_dotrel - 1] = *_dot;
+            if (header[*dotrel - 1] < *dot) {
+                header[*dotrel - 1] = *dot;
             }
         }
     }
