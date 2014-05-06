@@ -20,7 +20,7 @@ go()
     p = usymtab = memend = sbrk(0);
     fin = ofile(atmp3);
     while (getw() != 4/*EOT*/) {
-        setbrk(p + 6);
+        setbrk(p + 2);
         *symsiz =+ 12; /* count symbols */
         getw();
         getw();
