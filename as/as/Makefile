@@ -2,7 +2,7 @@ TOPDIR = ../..
 include ../Makefile.inc
 
 TARGET = as
-CSRCS = as13.c as14.c as15.c as18.c as19.c \
+CSRCS = as13.c as15.c as18.c as19.c \
         as21.c as22.c as24.c as26.c as27.c utils.c
 COBJS = $(CSRCS:.c=.o)
 
