@@ -26,9 +26,17 @@ char *argv[];
     go0();
     go1();
     go2();
+    aexit();
 }
 
-aexit();
+aexit()
+{
+    unlink(atmp1);
+    unlink(atmp2);
+    unlink(atmp3);
+    if (passno) chmod(aout, outmod);
+    exit(errflg);
+}
 
 /* pass 0 (as1) */
 go0()
@@ -186,7 +194,6 @@ go2() {
     }
     close(fin);
     aflush(txtp);
-    aexit();
 }
 
 init()
@@ -201,15 +208,6 @@ init()
     for (i = 0; i < 10; ++i) {
         fbadv(i);
     }
-}
-
-aexit()
-{
-    unlink(atmp1);
-    unlink(atmp2);
-    unlink(atmp3);
-    if (passno) chmod(aout, outmod);
-    exit(errflg);
 }
 
 doreloc(sym)
