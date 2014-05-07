@@ -45,25 +45,25 @@ assem()
                     op->value = x.value;
                 }
             } else if (op2 == ':') {
-                if (!issym(op)) {
-                    if (op == 1) {
-                        fbadv(numval);
-                        fb = curfb[numval];
-                        fb->type  = *dotrel;
-                        fb->value = *dot;
-                    } else {
-                        error("x");
+                if (issym(op)) {
+                    if (passno < 2) {
+                        t = op->type & 31;
+                        if (t != 0 && t != 27 && t != 28) {
+                            error("m");
+                        }
+                        op->type =& ~31;
+                        op->type =| *dotrel;
+                        op->value = *dot;
+                    } else if (op->value != *dot) {
+                        error("p");
                     }
-                } else if (passno < 2) {
-                    t = op->type & 31;
-                    if (t != 0 && t != 27 && t != 28) {
-                        error("m");
-                    }
-                    op->type =& ~31;
-                    op->type =| *dotrel;
-                    op->value = *dot;
-                } else if (op->value != *dot) {
-                    error("p");
+                } else if (op == 1) {
+                    fbadv(numval);
+                    fb = curfb[numval];
+                    fb->type  = *dotrel;
+                    fb->value = *dot;
+                } else {
+                    error("x");
                 }
             } else {
                 savop = op2;
