@@ -86,7 +86,7 @@ char *e;
         outmod = 0666;
 
         if (argb[0]) {
-            filerr(argb, "");
+            printf("%s\n", argb);
             argb[0] = 0;
         }
     }
