@@ -1,14 +1,16 @@
 /* translated from as23.s */
 
 struct Op { char type, num; int value; };
-struct Op *curfb[], *nxtfb[], *fbbufp;
+struct Op curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
 int line, savop, numval, passno, *dotrel, *dot;
+char fbfil;
 
 _assem()
 {
     struct Op x, *fb;
-    int t, op, op2, i;
+    int op, op2, num, i, t;
+
     for (;;) {
         op = readop();
         if (op == 4/*EOT*/) {
@@ -57,19 +59,27 @@ _assem()
                 }
             } else if (op2 == ':') {
                 if (issym(op)) {
+                    t = op->type & 31;
                     if (passno < 2) {
-                        t = op->type & 31;
-                        if (t != 0 && t != 27 && t != 28) {
+                        if (t == 27 || t == 28) {
+                            op->type =& 32;
+                        } else if (t) {
                             error("m");
                         }
-                        op->type =& ~31;
                         op->type =| *dotrel;
                         op->value = *dot;
-                    } else if (op->value != *dot) {
-                        error("p");
+                    } else {
+                        if (op->value != *dot) error("p");
                     }
                 } else {
-                    if (op == 2) {
+                    if (op == 1/*digit*/) {
+                        num = fbcheck(numval);
+                        curfbr[num].type  = *dotrel;
+                        curfbr[num].value = *dot;
+                        write(fbfil, dotrel, 1);
+                        write(fbfil, &num  , 1);
+                        write(fbfil, dot   , 2);
+                    } else if (op == 2) {
                         fbadv(numval);
                         fb = curfb[numval];
                         fb->type  = *dotrel;
