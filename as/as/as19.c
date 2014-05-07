@@ -282,6 +282,7 @@ char *argv[];
     }
 
     setup();
+    go0();
     go1();
     go2();
 }
