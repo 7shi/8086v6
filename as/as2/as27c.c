@@ -50,11 +50,7 @@ struct Op *this;
                 expres1(&x, readop());
                 if (!checkop(']')) error("]");
                 break;
-            case   1:
-                x.type  = 1;
-                x.value = getw();
-                break;
-            case   2:
+            case 1:
                 x.type  = 1;
                 x.value = numval;
                 break;

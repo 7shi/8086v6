@@ -84,14 +84,8 @@ struct Op *this;
                 break;
             case 1:
                 x.type  = 1;
-                x.value = passno == 0 ? numval : getw();
+                x.value = numval;
                 break;
-            case 2:
-                if (passno) {
-                    x.type  = 1;
-                    x.value = numval;
-                    break;
-                }
             default:
                 savop = op;
                 return;

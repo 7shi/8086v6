@@ -19,10 +19,6 @@ assem()
         } else if (op == 5/*file name*/ || op == '<'/*string*/) {
             opline(op);
         } else if (op != ';') {
-            if (op == 1) {
-                op = 2;
-                numval = getw();
-            }
             op2 = readop();
             if (op2 == '=') {
                 expres(&x, readop());
@@ -50,7 +46,7 @@ assem()
                 }
             } else if (op2 == ':') {
                 if (!issym(op)) {
-                    if (op == 2) {
+                    if (op == 1) {
                         fbadv(numval);
                         fb = curfb[numval];
                         fb->type  = *dotrel;

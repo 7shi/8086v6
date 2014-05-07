@@ -21,10 +21,6 @@ assem() {
                 }
                 continue;
             }
-            if (passno && op == 1) {
-                op = 2;
-                numval = getw();
-            }
             op2 = readop();
             if (op2 == '=') {
                 let(op);
@@ -106,22 +102,22 @@ label(op) {
         } else {
             if (op->value != *dot) error("p");
         }
-    } else {
-        if (op == 1/*digit*/) {
+    } else if (op == 1/*digit*/) {
+        if (passno == 0) {
             num = fbcheck(numval);
             curfbr[num].type  = *dotrel;
             curfbr[num].value = *dot;
             write(fbfil, dotrel, 1);
             write(fbfil, &num  , 1);
             write(fbfil, dot   , 2);
-        } else if (op == 2) {
+        } else {
             fbadv(numval);
             fb = curfb[numval];
             fb->type  = *dotrel;
             fb->value = *dot;
-        } else {
-            error("x");
         }
+    } else {
+        error("x");
     }
 }
 

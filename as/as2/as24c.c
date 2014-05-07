@@ -37,7 +37,7 @@ struct Buf *this;
     oset(this, this->addr + len);
 }
 
-int savop;
+int savop, numval;
 char symtab[], *usymtab;
 
 readop()
@@ -53,6 +53,8 @@ readop()
         return usymtab + (op - 04000);
     } else if (op >= 01000) {
         return  symtab + (op - 01000);
+    } else if (op == 1) {
+        numval = getw();
     }
     return op;
 }

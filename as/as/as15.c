@@ -5,10 +5,13 @@ char ch, chartab[], *txtp[];
 
 readop() {
     int c, num, type, ret;
-    if (passno) return getw();
     if (savop) {
         ret = savop;
         savop = 0;
+        return ret;
+    } else if (passno) {
+        ret = getw();
+        if (ret == 1) numval = getw();
         return ret;
     }
     for (;;) {
