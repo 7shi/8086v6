@@ -2,12 +2,31 @@ struct Op { char type, num; int value; };
 struct Op curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
 int outmod 0777;
-int savdot[], datbase, bssbase, ibufc, defund;
+int savdot[], datbase, bssbase, ibufc, defund, nargs;
 int *dotrel, *dot, *dotdot, brtabi, passno, errflg;
 int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
 int *txtseek, *datseek, *trelseek, *drelseek, symseek;
-char fbfil, fin, *txtp[], *relp[], atmp1[], atmp2[], atmp3[];
-char *usymtab, *symend, *endtable, *memend, faout, *aout;
+char fbfil, faout, fin, *txtp[], *relp[], atmp1[], atmp2[], atmp3[];
+char *usymtab, *symend, *endtable, *memend, *aout, **curarg;
+
+main(argc, argv)
+char *argv[];
+{
+    nargs  = argc;
+    curarg = argv;
+
+    if (argv[1][0] == '-') {
+        /* globalize all undefineds */
+        defund = 040;
+        nargs--;
+        curarg++;
+    }
+
+    setup();
+    go0();
+    go1();
+    go2();
+}
 
 aexit();
 

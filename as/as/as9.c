@@ -263,28 +263,6 @@ int *dotrel &symtab[1];
 int *dot    &symtab[2];
 int *dotdot &symtab[5];
 
-int nargs, defund;
-char **curarg;
-
-main(argc, argv)
-char *argv[];
-{
-    nargs  = argc;
-    curarg = argv;
-
-    if (argv[1][0] == '-') {
-        /* globalize all undefineds */
-        defund = 040;
-        nargs--;
-        curarg++;
-    }
-
-    setup();
-    go0();
-    go1();
-    go2();
-}
-
 int hshsiz;
 char *hshtab[];
 
