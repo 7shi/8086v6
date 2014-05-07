@@ -41,10 +41,7 @@ opline(op)
     switch (optype) {
     case 5: /* flop src,freg */
         opr = _addres();
-        if (!checkop(',')) {
-            error("a");
-            break;
-        }
+        if (!checkop(',')) return error("a");
         op2b(opcode, opr, _addres(), 4);
         break;
     case 6: /* branch */
@@ -59,10 +56,7 @@ opline(op)
     case 7: /* jsr */
         expres(&x, readop());
         _checkreg(&x);
-        if (!checkop(',')) {
-            error("a");
-            break;
-        }
+        if (!checkop(',')) return error("a");
         op2b(opcode, x.value, _addres(), -1);
         break;
     case 8: /* rts */
@@ -72,15 +66,12 @@ opline(op)
         break;
     case 9: /* sys, emt etc */
         expres(&x, readop());
-        if (x.value >= 64 || x.type > 1) _error("a");
+        if (x.value >= 64 || x.type > 1) return error("a");
         outw(x.type, opcode | x.value);
         break;
     case 10: /* movf */
         opr = _addres();
-        if (!checkop(',')) {
-            error("a");
-            break;
-        }
+        if (!checkop(',')) return error("a");
         if (opr >= 4) {
             /* see if source is fregister */
             op2b(opcode, _addres(), opr, 4);
@@ -90,18 +81,12 @@ opline(op)
         break;
     case 11: /* double */
         opr = _addres();
-        if (!checkop(',')) {
-            error("a");
-            break;
-        }
+        if (!checkop(',')) return error("a");
         op2b(opcode, opr, _addres(), -1);
         break;
     case 12: /* flop freg,fsrc */
         opr = _addres();
-        if (!checkop(',')) {
-            error("a");
-            break;
-        }
+        if (!checkop(',')) return error("a");
         op2b(opcode, _addres(), opr, 4);
         break;
     case 13: /* single operand */
@@ -159,20 +144,14 @@ opline(op)
         break;
     case 24: /* mpy, dvd etc */
         opr = _addres();
-        if (!checkop(',')) {
-            error("a");
-            break;
-        }
+        if (!checkop(',')) return error("a");
         op2b(opcode, _addres(), opr, 010);
         break;
     case 25: /* sob */
         expres(&x, readop());
         _checkreg(&x);
         opcode =| x.value << 6;
-        if (!checkop(',')) {
-            error("a");
-            break;
-        }
+        if (!checkop(',')) return error("a");
         expres(&x, readop());
         if (passno < 2) {
             *dot =+ 2;
@@ -182,10 +161,8 @@ opline(op)
         }
         break;
     case 26: /* .comm */
-        if (!issym(op = readop()) || !checkop(',')) {
-            error("x");
-            break;
-        }
+        op = readop();
+        if (!issym(op) || !checkop(',')) return error("x");
         expres(&x, readop());
         if (passno == 0) {
             op->type =| 32;
