@@ -16,8 +16,6 @@ _assem()
             break;
         } else if (op == '\n') {
             ++line;
-        } else if (op == 5/*file name*/ || op == '<'/*string*/) {
-            opline(op);
         } else if (op != ';') {
             if (op == 1) {
                 op = 2;

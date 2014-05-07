@@ -24,6 +24,10 @@ assem() {
                 }
                 continue;
             }
+            if (passno && op == 1) {
+                op = 2;
+                numval = getw();
+            }
             op2 = readop();
             if (op2 == '=') {
                 expres(&x, readop());
