@@ -170,14 +170,13 @@ go2() {
     aexit();
 }
 
-int errflg;
-
-filerr(fname, msg)
-char *fname, *msg;
+aexit()
 {
-    if (!errflg) ++errflg;
-    printf("%s%s\n", fname, msg);
-    if (passno) aexit();
+    unlink(atmp1);
+    unlink(atmp2);
+    unlink(atmp3);
+    if (passno) chmod(aout, outmod);
+    exit(errflg);
 }
 
 doreloc(sym)
@@ -216,10 +215,32 @@ _setup()
     }
 }
 
+filerr(fname, msg)
+char *fname, *msg;
+{
+    if (!errflg) ++errflg;
+    printf("%s%s\n", fname, msg);
+    if (passno) aexit();
+}
+
 ofile(fn)
 char *fn;
 {
     int fd;
     if ((fd = open(fn, 0)) < 0) filerr(fn, "?");
     return fd;
+}
+
+fcreat(atmp)
+char *atmp;
+{
+    int ret, st[20];
+    do {
+        if(stat(atmp, st) < 0) {
+            ret = creat(atmp, 0444);
+            if(ret > 0) return ret;
+        }
+    } while (++atmp[9] <= 'z');
+    filerr(atmp, "?");
+    exit(1);
 }
