@@ -72,7 +72,7 @@ error(e)
 char *e;
 {
     int i, ln;
-    char *p, buf[5];
+    char buf[5];
 
     ++errflg;
 
