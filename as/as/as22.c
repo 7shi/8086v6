@@ -7,11 +7,11 @@ outw(type, value)
 {
     int t;
     if (*dotrel == 4) { /* test bss mode */
-        _error("x");
+        error("x");
         return;
     }
     if (*dot & 1) {
-        _error("o");
+        error("o");
         outb(0, value);
         return;
     }
@@ -28,7 +28,7 @@ outw(type, value)
         if (t >= 5) {
             if (t == 27 || t == 28) {
                 /* est. text, data */
-                _error("r");
+                error("r");
             }
             t = 1; /* make absolute */
         }
@@ -48,10 +48,10 @@ outw(type, value)
 outb(type, value)
 {
     if (*dotrel == 4) { /* test bss mode */
-        _error("x");
+        error("x");
         return;
     }
-    if (type > 1) _error("r");
+    if (type > 1) error("r");
     if (passno == 2) {
         if ((*dot & 1) == 0) {
             putw(txtp, value);
@@ -65,25 +65,30 @@ outb(type, value)
     ++*dot;
 }
 
-char argb[];
+char argb[], **curarg;
 int line, errflg;
 
-_error(e)
+error(e)
 char *e;
 {
     int i, ln;
     char buf[5];
 
-    if (passno == 0) return error(e);
-
     ++errflg;
 
-    /* make nonexecutable */
-    outmod = 0666;
+    if (passno == 0) {
+        if (*curarg) {
+            filerr(*curarg, "\n");
+            *curarg = 0;
+        }
+    } else {
+        /* make nonexecutable */
+        outmod = 0666;
 
-    if (argb[0]) {
-        printf("%s\n", argb);
-        argb[0] = 0;
+        if (argb[0]) {
+            printf("%s\n", argb);
+            argb[0] = 0;
+        }
     }
 
     /* lineの値を10進数で表示 */

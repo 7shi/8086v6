@@ -30,7 +30,7 @@ _assem()
                     x.type =& ~32;
                     if (x.type != *dotrel) {
                         /* can't change relocation */
-                        _error(".");
+                        error(".");
                     } else if (x.type == 4) { /* bss */
                         *dot = x.value;
                     } else if (*dot <= x.value) {
@@ -38,10 +38,10 @@ _assem()
                             outb(1, 0);
                         }
                     } else {
-                        _error(".");
+                        error(".");
                     }
                 } else {
-                    if (x.type == 32) _error("r");
+                    if (x.type == 32) error("r");
                     x.type =& 31;
                     if (x.type == 0) x.value = 0;
                     op->type =& ~31;
@@ -56,18 +56,18 @@ _assem()
                         fb->type  = *dotrel;
                         fb->value = *dot;
                     } else {
-                        _error("x");
+                        error("x");
                     }
                 } else if (passno < 2) {
                     t = op->type & 31;
                     if (t != 0 && t != 27 && t != 28) {
-                        _error("m");
+                        error("m");
                     }
                     op->type =& ~31;
                     op->type =| *dotrel;
                     op->value = *dot;
                 } else if (op->value != *dot) {
-                    _error("p");
+                    error("p");
                 }
             } else {
                 savop = op2;

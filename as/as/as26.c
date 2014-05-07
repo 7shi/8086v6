@@ -219,7 +219,7 @@ opline(op)
 op2b(opcode, opr1, opr2, rlimit)
 {
     int i;
-    if (rlimit != -1 && opr1 >= rlimit) _error("x");
+    if (rlimit != -1 && opr1 >= rlimit) error("x");
     outw(0, opcode | (opr1 << 6) | opr2);
     for (i = 0; i < abufi; i =+ 3) {
         xsymbol = adrbuf[i + 2];
@@ -234,7 +234,7 @@ struct Op *this;
     if (this->value < min || max < this->value
             || this->value & 1 /* (must) even */
             || this->type != *dotrel /* (must) same relocation as . */) {
-        _error("b");
+        error("b");
         outw(0, opcode);
     } else {
         outw(0, opcode | ((this->value >> 1) & 255));
@@ -255,7 +255,7 @@ addres1(astar)
     switch (op = readop()) {
     case '(':
         expres(&x, readop());
-        if (!checkop(')')) _error(")");
+        if (!checkop(')')) error(")");
         _checkreg(&x);
         if (checkop('+')) {
             return x.value | 020;
@@ -273,7 +273,7 @@ addres1(astar)
             break;
         }
         expres(&x, readop());
-        if (!checkop(')')) _error(")");
+        if (!checkop(')')) error(")");
         _checkreg(&x);
         return x.value | 040;
     case '$':
@@ -283,7 +283,7 @@ addres1(astar)
         adrbuf[abufi++] = xsymbol;
         return 027;
     case '*':
-        if (astar) _error("*");
+        if (astar) error("*");
         return addres1(1) | 010;
     }
     expres(&x, op);
@@ -292,7 +292,7 @@ addres1(astar)
         adrbuf[abufi++] = x.type;
         adrbuf[abufi++] = xsymbol;
         expres(&x, readop());
-        if (!checkop(')')) _error(")");
+        if (!checkop(')')) error(")");
         _checkreg(&x);
         return x.value | 060;
     } else if (x.type == 20) {
@@ -311,7 +311,7 @@ _checkreg(this)
 struct Op *this;
 {
     if (this->value > 7 || (this->value > 1 && this->type < 5)) {
-        _error("a");
+        error("a");
         this->type = this->value = 0;
     }
 }

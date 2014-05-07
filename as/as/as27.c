@@ -33,7 +33,7 @@ struct Op *this;
         if (issym(op)) {
             x.type = op->type;
             if (x.type == 0 && passno == 2) {
-                _error("u");
+                error("u");
             }
             if (passno && x.type == 32) {
                 xsymbol = op;
@@ -74,13 +74,13 @@ struct Op *this;
             case '&':
             case '%':
             case '!':
-                if (opr != '+') _error("e");
+                if (opr != '+') error("e");
                 opr = op;
                 op = readop();
                 continue;
             case '[':
                 expres1(&x, readop());
-                if (!checkop(']')) _error("]");
+                if (!checkop(']')) error("]");
                 break;
             case 1:
                 x.type  = 1;
@@ -152,7 +152,7 @@ struct Op *this, *x;
         } else if (opr == '-' && rel1 <= 4 && rel1 == rel2) {
             this->type = 1;
         } else {
-            _error("r");
+            error("r");
             this->type = maxtyp;
         }
     }
