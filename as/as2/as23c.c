@@ -26,8 +26,6 @@ assem()
                 if (w < 0) break;
                 if (i < 21) argb[i] = w;
             }
-        } else if (op == '<'/*string*/) {
-            opline(op);
         } else if (op != ';') {
             op2 = readop();
             if (op2 == '=') {
