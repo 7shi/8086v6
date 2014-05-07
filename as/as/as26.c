@@ -40,9 +40,9 @@ opline(op)
     abufi = 0;
     switch (optype) {
     case 5: /* flop src,freg */
-        opr = _addres();
+        opr = addres();
         if (!checkop(',')) return error("a");
-        op2b(opcode, opr, _addres(), 4);
+        op2b(opcode, opr, addres(), 4);
         break;
     case 6: /* branch */
         expres(&x, readop());
@@ -55,13 +55,13 @@ opline(op)
         break;
     case 7: /* jsr */
         expres(&x, readop());
-        _checkreg(&x);
+        checkreg(&x);
         if (!checkop(',')) return error("a");
-        op2b(opcode, x.value, _addres(), -1);
+        op2b(opcode, x.value, addres(), -1);
         break;
     case 8: /* rts */
         expres(&x, readop());
-        _checkreg(&x);
+        checkreg(&x);
         outw(x.type, opcode | x.value);
         break;
     case 9: /* sys, emt etc */
@@ -70,27 +70,27 @@ opline(op)
         outw(x.type, opcode | x.value);
         break;
     case 10: /* movf */
-        opr = _addres();
+        opr = addres();
         if (!checkop(',')) return error("a");
         if (opr >= 4) {
             /* see if source is fregister */
-            op2b(opcode, _addres(), opr, 4);
+            op2b(opcode, addres(), opr, 4);
         } else {
-            op2b(0174000, opr, _addres(), -1);
+            op2b(0174000, opr, addres(), -1);
         }
         break;
     case 11: /* double */
-        opr = _addres();
+        opr = addres();
         if (!checkop(',')) return error("a");
-        op2b(opcode, opr, _addres(), -1);
+        op2b(opcode, opr, addres(), -1);
         break;
     case 12: /* flop freg,fsrc */
-        opr = _addres();
+        opr = addres();
         if (!checkop(',')) return error("a");
-        op2b(opcode, _addres(), opr, 4);
+        op2b(opcode, addres(), opr, 4);
         break;
     case 13: /* single operand */
-        op2b(opcode, 0, _addres(), -1);
+        op2b(opcode, 0, addres(), -1);
         break;
     case 14: /* .byte */
         do {
@@ -143,13 +143,13 @@ opline(op)
         *dotrel = optype - 19; /* new . relocation */
         break;
     case 24: /* mpy, dvd etc */
-        opr = _addres();
+        opr = addres();
         if (!checkop(',')) return error("a");
-        op2b(opcode, _addres(), opr, 010);
+        op2b(opcode, addres(), opr, 010);
         break;
     case 25: /* sob */
         expres(&x, readop());
-        _checkreg(&x);
+        checkreg(&x);
         opcode =| x.value << 6;
         if (!checkop(',')) return error("a");
         expres(&x, readop());
@@ -243,7 +243,7 @@ struct Op *this;
 
 int savop;
 
-_addres()
+addres()
 {
     return addres1(0);
 }
@@ -256,7 +256,7 @@ addres1(astar)
     case '(':
         expres(&x, readop());
         if (!checkop(')')) error(")");
-        _checkreg(&x);
+        checkreg(&x);
         if (checkop('+')) {
             return x.value | 020;
         }
@@ -274,7 +274,7 @@ addres1(astar)
         }
         expres(&x, readop());
         if (!checkop(')')) error(")");
-        _checkreg(&x);
+        checkreg(&x);
         return x.value | 040;
     case '$':
         expres(&x, readop());
@@ -293,10 +293,10 @@ addres1(astar)
         adrbuf[abufi++] = xsymbol;
         expres(&x, readop());
         if (!checkop(')')) error(")");
-        _checkreg(&x);
+        checkreg(&x);
         return x.value | 060;
     } else if (x.type == 20) {
-        _checkreg(&x);
+        checkreg(&x);
         return x.value;
     }
     x.value =- *dot + 4;
@@ -307,7 +307,7 @@ addres1(astar)
     return 067; /* address mode */
 }
 
-_checkreg(this)
+checkreg(this)
 struct Op *this;
 {
     if (this->value > 7 || (this->value > 1 && this->type < 5)) {
