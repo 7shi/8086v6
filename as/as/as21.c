@@ -99,7 +99,7 @@ go1()
     memset(savdot, 0, 6);
     ibufc = 0;
     fin = ofile(atmp1);
-    _assem();
+    assem();
     close(fin);
     savdot[*dotrel - 2] = *dot;
 
@@ -145,7 +145,7 @@ go2() {
     /* do pass 2 */
     ibufc = 0;
     fin = ofile(atmp1);
-    _assem();
+    assem();
     close(fin);
 
     /* polish off text and relocation */
