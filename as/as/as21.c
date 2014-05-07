@@ -92,8 +92,8 @@ go1()
     setbrk(p + 1);
     *(p++) = -1;
 
-    /* set up input text file; initialize f-b table */
-    _setup();
+    /* initialize f-b table */
+    init();
 
     /* do pass 1 */
     memset(savdot, 0, 6);
@@ -112,7 +112,9 @@ go2() {
 
     /* prepare for pass 2 */
     passno = 2;
-    _setup();
+
+    /* initialize f-b table */
+    init();
 
     /* header */
     *txtmagic = 0407; /* br .+20 */
@@ -170,6 +172,20 @@ go2() {
     aexit();
 }
 
+init()
+{
+    int i;
+    *dotrel = 2;
+    *dot    = 0;
+    *dotdot = 0; /* .. */
+    brtabi  = 0;
+    memset(curfb, 0, 20);
+    memset(nxtfb, 0, 20);
+    for (i = 0; i < 10; ++i) {
+        fbadv(i);
+    }
+}
+
 aexit()
 {
     unlink(atmp1);
@@ -198,20 +214,6 @@ char *p;
     while (p > memend) {
         memend =+ 512;
         brk(memend);
-    }
-}
-
-_setup()
-{
-    int i;
-    *dotrel = 2;
-    *dot    = 0;
-    *dotdot = 0; /* .. */
-    brtabi  = 0;
-    memset(curfb, 0, 20);
-    memset(nxtfb, 0, 20);
-    for (i = 0; i < 10; ++i) {
-        fbadv(i);
     }
 }
 
