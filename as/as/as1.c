@@ -41,7 +41,7 @@ aexit()
 /* pass 0 (as1) */
 go0()
 {
-    int fp, i;
+    int i, symf;
 
     usymtab = symend = memend = sbrk(0);
     for (i = 0; i < 10; ++i) {
@@ -50,7 +50,7 @@ go0()
 
     faout = fcreat(atmp1);
     fbfil = fcreat(atmp2);
-    fp    = fcreat(atmp3);
+    symf  = fcreat(atmp3);
 
     /* SIGINTが無視されていなければ、中断時に後片付け */
     if (signal(2/*SIGINT*/, 1) & 1 == 0) {
@@ -62,9 +62,9 @@ go0()
     aflush(txtp);
 
     /* シンボルテーブルをダンプ */
-    write(fp, usymtab, symend - usymtab);
+    write(symf, usymtab, symend - usymtab);
 
-    close(fp);
+    close(symf);
     close(fbfil);
     close(faout);
 
