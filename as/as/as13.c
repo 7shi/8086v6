@@ -7,9 +7,7 @@ int ifflg, line, savop, numval, passno, *dotrel, *dot;
 char fbfil;
 
 assem() {
-    struct Op x, *fb;
-    int op, op2, num, i, t;
-
+    int op, op2;
     for (;;) {
         op = readop();
         if (!checkeos(op)) {
@@ -29,70 +27,9 @@ assem() {
             }
             op2 = readop();
             if (op2 == '=') {
-                expres(&x, readop());
-                if (!issym(op)) {
-                    error("x");
-                } else if (&op->value == dot) { /* test for dot */
-                    x.type =& 31;
-                    if (x.type != *dotrel) {
-                        /* can't change relocation */
-                        error(".");
-                        if (passno == 0) *dotrel = 2;
-                    } else {
-                        if (passno == 0) {
-                            op->type = (op->type & 32) | x.type;
-                            op->value = x.type ? x.value : 0;
-                        } else {
-                            if (x.type == 4) { /* bss */
-                                *dot = x.value;
-                            } else if (*dot <= x.value) {
-                                for (i = *dot; i < x.value; ++i) {
-                                    outb(1, 0);
-                                }
-                            } else {
-                                error(".");
-                            }
-                        }
-                    }
-                } else {
-                    if (x.type == 32) error("r");
-                    x.type =& 31;
-                    if (x.type == 0) x.value = 0;
-                    op->type =& 32;
-                    op->type =| x.type;
-                    op->value = x.value;
-                }
+                let(op);
             } else if (op2 == ':') {
-                if (issym(op)) {
-                    t = op->type & 31;
-                    if (passno < 2) {
-                        if (t == 27 || t == 28) {
-                            op->type =& 32;
-                        } else if (t) {
-                            error("m");
-                        }
-                        op->type =| *dotrel;
-                        op->value = *dot;
-                    } else {
-                        if (op->value != *dot) error("p");
-                    }
-                } else {
-                    if (op == 1/*digit*/) {
-                        num = fbcheck(numval);
-                        curfbr[num].type  = *dotrel;
-                        curfbr[num].value = *dot;
-                        write(fbfil, dotrel, 1);
-                        write(fbfil, &num  , 1);
-                        write(fbfil, dot   , 2);
-                    } else if (op == 2) {
-                        fbadv(numval);
-                        fb = curfb[numval];
-                        fb->type  = *dotrel;
-                        fb->value = *dot;
-                    } else {
-                        error("x");
-                    }
-                }
+                label(op);
                 continue;
             } else {
                 savop = op2;
@@ -111,6 +48,79 @@ assem() {
             while (!checkeos(op)) {
                 op = readop();
             }
+        }
+    }
+}
+
+let(op) {
+    struct Op x;
+    int i;
+    expres(&x, readop());
+    if (!issym(op)) {
+        error("x");
+    } else if (&op->value == dot) { /* test for dot */
+        x.type =& 31;
+        if (x.type != *dotrel) {
+            /* can't change relocation */
+            error(".");
+            if (passno == 0) *dotrel = 2;
+        } else {
+            if (passno == 0) {
+                op->type = (op->type & 32) | x.type;
+                op->value = x.type ? x.value : 0;
+            } else {
+                if (x.type == 4) { /* bss */
+                    *dot = x.value;
+                } else if (*dot <= x.value) {
+                    for (i = *dot; i < x.value; ++i) {
+                        outb(1, 0);
+                    }
+                } else {
+                    error(".");
+                }
+            }
+        }
+    } else {
+        if (x.type == 32) error("r");
+        x.type =& 31;
+        if (x.type == 0) x.value = 0;
+        op->type =& 32;
+        op->type =| x.type;
+        op->value = x.value;
+    }
+}
+
+label(op) {
+    struct Op *fb;
+    int t, num;
+    if (issym(op)) {
+        t = op->type & 31;
+        if (passno < 2) {
+            if (t == 27 || t == 28) {
+                op->type =& 32;
+            } else if (t) {
+                error("m");
+            }
+            op->type =| *dotrel;
+            op->value = *dot;
+        } else {
+            if (op->value != *dot) error("p");
+        }
+    } else {
+        if (op == 1/*digit*/) {
+            num = fbcheck(numval);
+            curfbr[num].type  = *dotrel;
+            curfbr[num].value = *dot;
+            write(fbfil, dotrel, 1);
+            write(fbfil, &num  , 1);
+            write(fbfil, dot   , 2);
+        } else if (op == 2) {
+            fbadv(numval);
+            fb = curfb[numval];
+            fb->type  = *dotrel;
+            fb->value = *dot;
+        } else {
+            error("x");
         }
     }
 }
