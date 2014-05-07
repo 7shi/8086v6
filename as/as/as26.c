@@ -328,7 +328,7 @@ setbr(rel, len)
     ++brtabi;
     /* 前方参照の誤差を補正 */
     if (rel > -2) rel =- brdelt;
-    if (rel < -254 || 256 < rel) return 0; /* not fit */
+    if (rel < -256 || 254 < rel) return 0; /* not fit */
     /* 前方参照の短縮による誤差を計上 */
     if (rel > -2) brdelt =+ len - 2;
     /* set bitmap */
