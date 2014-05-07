@@ -78,17 +78,16 @@ char *e;
 
     if (passno == 0) {
         if (*curarg) {
-            filerr(*curarg, "");
+            printf("%s\n", *curarg);
             *curarg = 0;
         }
     } else {
-        /* make nonexecutable */
-        outmod = 0666;
-
         if (argb[0]) {
             printf("%s\n", argb);
             argb[0] = 0;
         }
+        /* make nonexecutable */
+        outmod = 0666;
     }
 
     /* lineの値を10進数で表示 */
