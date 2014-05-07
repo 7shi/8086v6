@@ -3,9 +3,8 @@
 struct Op { char type, num; int value; };
 struct Op curfbr[], *curfb[];
 
-char *savop, fbfil;
-int ifflg, line, numval, passno;
-int *dotrel, *dot;
+int ifflg, line, savop, numval, passno, *dotrel, *dot;
+char fbfil;
 
 assem() {
     struct Op x, *fb;

@@ -3,8 +3,7 @@
 struct Op { char type, num; int value; };
 struct Op *curfb[], *nxtfb[], *fbbufp;
 
-int line, savop, passno, *dotrel, *dot, numval;
-int header[];
+int line, savop, numval, passno, *dotrel, *dot;
 
 _assem()
 {
@@ -24,25 +23,35 @@ _assem()
             op2 = readop();
             if (op2 == '=') {
                 expres(&x, readop());
-                if (&op->value == dot) { /* test for dot */
-                    x.type =& ~32;
+                if (!issym(op)) {
+                    error("x");
+                } else if (&op->value == dot) { /* test for dot */
+                    x.type =& 31;
                     if (x.type != *dotrel) {
                         /* can't change relocation */
                         error(".");
-                    } else if (x.type == 4) { /* bss */
-                        *dot = x.value;
-                    } else if (*dot <= x.value) {
-                        for (i = *dot; i < x.value; ++i) {
-                            outb(1, 0);
-                        }
+                        if (passno == 0) *dotrel = 2;
                     } else {
-                        error(".");
+                        if (passno == 0) {
+                            op->type = (op->type & 32) | x.type;
+                            op->value = x.type ? x.value : 0;
+                        } else {
+                            if (x.type == 4) { /* bss */
+                                *dot = x.value;
+                            } else if (*dot <= x.value) {
+                                for (i = *dot; i < x.value; ++i) {
+                                    outb(1, 0);
+                                }
+                            } else {
+                                error(".");
+                            }
+                        }
                     }
                 } else {
                     if (x.type == 32) error("r");
                     x.type =& 31;
                     if (x.type == 0) x.value = 0;
-                    op->type =& ~31;
+                    op->type =& 32;
                     op->type =| x.type;
                     op->value = x.value;
                 }
