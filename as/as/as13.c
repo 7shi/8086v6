@@ -1,7 +1,7 @@
 /* translated from as13.s */
 
 struct Op { char type, num; int value; };
-struct Op curfbr[], *curfb[];
+struct Op curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
 int ifflg, line, savop, numval, passno, *dotrel, *dot;
 char fbfil;
@@ -113,6 +113,17 @@ assem() {
             }
         }
     }
+}
+
+fbadv(num)
+{
+    struct Op *fb;
+    fb = curfb[num] = nxtfb[num];
+    if (!fb) fb = fbbufp - 1;
+    do {
+        ++fb;
+    } while (fb->type >= 0 && fb->num != num);
+    nxtfb[num] = fb;
 }
 
 fbcheck(n) {
