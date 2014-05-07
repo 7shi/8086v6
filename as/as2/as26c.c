@@ -4,23 +4,13 @@ struct Op { char type, num; int value; };
 
 int passno, line, *dotrel, *dot, abufi;
 int adrbuf[], savdot[], tseeks[], rseeks[];
-char argb[], *txtp[], *relp[], *xsymbol;
+char *txtp[], *relp[], *xsymbol;
 
 opline(op)
 {
     struct Op x;
-    int w, i, optype, opcode, opr, len;
-    if (op == 5) {
-        /* file name */
-        line = 1;
-        memset(argb, 0, 22);
-        for (i = 0;; ++i) {
-            w = getw();
-            if (w < 0) break;
-            if (i < 21) argb[i] = w;
-        }
-        return;
-    } else if (op == '<') {
+    int w, optype, opcode, opr, len;
+    if (op == '<') {
         while ((w = getw()) != -1) {
             outb(1, w & 255);
         }

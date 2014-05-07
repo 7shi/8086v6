@@ -5,18 +5,28 @@ struct Op *curfb[], *nxtfb[], *fbbufp;
 
 int line, savop, passno, *dotrel, *dot, numval;
 int header[];
+char argb[];
 
 assem()
 {
     struct Op x, *fb;
-    int t, op, op2, i;
+    int t, op, op2, i, w;
     for (;;) {
         op = readop();
         if (op == 4/*EOT*/) {
             break;
         } else if (op == '\n') {
             ++line;
-        } else if (op == 5/*file name*/ || op == '<'/*string*/) {
+        } else if (op == 5/*file name*/) {
+            /* file name */
+            line = 1;
+            memset(argb, 0, 22);
+            for (i = 0;; ++i) {
+                w = getw();
+                if (w < 0) break;
+                if (i < 21) argb[i] = w;
+            }
+        } else if (op == '<'/*string*/) {
             opline(op);
         } else if (op != ';') {
             op2 = readop();

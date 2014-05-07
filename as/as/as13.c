@@ -4,13 +4,23 @@ struct Op { char type, num; int value; };
 struct Op curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
 int ifflg, line, savop, numval, passno, *dotrel, *dot;
-char fbfil;
+char fbfil, argb[];
 
 assem() {
-    int op, op2;
+    int op, op2, i, w;
     for (;;) {
         op = readop();
-        if (!checkeos(op)) {
+        if (op == 5) {
+            /* file name */
+            line = 1;
+            memset(argb, 0, 22);
+            for (i = 0;; ++i) {
+                w = getw();
+                if (w < 0) break;
+                if (i < 21) argb[i] = w;
+            }
+            continue;
+        } else if (!checkeos(op)) {
             if (ifflg) {
                 if (issym(op)) {
                     if (op->type == 17/*.if*/) {
@@ -30,7 +40,6 @@ assem() {
             } else {
                 savop = op2;
                 opline(op);
-                if (passno && op == 5) continue;
             }
             op = readop();
         }
