@@ -78,7 +78,7 @@ char *e;
 
     if (passno == 0) {
         if (*curarg) {
-            filerr(*curarg, "\n");
+            filerr(*curarg, "");
             *curarg = 0;
         }
     } else {
@@ -86,7 +86,7 @@ char *e;
         outmod = 0666;
 
         if (argb[0]) {
-            printf("%s\n", argb);
+            filerr(argb, "");
             argb[0] = 0;
         }
     }

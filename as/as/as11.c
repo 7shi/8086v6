@@ -12,12 +12,6 @@ aexit()
     exit(errflg);
 }
 
-filerr(fname, msg)
-char *fname, *msg;
-{
-    printf("%s%s", fname, msg);
-}
-
 fcreat(atmp)
 char *atmp;
 {
@@ -28,6 +22,6 @@ char *atmp;
             if(ret > 0) return ret;
         }
     } while (++atmp[9] <= 'z');
-    filerr(atmp, "?\n");
+    filerr(atmp, "?");
     exit(1);
 }

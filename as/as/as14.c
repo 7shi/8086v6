@@ -143,7 +143,7 @@ rch() {
         }
         ++curarg;
         if (++fileflg < 0) {
-            filerr(*curarg, "?\n");
+            filerr(*curarg, "?");
             aexit();
         }
 

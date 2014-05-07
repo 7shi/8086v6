@@ -52,7 +52,7 @@ go1()
     int t, *p, w;
 
     if ((faout = creat(aout, 0)) < 0) {
-        _filerr(aout);
+        filerr(aout, "?");
     }
     passno = 1;
 
@@ -172,12 +172,12 @@ go2() {
 
 int errflg;
 
-_filerr(fn)
-char *fn;
+filerr(fname, msg)
+char *fname, *msg;
 {
     if (!errflg) ++errflg;
-    printf("%s?\n", fn);
-    aexit();
+    printf("%s%s\n", fname, msg);
+    if (passno) aexit();
 }
 
 doreloc(sym)
@@ -220,6 +220,6 @@ ofile(fn)
 char *fn;
 {
     int fd;
-    if ((fd = open(fn, 0)) < 0) _filerr(fn);
+    if ((fd = open(fn, 0)) < 0) filerr(fn, "?");
     return fd;
 }
