@@ -97,6 +97,7 @@ assem() {
             } else {
                 savop = op2;
                 opline(op);
+                if (passno && op == 5) continue;
             }
             op = readop();
         }
