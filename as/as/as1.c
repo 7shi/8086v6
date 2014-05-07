@@ -12,6 +12,11 @@ char *usymtab, *symend, *endtable, *memend, *aout, **curarg;
 main(argc, argv)
 char *argv[];
 {
+    if (argc < 2) {
+        printf("usage: as [-] source1 [source2 ...]\n");
+        exit(1);
+    }
+
     nargs  = argc;
     curarg = argv;
 
