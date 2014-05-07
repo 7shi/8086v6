@@ -1,5 +1,3 @@
-/* translated from as22.s */
-
 int outmod, *dotrel, *dot, *dotdot, passno, tseeks[], rseeks[];
 char *xsymbol, *usymtab, *txtp[], *relp[];
 

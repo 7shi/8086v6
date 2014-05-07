@@ -1,5 +1,3 @@
-/* translated from as26.s */
-
 struct Op { char type, num; int value; };
 
 int passno, line, *dotrel, *dot, abufi;
@@ -309,7 +307,6 @@ struct Op *this;
 int brtabi, brlen, brdelt;
 char brtab[];
 
-/* 戻り値の意味をオリジナルと逆転 */
 setbr(rel, len)
 {
     int i;
@@ -326,7 +323,6 @@ setbr(rel, len)
     return 1; /* fit */
 }
 
-/* 戻り値の意味をオリジナルと逆転 */
 getbr()
 {
     int i;
@@ -337,7 +333,6 @@ getbr()
     return (brtab[i >> 3] >> (i & 7)) & 1;
 }
 
-/* checkrp()を汎用化（独自関数） */
 checkop(ch)
 {
     int op;
@@ -346,7 +341,7 @@ checkop(ch)
     return 0;
 }
 
-/* トークンがシンボルかどうかを判定（独自関数） */
+/* トークンがシンボルかどうかを判定 */
 issym(op)
 {
     return op < 0 || 127 < op;

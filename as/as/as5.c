@@ -1,5 +1,3 @@
-/* translated from as15.s */
-
 int savop, numval, passno;
 char ch, chartab[], *txtp[];
 

@@ -1,5 +1,3 @@
-/* translated from as18.s */
-
 char chartab[256] {
     /*  0*/ -12, -12, -12, -12,  -2, -12, -12, -12,
     /*  8*/ -12, -18,  -2, -12, -12, -18, -12, -12,
@@ -36,6 +34,7 @@ char chartab[256] {
 char atmp1[] "/tmp/atm1a";
 char atmp2[] "/tmp/atm2a";
 char atmp3[] "/tmp/atm3a";
+char *aout "a.out";
 
 /* atmp2 */
 char fbfil;
@@ -55,10 +54,6 @@ char **curarg;
 
 char fileflg, ch;
 int line, errflg, ifflg, savop, numval;
-
-/* translated from as28.s */
-
-char *aout "a.out";
 
 int header[8];
 int *txtmagic &header[0];

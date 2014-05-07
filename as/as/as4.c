@@ -1,5 +1,3 @@
-/* translated from as24.s */
-
 struct Buf {
     int *next; /* next slot */
     int *max;  /* buf max */

@@ -1,5 +1,3 @@
-/* translated from as13.s */
-
 struct Op { char type, num; int value; };
 struct Op curfbr[], *curfb[], *nxtfb[], *fbbufp;
 

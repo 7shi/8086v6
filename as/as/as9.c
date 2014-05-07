@@ -1,5 +1,3 @@
-/* translated from as19.s */
-
 /* key to types
 
      0  undefined
@@ -290,7 +288,7 @@ char *argv[];
 int hshsiz;
 char *hshtab[];
 
-/* シンボルテーブルを検索（独自関数） */
+/* シンボルテーブルを検索 */
 symget(key, name)
 char *name;
 {
@@ -306,7 +304,7 @@ char *name;
 
 char *usymtab;
 
-/* シンボル名をチェック（独自関数） */
+/* シンボル名をチェック */
 symcmp(idx, name)
 {
     struct { char *cptr; };
