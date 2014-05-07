@@ -1,8 +1,7 @@
 /* translated from as12.s */
 
-char errflg;
 char **curarg;
-int line;
+int line, errflg;
 
 error(e)
 char *e;

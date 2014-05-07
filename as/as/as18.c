@@ -53,5 +53,5 @@ char *hshtab[1553];
 int nargs;
 char **curarg;
 
-char fileflg, errflg, ch;
-int line, ifflg, savop, numval;
+char fileflg, ch;
+int line, errflg, ifflg, savop, numval;

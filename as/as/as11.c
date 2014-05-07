@@ -3,9 +3,9 @@
 struct Op { char type, num; int value; };
 struct Op curfbr[];
 
-int outmod, passno;
+int outmod, passno, errflg;
 char atmp1[], atmp2[], atmp3[], faout, *aout;
-char errflg, faout, fbfil, *txtp[];
+char faout, fbfil, *txtp[];
 char *usymtab, *symend, *memend;
 
 int aexit();
