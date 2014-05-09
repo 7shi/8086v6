@@ -57,7 +57,7 @@ go0()
     fbfil = fcreat(atmp2);
     symf  = fcreat(atmp3);
 
-    /* SIGINT‚ª–³‹‚³‚ê‚Ä‚¢‚È‚¯‚ê‚ÎA’†’f‚ÉŒã•Ğ•t‚¯ */
+    /* SIGINTãŒç„¡è¦–ã•ã‚Œã¦ã„ãªã‘ã‚Œã°ã€ä¸­æ–­æ™‚ã«å¾Œç‰‡ä»˜ã‘ */
     if (signal(2/*SIGINT*/, 1) & 1 == 0) {
         signal(2, aexit);
     }
@@ -66,7 +66,7 @@ go0()
     assem();
     aflush(txtp);
 
-    /* ƒVƒ“ƒ{ƒ‹ƒe[ƒuƒ‹‚ğƒ_ƒ“ƒv */
+    /* ã‚·ãƒ³ãƒœãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ãƒ€ãƒ³ãƒ— */
     write(symf, usymtab, symend - usymtab);
 
     close(symf);
