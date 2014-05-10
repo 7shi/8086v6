@@ -1,15 +1,14 @@
 /* translated from as21.s */
 
 struct Op { char type, num; int value; };
-struct Op *curfb[], *nxtfb[], *fbbufp;
+extern struct Op *curfb[], *nxtfb[], *fbbufp;
 
-int outmod 0777;
-int savdot[], datbase, bssbase, ibufc;
-int *dotrel, *dot, *dotdot, brtabi, passno;
-int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
-int *txtseek, *datseek, *trelseek, *drelseek, symseek;
-char fin, *txtp[], *relp[], *atmp1, *atmp2, *atmp3;
-char *usymtab, *endtable, *memend;
+extern int outmod, savdot[], datbase, bssbase, ibufc;
+extern int *dotrel, *dot, *dotdot, brtabi, passno;
+extern int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
+extern int *txtseek, *datseek, *trelseek, *drelseek, symseek;
+extern char fin, *txtp[], *relp[], *atmp1, *atmp2, *atmp3;
+extern char *usymtab, *endtable, *memend;
 
 /* set up sizes and origins */
 go()
@@ -124,8 +123,8 @@ go()
     aexit();
 }
 
-int errflg;
-char *aout;
+extern int errflg;
+extern char *aout;
 
 aexit()
 {
@@ -144,7 +143,7 @@ char *fn;
     aexit();
 }
 
-int defund;
+extern int defund;
 
 doreloc(sym)
 int *sym;

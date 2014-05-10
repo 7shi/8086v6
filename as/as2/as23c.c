@@ -1,11 +1,11 @@
 /* translated from as23.s */
 
 struct Op { char type, num; int value; };
-struct Op *curfb[], *nxtfb[], *fbbufp;
+extern struct Op *curfb[], *nxtfb[], *fbbufp;
 
-int line, savop, passno, *dotrel, *dot, numval;
-int header[];
-char argb[];
+extern int line, savop, passno, *dotrel, *dot, numval;
+extern int header[];
+extern char argb[];
 
 assem()
 {

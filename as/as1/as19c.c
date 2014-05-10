@@ -265,8 +265,8 @@ int *dotrel &symtab[1];
 int *dot    &symtab[2];
 int *dotdot &symtab[5];
 
-int nargs;
-char **curarg, *unglob;
+extern int nargs;
+extern char **curarg, *unglob;
 
 main(argc, argv)
 char *argv[];
@@ -289,8 +289,8 @@ char *argv[];
     go();
 }
 
-int hshsiz;
-char *hshtab[];
+extern int hshsiz;
+extern char *hshtab[];
 
 /* シンボルテーブルを検索（独自関数） */
 symget(key, name)
@@ -306,7 +306,7 @@ char *name;
     return idx;
 }
 
-char *usymtab;
+extern char *usymtab;
 
 /* シンボル名をチェック（独自関数） */
 symcmp(idx, name)

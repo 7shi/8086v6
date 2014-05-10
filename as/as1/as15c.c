@@ -1,7 +1,7 @@
 /* translated from as15.s */
 
-int savop, numval;
-char ch, chartab[];
+extern int savop, numval;
+extern char ch, chartab[];
 
 readop() {
     int c, num, type, ret;

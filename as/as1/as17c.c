@@ -2,8 +2,8 @@
 
 struct Op { int type, value; };
 
-char curfbr[];
-int curfb[], numval, savop;
+extern char curfbr[];
+extern int curfb[], numval, savop;
 
 expres(this, op)
 struct Op *this;

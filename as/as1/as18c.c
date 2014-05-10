@@ -61,5 +61,7 @@ char *hshtab[1553];
 int nargs;
 char **curarg;
 
-char fileflg, errflg, ch;
+char fileflg, errflg, ch, *unglob;
 int line, ifflg, savop, numval;
+
+char *usymtab, *symend, *memend;

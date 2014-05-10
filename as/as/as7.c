@@ -1,8 +1,8 @@
 struct Op { char type, num; int value; };
-struct Op curfbr[], *curfb[], *nxtfb[];
+extern struct Op curfbr[], *curfb[], *nxtfb[];
 
-int savop;
-char *xsymbol;
+extern int savop;
+extern char *xsymbol;
 
 expres(this, op)
 struct Op *this;
@@ -11,7 +11,7 @@ struct Op *this;
     expres1(this, op);
 }
 
-int numval, passno;
+extern int numval, passno;
 
 expres1(this, op)
 struct Op *this;

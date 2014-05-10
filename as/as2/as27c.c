@@ -1,10 +1,10 @@
 /* translated from as27.s */
 
 struct Op { char type, num; int value; };
-struct Op *curfb[], *nxtfb[];
+extern struct Op *curfb[], *nxtfb[];
 
-int savop;
-char *xsymbol;
+extern int savop;
+extern char *xsymbol;
 
 expres(this, op)
 struct Op *this;
@@ -13,7 +13,7 @@ struct Op *this;
     expres1(this, op);
 }
 
-int numval, passno;
+extern int numval, passno;
 
 expres1(this, op)
 struct Op *this;

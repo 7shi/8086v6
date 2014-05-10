@@ -2,9 +2,9 @@
 
 struct Op { int type, value; };
 
-char *savop, fbfil, curfbr[];
-int ifflg, line, numval, curfb[];
-int *dotrel, *dot;
+extern char *savop, fbfil, curfbr[];
+extern int ifflg, line, numval, curfb[];
+extern int *dotrel, *dot;
 
 assem() {
     struct Op x;

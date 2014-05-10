@@ -1,6 +1,6 @@
 /* translated from as14.s */
 
-char ch;
+extern char ch;
 
 number(retval)
 int *retval;
@@ -31,8 +31,8 @@ int *retval;
     return 1;
 }
 
-char *hshtab[], symtab[], chartab[];
-char *usymtab, *symend, *memend;
+extern char *hshtab[], symtab[], chartab[];
+extern char *usymtab, *symend, *memend;
 
 rname()
 {
@@ -93,8 +93,8 @@ rname()
     }
 }
 
-char fin, inbuf[], fileflg, **curarg;
-int line, nargs, inbfi, inbfcnt, ifflg;
+extern char fin, inbuf[], fileflg, **curarg;
+extern int line, nargs, inbfi, inbfcnt, ifflg;
 
 /*
 -- ch == 0の場合

@@ -1,10 +1,9 @@
 /* translated from as11.s */
 
-int outbuf[];
-char atmp1[], atmp2[], atmp3[];
-char errflg, pof, fbfil;
-char *usymtab, *symend, *memend;
-char *unglob;
+extern int outbuf[];
+extern char atmp1[], atmp2[], atmp3[];
+extern char errflg, pof, fbfil, *unglob;
+extern char *usymtab, *symend, *memend;
 
 int aexit();
 

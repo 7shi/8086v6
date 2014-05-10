@@ -25,7 +25,7 @@ struct Buf *this;
     *(this->next++) = w;
 }
 
-char faout;
+extern char faout;
 
 aflush(this)
 struct Buf *this;
@@ -37,8 +37,8 @@ struct Buf *this;
     oset(this, this->addr + len);
 }
 
-int savop, numval;
-char symtab[], *usymtab;
+extern int savop, numval;
+extern char symtab[], *usymtab;
 
 readop()
 {
@@ -59,8 +59,8 @@ readop()
     return op;
 }
 
-int inbuf[256], ibufi, ibufc;
-char fin;
+extern int inbuf[], ibufi, ibufc;
+extern char fin;
 
 getw()
 {

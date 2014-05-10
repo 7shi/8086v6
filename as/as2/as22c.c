@@ -1,7 +1,8 @@
 /* translated from as22.s */
 
-int outmod, *dotrel, *dot, *dotdot, passno, tseeks[], rseeks[];
-char *xsymbol, *usymtab, *txtp[], *relp[];
+extern int outmod, *dotrel, *dot, *dotdot, passno;
+extern int tseeks[], rseeks[];
+extern char *xsymbol, *usymtab, *txtp[], *relp[];
 
 outw(type, value)
 {
@@ -65,8 +66,8 @@ outb(type, value)
     ++*dot;
 }
 
-char argb[];
-int line, errflg;
+extern char argb[];
+extern int line, errflg;
 
 error(e)
 char *e;

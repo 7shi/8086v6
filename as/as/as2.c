@@ -1,5 +1,5 @@
-int outmod, *dotrel, *dot, *dotdot, passno, tseeks[], rseeks[];
-char *xsymbol, *usymtab, *txtp[], *relp[];
+extern int outmod, *dotrel, *dot, *dotdot, passno, tseeks[], rseeks[];
+extern char *xsymbol, *usymtab, *txtp[], *relp[];
 
 outw(type, value)
 {
@@ -63,8 +63,8 @@ outb(type, value)
     ++*dot;
 }
 
-char argb[], **curarg;
-int line, errflg;
+extern char argb[], **curarg;
+extern int line, errflg;
 
 error(e)
 char *e;

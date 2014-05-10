@@ -1,5 +1,5 @@
-int savop, numval, passno;
-char ch, chartab[], *txtp[];
+extern int savop, numval, passno;
+extern char ch, chartab[], *txtp[];
 
 readop() {
     int c, num, type, ret;
@@ -97,7 +97,7 @@ rsch(isstr)
     return c;
 }
 
-char ch;
+extern char ch;
 
 number(retval)
 int *retval;
@@ -128,8 +128,8 @@ int *retval;
     return 1;
 }
 
-char *hshtab[], symtab[], chartab[], *txtp[];
-char *usymtab, *symend, *memend;
+extern char *hshtab[], symtab[], chartab[], *txtp[];
+extern char *usymtab, *symend, *memend;
 
 rname()
 {
@@ -187,8 +187,8 @@ rname()
     }
 }
 
-char fin, inbuf[], fileflg, **curarg;
-int line, nargs, inbfi, inbfcnt, ifflg;
+extern char fin, inbuf[], fileflg, **curarg;
+extern int line, nargs, inbfi, inbfcnt, ifflg;
 
 /*
 最初の実行時はこの関数下部にある処理で

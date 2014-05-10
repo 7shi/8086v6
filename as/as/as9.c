@@ -263,8 +263,8 @@ int *dotrel &symtab[1];
 int *dot    &symtab[2];
 int *dotdot &symtab[5];
 
-int hshsiz;
-char *hshtab[];
+extern int hshsiz;
+extern char *hshtab[];
 
 /* シンボルテーブルを検索 */
 symget(key, name)
@@ -280,7 +280,7 @@ char *name;
     return idx;
 }
 
-char *usymtab;
+extern char *usymtab;
 
 /* シンボル名をチェック */
 symcmp(idx, name)

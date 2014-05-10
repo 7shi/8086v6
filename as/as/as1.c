@@ -1,13 +1,12 @@
 struct Op { char type, num; int value; };
-struct Op curfbr[], *curfb[], *nxtfb[], *fbbufp;
+extern struct Op curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
-int outmod 0777;
-int savdot[], datbase, bssbase, ibufc, defund, nargs;
-int *dotrel, *dot, *dotdot, brtabi, passno, errflg;
-int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
-int *txtseek, *datseek, *trelseek, *drelseek, symseek;
-char fbfil, faout, fin, *txtp[], *relp[], atmp1[], atmp2[], atmp3[];
-char *usymtab, *symend, *endtable, *memend, *aout, **curarg;
+extern int outmod, savdot[], datbase, bssbase, ibufc, defund, nargs;
+extern int *dotrel, *dot, *dotdot, brtabi, passno, errflg;
+extern int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
+extern int *txtseek, *datseek, *trelseek, *drelseek, symseek;
+extern char fbfil, faout, fin, *txtp[], *relp[], atmp1[], atmp2[], atmp3[];
+extern char *usymtab, *symend, *endtable, *memend, *aout, **curarg;
 
 main(argc, argv)
 char *argv[];

@@ -1,8 +1,8 @@
 struct Op { char type, num; int value; };
-struct Op curfbr[], *curfb[], *nxtfb[], *fbbufp;
+extern struct Op curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
-int ifflg, line, savop, numval, passno, *dotrel, *dot;
-char fbfil, argb[];
+extern int ifflg, line, savop, numval, passno, *dotrel, *dot;
+extern char fbfil, argb[];
 
 assem() {
     int op, op2, i, w;

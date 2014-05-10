@@ -55,6 +55,8 @@ char **curarg;
 char fileflg, ch;
 int line, errflg, ifflg, savop, numval;
 
+int outmod 0777;
+
 int header[8];
 int *txtmagic &header[0];
 int *txtsiz   &header[1];

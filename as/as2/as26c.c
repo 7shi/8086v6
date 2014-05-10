@@ -2,9 +2,9 @@
 
 struct Op { char type, num; int value; };
 
-int passno, line, *dotrel, *dot, abufi;
-int adrbuf[], savdot[], tseeks[], rseeks[];
-char *txtp[], *relp[], *xsymbol;
+extern int passno, line, *dotrel, *dot, abufi;
+extern int adrbuf[], savdot[], tseeks[], rseeks[];
+extern char *txtp[], *relp[], *xsymbol;
 
 opline(op)
 {
@@ -204,8 +204,6 @@ struct Op *this;
     }
 }
 
-int savop;
-
 addres()
 {
     int ret;
@@ -282,6 +280,8 @@ struct Op *this;
     }
 }
 
+extern int savop;
+
 /* checkrp()を汎用化（独自関数） */
 checkop(ch)
 {
@@ -291,8 +291,8 @@ checkop(ch)
     return 0;
 }
 
-int brtabi, brlen, brdelt;
-char brtab[];
+extern int brtabi, brlen, brdelt;
+extern char brtab[];
 
 /* 戻り値の意味をオリジナルと逆転 */
 setbr(rel, len)

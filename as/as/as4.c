@@ -13,7 +13,7 @@ struct Buf *this;
     this->addr = ad;
 }
 
-int passno, ifflg;
+extern int passno, ifflg;
 
 putw(this, w)
 struct Buf *this;
@@ -26,7 +26,7 @@ struct Buf *this;
     *(this->next++) = w;
 }
 
-char faout;
+extern char faout;
 
 aflush(this)
 struct Buf *this;
@@ -38,8 +38,8 @@ struct Buf *this;
     oset(this, this->addr + len);
 }
 
-int inbuf[256], ibufi, ibufc, savop;
-char fin;
+extern int inbuf[], ibufi, ibufc, savop;
+extern char fin;
 
 getw()
 {

@@ -228,8 +228,8 @@ int *dotrel &symtab[0];
 int *dot    &symtab[1];
 int *dotdot &symtab[3];
 
-int defund;
-char *atmp1, *atmp2, *atmp3, *aout, faout;
+extern int defund;
+extern char *atmp1, *atmp2, *atmp3, *aout, faout;
 
 aexit();
 

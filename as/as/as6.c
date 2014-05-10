@@ -1,9 +1,9 @@
 struct Op { char type, num; int value; };
 
-int passno, line, *dotrel, *dot, abufi;
-int savop, numval, ifflg;
-int adrbuf[], savdot[], tseeks[], rseeks[];
-char *txtp[], *relp[], *xsymbol;
+extern int passno, line, *dotrel, *dot, abufi;
+extern int savop, numval, ifflg;
+extern int adrbuf[], savdot[], tseeks[], rseeks[];
+extern char *txtp[], *relp[], *xsymbol;
 
 opline(op)
 {
@@ -229,7 +229,7 @@ struct Op *this;
     }
 }
 
-int savop;
+extern int savop;
 
 addres()
 {
@@ -304,8 +304,8 @@ struct Op *this;
     }
 }
 
-int brtabi, brlen, brdelt;
-char brtab[];
+extern int brtabi, brlen, brdelt;
+extern char brtab[];
 
 setbr(rel, len)
 {

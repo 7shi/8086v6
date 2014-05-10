@@ -3,6 +3,8 @@
 char *aout "a.out";
 char *atmp1, *atmp2, *atmp3;
 
+int outmod 0777;
+
 int header[8];
 int *txtmagic &header[0];
 int *txtsiz   &header[1];

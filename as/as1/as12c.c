@@ -1,8 +1,7 @@
 /* translated from as12.s */
 
-char errflg;
-char **curarg;
-int line;
+extern char errflg, **curarg;
+extern int line;
 
 error(e)
 char *e;
@@ -27,8 +26,8 @@ char *e;
     printf("%s %s\n", e, buf);
 }
 
-int ifflg, obufi, outbuf[];
-char pof;
+extern int ifflg, obufi, outbuf[];
+extern char pof;
 
 putw(w)
 {

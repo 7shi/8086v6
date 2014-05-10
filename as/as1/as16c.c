@@ -2,7 +2,7 @@
 
 struct Op { int type, value; };
 
-int *dot, *dotrel, savdot[], savop, ifflg, numval;
+extern int *dot, *dotrel, savdot[], savop, ifflg, numval;
 
 opline(op)
 {
