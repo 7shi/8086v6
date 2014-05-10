@@ -44,7 +44,7 @@ char fin, inbuf[512];
 int inbfi, inbfcnt;
 
 /* .text, .data, .bss */
-int savdot[3];
+int savdot[3], datbase, bssbase;
 
 int hshsiz 1553;
 char *hshtab[1553];
@@ -72,15 +72,14 @@ int *datseek &tseeks[1];
 int *trelseek &rseeks[0];
 int *drelseek &rseeks[1];
 
-int brlen 1024;
+int brlen 1024, brtabi, brdelt;
 char brtab[128]; /* bitmap: brlen / 8 */
 
-int adrbuf[6];
-int brtabi, brdelt, defund, datbase, bssbase;
-int abufi, ibufi, ibufc, passno;
+int adrbuf[6], abufi;
+int defund, ibufi, ibufc, passno;
 
 char argb[22], *txtp[259], *relp[259], faout;
-char *usymtab, *endtable, *xsymbol;
+char *usymtab, *endtable, *memend, *xsymbol;
 
 struct Op { char type, num; int value; };
 

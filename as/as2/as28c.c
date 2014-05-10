@@ -20,16 +20,18 @@ int *datseek &tseeks[1];
 int *trelseek &rseeks[0];
 int *drelseek &rseeks[1];
 
-int brlen 1024;
+int brlen 1024, brtabi, brdelt;
 char brtab[128]; /* bitmap: brlen / 8 */
 
-int savdot[3], adrbuf[6];
-int brtabi, brdelt, defund, datbase, bssbase;
-int abufi, ibufi, ibufc, line, savop, numval, passno;
+int inbuf[256], ibufi, ibufc;
+int adrbuf[6], abufi;
+
+int savdot[3], datbase, bssbase;
+int defund, line, savop, numval, passno;
 
 char argb[22], *txtp[259], *relp[259];
 char fin, faout;
-char *usymtab, *endtable, *xsymbol;
+char *usymtab, *endtable, *memend, *xsymbol;
 
 struct Op { char type, num; int value; };
 struct Op *curfb[10], *nxtfb[10], *fbbufp;
