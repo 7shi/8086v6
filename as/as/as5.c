@@ -1,5 +1,5 @@
 extern int savop, numval, passno;
-extern char ch, chartab[], *txtp[];
+extern char ch, chartab[], *txtp[], symtab[], *usymtab;
 
 readop() {
     int c, num, type, ret;
@@ -9,7 +9,13 @@ readop() {
         return ret;
     } else if (passno) {
         ret = getw();
-        if (ret == 1) numval = getw();
+        if (ret >= 04000) {
+            return usymtab + (ret - 04000);
+        } else if (ret >= 01000) {
+            return  symtab + (ret - 01000);
+        } else if (ret == 1) {
+            numval = getw();
+        }
         return ret;
     }
     for (;;) {
@@ -97,8 +103,6 @@ rsch(isstr)
     return c;
 }
 
-extern char ch;
-
 number(retval)
 int *retval;
 {
@@ -128,8 +132,7 @@ int *retval;
     return 1;
 }
 
-extern char *hshtab[], symtab[], chartab[], *txtp[];
-extern char *usymtab, *symend, *memend;
+extern char *hshtab[], *symend, *memend;
 
 rname()
 {
@@ -178,11 +181,11 @@ rname()
 
     if (sym < usymtab) {
         /* builtin symbol */
-        putw(txtp, sym + 2);
+        putw(txtp, (sym - symtab) + 01002);
         return sym + 2;
     } else {
         /* user symbol */
-        putw(txtp, (sym - usymtab) / 3 + usymtab);
+        putw(txtp, (sym - usymtab) / 3 + 04000);
         return sym + 8;
     }
 }
