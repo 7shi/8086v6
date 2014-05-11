@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct Sym { char type, num; int value; };
+struct Sym { char type, num; short value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
 extern int outmod, savdot[], datbase, bssbase, ibufc, defund, nargs;

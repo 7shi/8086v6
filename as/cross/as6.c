@@ -1,4 +1,4 @@
-struct Sym { char type, num; int value; };
+struct Sym { char type, num; short value; };
 
 extern int passno, line, *dotrel, *dot, abufi;
 extern int savop, numval, ifflg;

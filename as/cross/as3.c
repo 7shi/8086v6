@@ -1,6 +1,6 @@
 #include <string.h>
 
-struct Sym { char type, num; int value; };
+struct Sym { char type, num; short value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
 extern int ifflg, line, savop, numval, passno, *dotrel, *dot;

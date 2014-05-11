@@ -1,4 +1,4 @@
-struct Sym { char type, num; int value; };
+struct Sym { char type, num; short value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[];
 
 extern int savop;

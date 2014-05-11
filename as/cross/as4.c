@@ -1,8 +1,8 @@
 struct Buf {
-    int *next; /* next slot */
-    int *max;  /* buf max */
-    int addr;  /* seek addr */
-    int data[256];
+    short *next; /* next slot */
+    short *max;  /* buf max */
+    short addr;  /* seek addr */
+    short data[256];
 };
 
 oset(this, ad)
