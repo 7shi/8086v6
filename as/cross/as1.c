@@ -51,7 +51,9 @@ go0()
 {
     int i, symf;
 
-    usymtab = symend = memend = sbrk(0);
+    usymtab = symend = malloc(0x10000);
+    memend = usymtab + 0x10000;
+
     for (i = 0; i < 10; ++i) {
         curfbr[i].value = -1;
     }
@@ -234,9 +236,9 @@ int *sym;
 setbrk(p)
 char *p;
 {
-    while (p > memend) {
-        memend += 512;
-        brk(memend);
+    if (p > memend) {
+        printf("Out of memory.\n");
+        exit(1);
     }
 }
 
