@@ -84,7 +84,8 @@ go0()
 /* pass 1 (as2) */
 go1()
 {
-    int t, *p, w;
+    int t;
+    short *p, w;
 
     if ((faout = creat(aout, 0)) < 0) {
         filerr(aout, "?");
@@ -92,7 +93,7 @@ go1()
     passno = 1;
 
     /* read in symbol table */
-    p = usymtab;
+    p = (short *)usymtab;
     fin = ofile(atmp3);
     while (agetw() != 4/*EOT*/) {
         setbrk(p + 2);
@@ -114,7 +115,7 @@ go1()
     close(fin);
 
     /* read in f-b definitions */
-    fbbufp = p;
+    fbbufp = (struct Sym *)p;
     ibufc = 0;
     fin = ofile(atmp2);
     while ((w = agetw()) != 4/*EOT*/) {
@@ -143,7 +144,8 @@ go1()
 
 /* pass 2 (as2) */
 go2() {
-    int i, *p, w;
+    int i;
+    short *p, w;
 
     /* prepare for pass 2 */
     passno = 2;
@@ -168,7 +170,7 @@ go2() {
     *drelseek = 16 + *txtsiz + *datsiz + *txtsiz;
     symseek   = 16 + *txtsiz + *datsiz + *txtsiz + *datsiz;
 
-    for (p = usymtab; p < endtable; p += 2) {
+    for (p = (short *)usymtab; p < (short *)endtable; p += 2) {
         doreloc(p);
     }
     oset(txtp, 0);
@@ -189,7 +191,7 @@ go2() {
 
     /* append full symbol table */
     oset(txtp, symseek);
-    p = usymtab;
+    p = (short *)usymtab;
     ibufc = 0;
     fin = ofile(atmp3);
     while ((w = agetw()) != 4/*EOT*/) {
