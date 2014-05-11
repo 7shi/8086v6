@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 extern int outmod, *dotrel, *dot, *dotdot, passno, tseeks[], rseeks[];
 extern char *xsymbol, *usymtab, *txtp[], *relp[];
 

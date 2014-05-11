@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 struct Sym { char type, num; int value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
 

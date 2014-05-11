@@ -1,3 +1,5 @@
+#include <string.h>
+
 extern int savop, numval, passno;
 extern char ch, chartab[], *txtp[], symtab[], *usymtab;
 

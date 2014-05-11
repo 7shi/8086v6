@@ -1,3 +1,5 @@
+#include <string.h>
+
 /* key to types
 
      0  undefined
