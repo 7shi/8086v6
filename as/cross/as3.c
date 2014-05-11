@@ -1,17 +1,23 @@
 #include <string.h>
+#include <stdint.h>
 
 struct Sym { char type, num; short value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
+union Op { intptr_t op; struct Sym *sym; };
+extern union Op savop;
+
 extern short *dotrel, *dot;
-extern int ifflg, line, savop, numval, passno;
+extern int ifflg, line, numval, passno;
 extern char fbfil, argb[];
 
 assem() {
-    int op, op2, i, w;
+    union Op op, op2;
+    int i;
+    short w;
     for (;;) {
-        op = readop();
-        if (op == 5) {
+        op.op = readop();
+        if (op.op == 5) {
             /* file name */
             line = 1;
             memset(argb, 0, 22);
@@ -24,47 +30,49 @@ assem() {
         } else if (!checkeos(op)) {
             if (ifflg) {
                 if (issym(op)) {
-                    if (op->type == 17/*.if*/) {
+                    if (op.sym->type == 17/*.if*/) {
                         ++ifflg;
-                    } else if (op->type == 18/*.endif*/) {
+                    } else if (op.sym->type == 18/*.endif*/) {
                         --ifflg;
                     }
                 }
                 continue;
             }
-            op2 = readop();
-            if (op2 == '=') {
+            op2.op = readop();
+            if (op2.op == '=') {
                 let(op);
-            } else if (op2 == ':') {
+            } else if (op2.op == ':') {
                 label(op);
                 continue;
             } else {
                 savop = op2;
                 opline(op);
             }
-            op = readop();
+            op.op = readop();
         }
-        if (op == 4/*EOT*/) {
+        if (op.op == 4/*EOT*/) {
             if (ifflg) error("x");
             break;
-        } else if (op == '\n') {
+        } else if (op.op == '\n') {
             ++line;
-        } else if (op != ';') {
+        } else if (op.op != ';') {
             error("x");
             while (!checkeos(op)) {
-                op = readop();
+                op.op = readop();
             }
         }
     }
 }
 
-let(op) {
+let(op)
+union Op op;
+{
     struct Sym x;
     int i;
     expres(&x, readop());
     if (!issym(op)) {
         error("x");
-    } else if (&op->value == dot) { /* test for dot */
+    } else if (&op.sym->value == dot) { /* test for dot */
         x.type &= 31;
         if (x.type != *dotrel) {
             /* can't change relocation */
@@ -72,8 +80,8 @@ let(op) {
             if (passno == 0) *dotrel = 2;
         } else {
             if (passno == 0) {
-                op->type = (op->type & 32) | x.type;
-                op->value = x.type ? x.value : 0;
+                op.sym->type = (op.sym->type & 32) | x.type;
+                op.sym->value = x.type ? x.value : 0;
             } else {
                 if (x.type == 4) { /* bss */
                     *dot = x.value;
@@ -90,36 +98,36 @@ let(op) {
         if (x.type == 32) error("r");
         x.type &= 31;
         if (x.type == 0) x.value = 0;
-        op->type &= 32;
-        op->type |= x.type;
-        op->value = x.value;
+        op.sym->type &= 32;
+        op.sym->type |= x.type;
+        op.sym->value = x.value;
     }
 }
 
-label(op) {
+label(op)
+union Op op;
+{
     struct Sym *fb;
     int t, num;
     if (issym(op)) {
-        t = op->type & 31;
+        t = op.sym->type & 31;
         if (passno < 2) {
             if (t == 27 || t == 28) {
-                op->type &= 32;
+                op.sym->type &= 32;
             } else if (t) {
                 error("m");
             }
-            op->type |= *dotrel;
-            op->value = *dot;
+            op.sym->type |= *dotrel;
+            op.sym->value = *dot;
         } else {
-            if (op->value != *dot) error("p");
+            if (op.sym->value != *dot) error("p");
         }
-    } else if (op == 1/*digit*/) {
+    } else if (op.op == 1/*digit*/) {
         if (passno == 0) {
-            num = fbcheck(numval);
+            struct Sym fb2 = { *dotrel, fbcheck(numval), *dot };
             curfbr[num].type  = *dotrel;
             curfbr[num].value = *dot;
-            write(fbfil, dotrel, 1);
-            write(fbfil, &num  , 1);
-            write(fbfil, dot   , 2);
+            write(fbfil, &fb2, sizeof(struct Sym));
         } else {
             fbadv(numval);
             fb = curfb[numval];
@@ -148,6 +156,8 @@ fbcheck(n) {
     return 0;
 }
 
-checkeos(op) {
-    return op == '\n' || op == ';' || op == 4/*EOT*/;
+checkeos(op)
+union Op op;
+{
+    return op.op == '\n' || op.op == ';' || op.op == 4/*EOT*/;
 }
