@@ -1,8 +1,11 @@
 #include <string.h>
+#include <stdint.h>
 
-extern int savop, numval, passno;
+extern intptr_t savop;
+extern int numval, passno;
 extern char ch, chartab[], *txtp[], symtab[], *usymtab;
 
+intptr_t
 readop() {
     int c, num, type, ret;
     if (savop) {
@@ -12,9 +15,9 @@ readop() {
     } else if (passno) {
         ret = agetw();
         if (ret >= 04000) {
-            return usymtab + (ret - 04000);
+            return (intptr_t)(usymtab + (ret - 04000));
         } else if (ret >= 01000) {
-            return  symtab + (ret - 01000);
+            return (intptr_t)( symtab + (ret - 01000));
         } else if (ret == 1) {
             numval = agetw();
         }
@@ -136,6 +139,7 @@ int *retval;
 
 extern char *hshtab[], *symend, *memend;
 
+intptr_t
 rname()
 {
     char *sym, symbol[8];
@@ -184,11 +188,11 @@ rname()
     if (sym < usymtab) {
         /* builtin symbol */
         aputw(txtp, (sym - symtab) + 01002);
-        return sym + 2;
+        return (intptr_t)(sym + 2);
     } else {
         /* user symbol */
         aputw(txtp, (sym - usymtab) / 3 + 04000);
-        return sym + 8;
+        return (intptr_t)(sym + 8);
     }
 }
 

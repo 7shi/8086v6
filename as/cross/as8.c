@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 char chartab[256] {
     /*  0*/ -12, -12, -12, -12,  -2, -12, -12, -12,
     /*  8*/ -12, -18,  -2, -12, -12, -18, -12, -12,
@@ -53,7 +55,8 @@ int nargs;
 char **curarg;
 
 char fileflg, ch;
-int line, errflg, ifflg, savop, numval;
+int line, errflg, ifflg, numval;
+intptr_t savop;
 
 int outmod 0777;
 

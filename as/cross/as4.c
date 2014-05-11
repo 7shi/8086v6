@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 struct Buf {
     short *next; /* next slot */
     short *max;  /* buf max */
@@ -38,7 +40,8 @@ struct Buf *this;
     oset(this, this->addr + len);
 }
 
-extern int inbuf[], ibufi, ibufc, savop;
+extern intptr_t savop;
+extern int inbuf[], ibufi, ibufc;
 extern char fin;
 
 agetw()

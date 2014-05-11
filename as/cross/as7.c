@@ -1,11 +1,12 @@
 struct Sym { char type, num; short value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[];
 
-extern int savop;
+extern intptr_t savop;
 extern char *xsymbol;
 
 expres(this, op)
 struct Sym *this;
+intptr_t op;
 {
     xsymbol = 0;
     expres1(this, op);
@@ -15,6 +16,7 @@ extern int numval, passno;
 
 expres1(this, op)
 struct Sym *this;
+intptr_t op;
 {
     struct Sym x, *fb;
     char opr;

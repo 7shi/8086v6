@@ -1,12 +1,13 @@
 struct Sym { char type, num; short value; };
 
 extern short *dotrel, *dot;
-extern int passno, line, abufi;
-extern int savop, numval, ifflg;
+extern intptr_t savop;
+extern int passno, line, abufi, numval, ifflg;
 extern int adrbuf[], savdot[], tseeks[], rseeks[];
 extern char *txtp[], *relp[], *xsymbol;
 
 opline(op)
+intptr_t op;
 {
     struct Sym x;
     int w, optype, opcode, opr, len;
@@ -344,6 +345,7 @@ checkop(ch)
 
 /* トークンがシンボルかどうかを判定 */
 issym(op)
+intptr_t op;
 {
     return op < 0 || 127 < op;
 }
