@@ -146,7 +146,7 @@ char *fn;
 extern int defund;
 
 doreloc(sym)
-int *sym;
+struct Op *sym;
 {
     int t;
     if (sym->type == 0) sym->type = defund;
