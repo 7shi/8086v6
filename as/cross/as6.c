@@ -1,17 +1,20 @@
+#include <stdint.h>
+
 struct Sym { char type, num; short value; };
+union Op { intptr_t op; struct Sym *sym; };
 
 extern short *dotrel, *dot;
 extern intptr_t savop;
-extern int passno, line, abufi, numval, ifflg;
+extern int passno, line, abufi, numval, ifflg, xsymbol;
 extern int adrbuf[], savdot[], tseeks[], rseeks[];
-extern char *txtp[], *relp[], *xsymbol;
+extern char *txtp[], *relp[];
 
 opline(op)
-intptr_t op;
+union Op op;
 {
     struct Sym x;
     int w, optype, opcode, opr, len;
-    if (op == '<') {
+    if (op.op == '<') {
         if (passno == 0) {
             *dot += numval;
         } else {
@@ -25,8 +28,8 @@ intptr_t op;
         outw(x.type, x.value);
         return;
     }
-    optype = op->type;
-    opcode = op->value;
+    optype = op.sym->type;
+    opcode = op.sym->value;
     abufi = 0;
     switch (optype) {
     case 5: /* flop src,freg */
@@ -112,11 +115,11 @@ intptr_t op;
         break;
     case 19: /* .globl */
         do {
-            if (!issym(op = readop())) {
-                savop = op;
+            if (!issym(op.op = readop())) {
+                savop = op.op;
                 break;
             }
-            op->type |= 32;
+            op.sym->type |= 32;
         } while (checkop(','));
         break;
     case 21: /* .text */
@@ -151,19 +154,19 @@ intptr_t op;
         }
         break;
     case 26: /* .comm */
-        op = readop();
+        op.op = readop();
         if (!issym(op) || !checkop(',')) return error("x");
         expres(&x, readop());
         if (passno == 0) {
-            op->type |= 32;
-        } else if ((op->type & 31) == 0) {
-            op->type |= 32;
-            op->value = x.value;
+            op.sym->type |= 32;
+        } else if ((op.sym->type & 31) == 0) {
+            op.sym->type |= 32;
+            op.sym->value = x.value;
         }
         break;
     case 29: /* jbr */
     case 30: /* jeq, jne, etc */
-        len = op->type == 29 ? 4 : 6;
+        len = op.sym->type == 29 ? 4 : 6;
         expres(&x, readop());
         if (passno == 0) {
             if (x.type == *dotrel) {
@@ -241,8 +244,8 @@ addres()
 addres1(astar)
 {
     struct Sym x;
-    int op;
-    switch (op = readop()) {
+    union Op op;
+    switch (op.op = readop()) {
     case '(':
         expres(&x, readop());
         if (!checkop(')')) error(")");
@@ -259,7 +262,7 @@ addres1(astar)
         return x.value | 010;
     case '-':
         if (!checkop('(')) {
-            op = '-';
+            op.op = '-';
             break;
         }
         expres(&x, readop());
@@ -337,7 +340,7 @@ getbr()
 
 checkop(ch)
 {
-    int op;
+    intptr_t op;
     if ((op = readop()) == ch) return 1;
     savop = op;
     return 0;
