@@ -1,5 +1,5 @@
-struct Op { char type, num; int value; };
-extern struct Op curfbr[], *curfb[], *nxtfb[], *fbbufp;
+struct Sym { char type, num; int value; };
+extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
 extern int outmod, savdot[], datbase, bssbase, ibufc, defund, nargs;
 extern int *dotrel, *dot, *dotdot, brtabi, passno, errflg;

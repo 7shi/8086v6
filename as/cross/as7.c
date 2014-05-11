@@ -1,11 +1,11 @@
-struct Op { char type, num; int value; };
-extern struct Op curfbr[], *curfb[], *nxtfb[];
+struct Sym { char type, num; int value; };
+extern struct Sym curfbr[], *curfb[], *nxtfb[];
 
 extern int savop;
 extern char *xsymbol;
 
 expres(this, op)
-struct Op *this;
+struct Sym *this;
 {
     xsymbol = 0;
     expres1(this, op);
@@ -14,9 +14,9 @@ struct Op *this;
 extern int numval, passno;
 
 expres1(this, op)
-struct Op *this;
+struct Sym *this;
 {
-    struct Op x, *fb;
+    struct Sym x, *fb;
     char opr;
     int opfound;
 
@@ -115,7 +115,7 @@ struct Op *this;
 }
 
 combin(this, x, opr)
-struct Op *this, *x;
+struct Sym *this, *x;
 {
     int rel1, rel2, globl, maxtyp;
     if (passno < 2) {
@@ -151,7 +151,7 @@ struct Op *this, *x;
 }
 
 maprel(this)
-struct Op *this;
+struct Sym *this;
 {
     int type;
     if (this->type == 32) return 32;

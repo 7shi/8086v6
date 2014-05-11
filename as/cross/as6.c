@@ -1,4 +1,4 @@
-struct Op { char type, num; int value; };
+struct Sym { char type, num; int value; };
 
 extern int passno, line, *dotrel, *dot, abufi;
 extern int savop, numval, ifflg;
@@ -7,7 +7,7 @@ extern char *txtp[], *relp[], *xsymbol;
 
 opline(op)
 {
-    struct Op x;
+    struct Sym x;
     int w, optype, opcode, opr, len;
     if (op == '<') {
         if (passno == 0) {
@@ -216,7 +216,7 @@ op2b(opcode, opr1, opr2, rlimit)
 }
 
 dobranch(this, opcode, min, max)
-struct Op *this;
+struct Sym *this;
 {
     int i;
     if (this->value < min || max < this->value
@@ -238,7 +238,7 @@ addres()
 
 addres1(astar)
 {
-    struct Op x;
+    struct Sym x;
     int op;
     switch (op = readop()) {
     case '(':
@@ -296,7 +296,7 @@ addres1(astar)
 }
 
 checkreg(this)
-struct Op *this;
+struct Sym *this;
 {
     if (this->value > 7 || (this->value > 1 && this->type < 5)) {
         error("a");

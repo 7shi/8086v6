@@ -1,5 +1,5 @@
-struct Op { char type, num; int value; };
-extern struct Op curfbr[], *curfb[], *nxtfb[], *fbbufp;
+struct Sym { char type, num; int value; };
+extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
 extern int ifflg, line, savop, numval, passno, *dotrel, *dot;
 extern char fbfil, argb[];
@@ -56,7 +56,7 @@ assem() {
 }
 
 let(op) {
-    struct Op x;
+    struct Sym x;
     int i;
     expres(&x, readop());
     if (!issym(op)) {
@@ -94,7 +94,7 @@ let(op) {
 }
 
 label(op) {
-    struct Op *fb;
+    struct Sym *fb;
     int t, num;
     if (issym(op)) {
         t = op->type & 31;
@@ -130,7 +130,7 @@ label(op) {
 
 fbadv(num)
 {
-    struct Op *fb;
+    struct Sym *fb;
     fb = curfb[num] = nxtfb[num];
     if (!fb) fb = fbbufp - 1;
     do {

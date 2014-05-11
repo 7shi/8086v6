@@ -83,7 +83,7 @@ int defund, ibufi, ibufc, passno;
 char argb[22], *txtp[259], *relp[259], faout;
 char *usymtab, *endtable, *memend, *xsymbol;
 
-struct Op { char type, num; int value; };
+struct Sym { char type, num; int value; };
 
 /* 0: .. 9: */
-struct Op curfbr[10], *curfb[10], *nxtfb[10], *fbbufp;
+struct Sym curfbr[10], *curfb[10], *nxtfb[10], *fbbufp;
