@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-extern int outmod, *dotrel, *dot, *dotdot, passno, tseeks[], rseeks[];
+extern short *dotrel, *dot, *dotdot;
+extern int outmod, passno, tseeks[], rseeks[];
 extern char *xsymbol, *usymtab, *txtp[], *relp[];
 
 outw(type, value)

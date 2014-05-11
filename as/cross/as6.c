@@ -1,6 +1,7 @@
 struct Sym { char type, num; short value; };
 
-extern int passno, line, *dotrel, *dot, abufi;
+extern short *dotrel, *dot;
+extern int passno, line, abufi;
 extern int savop, numval, ifflg;
 extern int adrbuf[], savdot[], tseeks[], rseeks[];
 extern char *txtp[], *relp[], *xsymbol;
