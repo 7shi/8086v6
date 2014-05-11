@@ -13,7 +13,7 @@ opline(op)
         if (passno == 0) {
             *dot += numval;
         } else {
-            while ((w = getw()) != -1) {
+            while ((w = agetw()) != -1) {
                 outb(1, w & 255);
             }
         }

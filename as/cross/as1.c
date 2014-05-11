@@ -88,21 +88,21 @@ go1()
     /* read in symbol table */
     p = usymtab;
     fin = ofile(atmp3);
-    while (getw() != 4/*EOT*/) {
+    while (agetw() != 4/*EOT*/) {
         setbrk(p + 2);
         *symsiz += 12; /* count symbols */
-        getw();
-        getw();
-        getw();
-        w = getw();
+        agetw();
+        agetw();
+        agetw();
+        w = agetw();
         t = w & 31;
         if (t == 2/*text*/ || t == 3/*data*/) {
             *(p++) = w + 25; /* mark "estimated" */
-            *(p++) = getw();
+            *(p++) = agetw();
         } else {
             *(p++) = 0;
             *(p++) = 0;
-            getw();
+            agetw();
         }
     }
     close(fin);
@@ -111,10 +111,10 @@ go1()
     fbbufp = p;
     ibufc = 0;
     fin = ofile(atmp2);
-    while ((w = getw()) != 4/*EOT*/) {
+    while ((w = agetw()) != 4/*EOT*/) {
         setbrk(p + 2);
         *(p++) = w + 25; /* "estimated" */
-        *(p++) = getw();
+        *(p++) = agetw();
     }
     close(fin);
     endtable = p;
@@ -168,7 +168,7 @@ go2() {
     oset(txtp, 0);
     oset(relp, *trelseek);
     for (i = 0; i < 8; ++i) {
-        putw(txtp, header[i]);
+        aputw(txtp, header[i]);
     }
 
     /* do pass 2 */
@@ -186,15 +186,15 @@ go2() {
     p = usymtab;
     ibufc = 0;
     fin = ofile(atmp3);
-    while ((w = getw()) != 4/*EOT*/) {
-        putw(txtp, w);
-        putw(txtp, getw());
-        putw(txtp, getw());
-        putw(txtp, getw());
-        putw(txtp, *(p++));
-        putw(txtp, *(p++));
-        getw();
-        getw();
+    while ((w = agetw()) != 4/*EOT*/) {
+        aputw(txtp, w);
+        aputw(txtp, agetw());
+        aputw(txtp, agetw());
+        aputw(txtp, agetw());
+        aputw(txtp, *(p++));
+        aputw(txtp, *(p++));
+        agetw();
+        agetw();
     }
     close(fin);
     aflush(txtp);

@@ -15,7 +15,7 @@ struct Buf *this;
 
 extern int passno, ifflg;
 
-putw(this, w)
+aputw(this, w)
 struct Buf *this;
 {
     if (passno == 0 && ifflg && w != '\n') return;
@@ -41,7 +41,7 @@ struct Buf *this;
 extern int inbuf[], ibufi, ibufc, savop;
 extern char fin;
 
-getw()
+agetw()
 {
     int op, len;
     if (savop) {

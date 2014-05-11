@@ -37,8 +37,8 @@ outw(type, value)
         }
         if (--t < 0) t = 0;
     }
-    putw(txtp, value);
-    putw(relp, (t << 1) | (type < 0));
+    aputw(txtp, value);
+    aputw(relp, (t << 1) | (type < 0));
     tseeks[*dotrel - 2] += 2;
     rseeks[*dotrel - 2] += 2;
 }
@@ -52,8 +52,8 @@ outb(type, value)
     if (type > 1) error("r");
     if (passno == 2) {
         if ((*dot & 1) == 0) {
-            putw(txtp, value);
-            putw(relp, 0);
+            aputw(txtp, value);
+            aputw(relp, 0);
             tseeks[*dotrel - 2] += 2;
             rseeks[*dotrel - 2] += 2;
         } else {

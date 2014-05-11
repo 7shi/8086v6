@@ -13,7 +13,7 @@ assem() {
             line = 1;
             memset(argb, 0, 22);
             for (i = 0;; ++i) {
-                w = getw();
+                w = agetw();
                 if (w < 0) break;
                 if (i < 21) argb[i] = w;
             }

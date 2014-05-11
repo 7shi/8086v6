@@ -8,13 +8,13 @@ readop() {
         savop = 0;
         return ret;
     } else if (passno) {
-        ret = getw();
+        ret = agetw();
         if (ret >= 04000) {
             return usymtab + (ret - 04000);
         } else if (ret >= 01000) {
             return  symtab + (ret - 01000);
         } else if (ret == 1) {
-            numval = getw();
+            numval = agetw();
         }
         return ret;
     }
@@ -58,11 +58,11 @@ readop() {
         } while (ret != 4/*EOT*/ && ret != '\n');
         break;
     case 0: /* string: < */
-        putw(txtp, '<');
+        aputw(txtp, '<');
         for (numval = 0; (c = rsch(1)) >= 0; ++numval) {
-            putw(txtp, c | 256);
+            aputw(txtp, c | 256);
         }
-        putw(txtp, -1);
+        aputw(txtp, -1);
         return '<';
     default: /* ASCII */
         ch = c;
@@ -72,10 +72,10 @@ readop() {
         }
         return rname();
     }
-    putw(txtp, ret);
+    aputw(txtp, ret);
     if (ret == 1) {
         /* default(数字), squote, dquote */
-        putw(txtp, numval = num);
+        aputw(txtp, numval = num);
     }
     return ret;
 }
@@ -181,11 +181,11 @@ rname()
 
     if (sym < usymtab) {
         /* builtin symbol */
-        putw(txtp, (sym - symtab) + 01002);
+        aputw(txtp, (sym - symtab) + 01002);
         return sym + 2;
     } else {
         /* user symbol */
-        putw(txtp, (sym - usymtab) / 3 + 04000);
+        aputw(txtp, (sym - usymtab) / 3 + 04000);
         return sym + 8;
     }
 }
@@ -246,10 +246,10 @@ rch() {
         fin = open(*curarg, 0);
         line = 1;
 
-        putw(txtp, 5);
+        aputw(txtp, 5);
         for (i = 0; c = (*curarg)[i]; ++i) {
-            putw(txtp, c);
+            aputw(txtp, c);
         }
-        putw(txtp, -1);
+        aputw(txtp, -1);
     }
 }
