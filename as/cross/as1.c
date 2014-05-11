@@ -124,7 +124,7 @@ go1()
         *(p++) = agetw();
     }
     close(fin);
-    endtable = p;
+    endtable = (char *)p;
     setbrk(p + 1);
     *(p++) = -1;
 
@@ -223,7 +223,7 @@ init()
 }
 
 doreloc(sym)
-int *sym;
+struct Sym *sym;
 {
     int t;
     if (sym->type == 0) sym->type = defund;
