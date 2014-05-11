@@ -2,8 +2,8 @@ TOPDIR = ../..
 include ../Makefile.inc
 
 TARGET = as
-CSRCS = as1.c as2.c as3.c as4.c as5.c as6.c as7.c as8.c as9.c utils.c
-COBJS = $(CSRCS:.c=.o)
+CSRCS  = as1.c as2.c as3.c as4.c as5.c as6.c as7.c as8.c as9.c utils.c
+COBJS  = $(CSRCS:.c=.o)
 
 all: $(TARGET)
 
