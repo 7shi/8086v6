@@ -84,10 +84,14 @@ intptr_t adrbuf[6];
 int abufi;
 int defund, ibufi, ibufc, passno;
 
-char argb[22], *txtp[259], *relp[259], faout;
+char argb[22], faout;
 char *usymtab, *symend, *endtable, *memend;
 
+struct Buf { short *next, *max; int addr; short data[256]; };
+struct Buf txtp, relp;
+
 struct Sym { char type, num; int value; };
+struct Sym *xsymbol;
 
 /* 0: .. 9: */
-struct Sym curfbr[10], *curfb[10], *nxtfb[10], *fbbufp, *xsymbol;
+struct Sym curfbr[10], *curfb[10], *nxtfb[10], *fbbufp;

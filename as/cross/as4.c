@@ -4,7 +4,7 @@
 struct Buf {
     short *next; /* next slot */
     short *max;  /* buf max */
-    short addr;  /* seek addr */
+    int   addr;  /* seek addr */
     short data[256];
 };
 
