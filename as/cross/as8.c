@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-char chartab[256] {
+char chartab[256] = {
     /*  0*/ -12, -12, -12, -12,  -2, -12, -12, -12,
     /*  8*/ -12, -18,  -2, -12, -12, -18, -12, -12,
     /* 16*/ -12, -12, -12, -12, -12, -12, -12, -12,
@@ -33,10 +33,10 @@ char chartab[256] {
                    _abcdefghijklmnopqrstuvwxyz~
 */
 
-char atmp1[] "/tmp/atm1a";
-char atmp2[] "/tmp/atm2a";
-char atmp3[] "/tmp/atm3a";
-char *aout "a.out";
+char atmp1[] = "/tmp/atm1a";
+char atmp2[] = "/tmp/atm2a";
+char atmp3[] = "/tmp/atm3a";
+char *aout = "a.out";
 
 /* atmp2 */
 char fbfil;
@@ -48,7 +48,7 @@ int inbfi, inbfcnt;
 /* .text, .data, .bss */
 int savdot[3], datbase, bssbase;
 
-int hshsiz 1553;
+int hshsiz = 1553;
 char *hshtab[1553];
 
 int nargs;
@@ -58,26 +58,26 @@ char fileflg, ch;
 int line, errflg, ifflg, numval;
 intptr_t savop;
 
-int outmod 0777;
+int outmod = 0777;
 
 int header[8];
-int *txtmagic &header[0];
-int *txtsiz   &header[1];
-int *datsiz   &header[2];
-int *bsssiz   &header[3];
-int *symsiz   &header[4];
-int *stksiz   &header[5];
-int *exorig   &header[6];
+int *txtmagic = &header[0];
+int *txtsiz   = &header[1];
+int *datsiz   = &header[2];
+int *bsssiz   = &header[3];
+int *symsiz   = &header[4];
+int *stksiz   = &header[5];
+int *exorig   = &header[6];
 
 int tseeks[3], rseeks[3], symseek;
 
-int *txtseek &tseeks[0];
-int *datseek &tseeks[1];
+int *txtseek = &tseeks[0];
+int *datseek = &tseeks[1];
 
-int *trelseek &rseeks[0];
-int *drelseek &rseeks[1];
+int *trelseek = &rseeks[0];
+int *drelseek = &rseeks[1];
 
-int brlen 1024, brtabi, brdelt;
+int brlen = 1024, brtabi, brdelt;
 char brtab[128]; /* bitmap: brlen / 8 */
 
 int adrbuf[6], abufi;
