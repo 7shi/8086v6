@@ -81,7 +81,7 @@ int adrbuf[6], abufi;
 int defund, ibufi, ibufc, passno;
 
 char argb[22], *txtp[259], *relp[259], faout;
-char *usymtab, *endtable, *memend, *xsymbol;
+char *usymtab, *symend, *endtable, *memend, *xsymbol;
 
 struct Op { char type, num; int value; };
 

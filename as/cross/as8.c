@@ -85,7 +85,7 @@ int abufi;
 int defund, ibufi, ibufc, passno;
 
 char argb[22], *txtp[259], *relp[259], faout;
-char *usymtab, *endtable, *memend;
+char *usymtab, *symend, *endtable, *memend;
 
 struct Sym { char type, num; int value; };
 
