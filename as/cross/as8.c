@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdint.h>
 
 char chartab[256] = {
@@ -33,9 +34,9 @@ char chartab[256] = {
                    _abcdefghijklmnopqrstuvwxyz~
 */
 
-char atmp1[] = "/tmp/atm1a";
-char atmp2[] = "/tmp/atm2a";
-char atmp3[] = "/tmp/atm3a";
+char atmp1[MAX_PATH] = "/tmp/atm1_XXXXXX";
+char atmp2[MAX_PATH] = "/tmp/atm2_XXXXXX";
+char atmp3[MAX_PATH] = "/tmp/atm3_XXXXXX";
 char *aout = "a.out";
 
 /* atmp2 */

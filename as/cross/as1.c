@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 struct Sym { char type, num; short value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
@@ -256,20 +261,30 @@ ofile(fn)
 char *fn;
 {
     int fd;
-    if ((fd = open(fn, 0)) < 0) filerr(fn, "?");
+    if ((fd = open(fn, O_BINARY | O_RDWR)) < 0) {
+        filerr(fn, "?");
+    }
     return fd;
 }
 
 fcreat(atmp)
 char *atmp;
 {
-    int ret, st[20];
-    do {
-        if(stat(atmp, st) < 0) {
-            ret = creat(atmp, 0444);
-            if(ret > 0) return ret;
-        }
-    } while (++atmp[9] <= 'z');
+    int ret = -1;
+#ifdef _WIN32
+    if (!strncmp(atmp, "/tmp/", 5)) {
+        char buf[MAX_PATH];
+        GetTempPath(sizeof(buf), buf);
+        strncat(buf, &atmp[5], MAX_PATH - 1);
+        strncpy(atmp, buf, MAX_PATH - 1);
+    }
+    if (mktemp(atmp)) {
+        ret = open(atmp, O_CREAT | O_BINARY | O_WRONLY);
+    }
+#else
+    ret = mkstemp(atmp);
+#endif
+    if (ret != -1) return ret;
     filerr(atmp, "?");
     exit(1);
 }
