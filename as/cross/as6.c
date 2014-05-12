@@ -4,9 +4,9 @@ struct Sym { char type, num; short value; };
 union Op { intptr_t op; struct Sym *sym; };
 
 extern short *dotrel, *dot;
-extern intptr_t savop;
-extern int passno, line, abufi, numval, ifflg, xsymbol;
-extern int adrbuf[], savdot[], tseeks[], rseeks[];
+extern intptr_t savop, adrbuf[], xsymbol;
+extern int passno, line, abufi, numval, ifflg;
+extern int savdot[], tseeks[], rseeks[];
 extern char *txtp[], *relp[];
 
 opline(op)

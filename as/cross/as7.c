@@ -1,12 +1,15 @@
+#include <stdint.h>
+
 struct Sym { char type, num; short value; };
-extern struct Sym curfbr[], *curfb[], *nxtfb[];
+extern struct Sym curfbr[], *curfb[], *nxtfb[], *xsymbol;
+
+union Op { intptr_t op; struct Sym *sym; };
 
 extern intptr_t savop;
-extern char *xsymbol;
 
 expres(this, op)
 struct Sym *this;
-intptr_t op;
+union Op op;
 {
     xsymbol = 0;
     expres1(this, op);
@@ -16,7 +19,7 @@ extern int numval, passno;
 
 expres1(this, op)
 struct Sym *this;
-intptr_t op;
+union Op op;
 {
     struct Sym x, *fb;
     char opr;
@@ -31,38 +34,38 @@ intptr_t op;
 
     for (;;) {
         if (issym(op)) {
-            x.type = op->type;
+            x.type = op.sym->type;
             if (x.type == 0 && passno == 2) {
                 error("u");
             }
             if (passno && x.type == 32) {
-                xsymbol = op;
+                xsymbol = op.sym;
                 x.value = 0;
             } else {
-                x.value = op->value;
+                x.value = op.sym->value;
             }
-        } else if ('a' <= op && op <= 'j') { /* 0b-9b */
+        } else if ('a' <= op.op && op.op <= 'j') { /* 0b-9b */
             if (passno == 0) {
-                fb = &curfbr[op - 'a'];
+                fb = &curfbr[op.op - 'a'];
                 x.type  = fb->type;
                 x.value = fb->value;
                 if (x.value == -1) error("f");
             } else {
-                fb = curfb[op - 'a'];
+                fb = curfb[op.op - 'a'];
                 x.type  = fb->type;
                 x.value = fb->value;
             }
-        } else if ('k' <= op && op <= 't') { /* 0f-9f */
+        } else if ('k' <= op.op && op.op <= 't') { /* 0f-9f */
             if (passno == 0) {
-                x.type  = op;
+                x.type  = op.op;
                 x.value = 0;
             } else {
-                fb = nxtfb[op - 'k'];
+                fb = nxtfb[op.op - 'k'];
                 x.type  = fb->type;
                 x.value = fb->value;
             }
         } else {
-            switch (op) {
+            switch (op.op) {
             case '^':
             case  29: /* \< */
             case  30: /* \> */
@@ -75,8 +78,8 @@ intptr_t op;
             case '%':
             case '!':
                 if (opr != '+') error("e");
-                opr = op;
-                op = readop();
+                opr = op.op;
+                op.op = readop();
                 continue;
             case '[':
                 expres1(&x, readop());
@@ -87,7 +90,7 @@ intptr_t op;
                 x.value = numval;
                 break;
             default:
-                savop = op;
+                savop = op.op;
                 return;
             }
         }
@@ -99,20 +102,20 @@ intptr_t op;
         } else {
             combin(this, &x, opr);
             switch (opr) {
-            case  29: this->value =<< x.value; break; /* \< */
-            case  30: this->value =>> x.value; break; /* \> */
-            case  31: this->value |=  x.value; break; /* |, \% */
-            case '+': this->value +=  x.value; break;
-            case '-': this->value -=  x.value; break;
-            case '*': this->value *=  x.value; break;
-            case '/': this->value /=  x.value; break;
-            case '&': this->value &=  x.value; break;
-            case '%': this->value =%  x.value; break;
-            case '!': this->value += ~x.value; break;
+            case  29: this->value <<=  x.value; break; /* \< */
+            case  30: this->value >>=  x.value; break; /* \> */
+            case  31: this->value  |=  x.value; break; /* |, \% */
+            case '+': this->value  +=  x.value; break;
+            case '-': this->value  -=  x.value; break;
+            case '*': this->value  *=  x.value; break;
+            case '/': this->value  /=  x.value; break;
+            case '&': this->value  &=  x.value; break;
+            case '%': this->value  %=  x.value; break;
+            case '!': this->value  += ~x.value; break;
             }
         }
         opr = '+';
-        op = readop();
+        op.op = readop();
     }
 }
 

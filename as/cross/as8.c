@@ -80,13 +80,14 @@ int *drelseek = &rseeks[1];
 int brlen = 1024, brtabi, brdelt;
 char brtab[128]; /* bitmap: brlen / 8 */
 
-int adrbuf[6], abufi;
+intptr_t adrbuf[6];
+int abufi;
 int defund, ibufi, ibufc, passno;
 
 char argb[22], *txtp[259], *relp[259], faout;
-char *usymtab, *endtable, *memend, *xsymbol;
+char *usymtab, *endtable, *memend;
 
 struct Sym { char type, num; int value; };
 
 /* 0: .. 9: */
-struct Sym curfbr[10], *curfb[10], *nxtfb[10], *fbbufp;
+struct Sym curfbr[10], *curfb[10], *nxtfb[10], *fbbufp, *xsymbol;
