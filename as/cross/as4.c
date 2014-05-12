@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <stdint.h>
 
 struct Buf {
@@ -35,7 +36,7 @@ struct Buf *this;
 {
     int len;
     len = (this->next - this->data) << 1;
-    seek(faout, this->addr, 0); /* 仕様変更 */
+    lseek(faout, this->addr, 0); /* 仕様変更 */
     write(faout, this->data, len);
     oset(this, this->addr + len);
 }
