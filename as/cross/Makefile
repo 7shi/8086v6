@@ -17,11 +17,11 @@ $(TARGET): $(COBJS)
 
 test: $(TARGET)
 	$(MAKE) all-orig -C ..
-	cd ../orig && ../as/as as1?.s
+	cd ../orig && ../cross/as as1?.s
 	mv ../orig/a.out .
 	$(LD) a.out
 	cmp a.out ../orig/as1
-	cd ../orig && ../as/as as2?.s
+	cd ../orig && ../cross/as as2?.s
 	mv ../orig/a.out .
 	$(LD) a.out
 	cmp a.out ../orig/as2
