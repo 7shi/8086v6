@@ -2,12 +2,14 @@ syntax: glob
 *.o
 *.a
 *.out
+*.exe
 dest/
 as/orig/as1
 as/orig/as2
 as/as1/as1
 as/as2/as2
 as/as/as
+as/cross/as
 sys/conf/c.c
 sys/conf/l.s
 sys/conf/mkconf
