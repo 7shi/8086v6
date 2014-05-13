@@ -3,9 +3,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#ifdef _WIN32
-#include <windows.h>
-#endif
 
 struct Sym { char type, num; short value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
@@ -270,20 +267,7 @@ char *fn;
 fcreat(atmp)
 char *atmp;
 {
-    int ret = -1;
-#ifdef _WIN32
-    if (!strncmp(atmp, "/tmp/", 5)) {
-        char buf[MAX_PATH];
-        GetTempPath(sizeof(buf), buf);
-        strncat(buf, &atmp[5], MAX_PATH - 1);
-        strncpy(atmp, buf, MAX_PATH - 1);
-    }
-    if (mktemp(atmp)) {
-        ret = open(atmp, O_CREAT | O_BINARY | O_WRONLY);
-    }
-#else
-    ret = mkstemp(atmp);
-#endif
+    int ret = mkstemp(atmp);
     if (ret != -1) return ret;
     filerr(atmp, "?");
     exit(1);
