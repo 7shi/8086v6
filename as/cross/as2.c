@@ -72,9 +72,6 @@ extern int line, errflg;
 error(e)
 char *e;
 {
-    int i, ln;
-    char buf[5];
-
     ++errflg;
 
     if (passno == 0) {
@@ -92,11 +89,5 @@ char *e;
     }
 
     /* lineの値を10進数で表示 */
-    ln = line;
-    for (i = 0; i < 4; i++) {
-        buf[3 - i] = '0' + (ln % 10);
-        ln /= 10;
-    }
-    buf[4] = 0;
-    printf("%s %s\n", e, buf);
+    printf("%s %04d\n", e, line);
 }
