@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 
 struct Sym { char type, num; short value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
@@ -89,10 +90,10 @@ go1()
     int t;
     short *p, w;
 
-    if ((faout = creat(aout, 0)) < 0) {
+    passno = 1;
+    if ((faout = open(aout, O_CREAT | O_BINARY | O_WRONLY, S_IWRITE)) < 0) {
         filerr(aout, "?");
     }
-    passno = 1;
 
     /* read in symbol table */
     p = (short *)usymtab;

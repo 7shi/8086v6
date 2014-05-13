@@ -80,10 +80,10 @@ go1()
 {
     int t, *p, w;
 
+    passno = 1;
     if ((faout = creat(aout, 0)) < 0) {
         filerr(aout, "?");
     }
-    passno = 1;
 
     /* read in symbol table */
     p = usymtab;
