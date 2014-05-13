@@ -8,8 +8,9 @@
 struct Sym { char type, num; short value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
+extern short *dotrel, *dot, *dotdot;
 extern int outmod, savdot[], datbase, bssbase, ibufc, defund, nargs;
-extern int *dotrel, *dot, *dotdot, brtabi, passno, errflg;
+extern int brtabi, passno, errflg;
 extern int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
 extern int *txtseek, *datseek, *trelseek, *drelseek, symseek;
 extern char fbfil, faout, fin, *txtp[], *relp[], atmp1[], atmp2[], atmp3[];
