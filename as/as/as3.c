@@ -112,11 +112,11 @@ label(op) {
     } else if (op == 1/*digit*/) {
         if (passno == 0) {
             num = fbcheck(numval);
-            curfbr[num].type  = *dotrel;
-            curfbr[num].value = *dot;
-            write(fbfil, dotrel, 1);
-            write(fbfil, &num  , 1);
-            write(fbfil, dot   , 2);
+            fb = &curfbr[num];
+            fb->type  = *dotrel;
+            fb->num   = num;
+            fb->value = *dot;
+            write(fbfil, fb, 4);
         } else {
             fbadv(numval);
             fb = curfb[numval];

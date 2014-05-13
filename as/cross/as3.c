@@ -124,10 +124,12 @@ union Op op;
         }
     } else if (op.op == 1/*digit*/) {
         if (passno == 0) {
-            struct Sym fb2 = { *dotrel, fbcheck(numval), *dot };
-            curfbr[num].type  = *dotrel;
-            curfbr[num].value = *dot;
-            write(fbfil, &fb2, sizeof(struct Sym));
+            num = fbcheck(numval);
+            fb = &curfbr[num];
+            fb->type  = *dotrel;
+            fb->num   = num;
+            fb->value = *dot;
+            write(fbfil, fb, sizeof(*fb));
         } else {
             fbadv(numval);
             fb = curfb[numval];
