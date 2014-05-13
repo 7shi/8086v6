@@ -42,7 +42,8 @@ struct Buf *this;
 }
 
 extern intptr_t savop;
-extern int inbuf[], ibufi, ibufc;
+extern short inbuf[];
+extern int ibufi, ibufc;
 extern char fin;
 
 agetw()
