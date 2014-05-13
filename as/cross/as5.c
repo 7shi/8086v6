@@ -17,7 +17,7 @@ readop() {
         if (ret >= 04000) {
             return (intptr_t)(usymtab + (ret - 04000));
         } else if (ret >= 01000) {
-            return (intptr_t)( symtab + (ret - 01000));
+            return (intptr_t)( symtab + (ret - 01000) * 3 + 8);
         } else if (ret == 1) {
             numval = agetw();
         }
@@ -187,13 +187,12 @@ rname()
 
     if (sym < usymtab) {
         /* builtin symbol */
-        aputw(txtp, (sym - symtab) + 01002);
-        return (intptr_t)(sym + 2);
+        aputw(txtp, (sym - symtab) / 3 + 01000);
     } else {
         /* user symbol */
         aputw(txtp, (sym - usymtab) / 3 + 04000);
-        return (intptr_t)(sym + 8);
     }
+    return (intptr_t)(sym + 8);
 }
 
 extern char fin, inbuf[], fileflg, **curarg;
