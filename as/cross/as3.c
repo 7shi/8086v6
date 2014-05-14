@@ -5,18 +5,21 @@ struct Sym { char type, num; short value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
 
 union Op { intptr_t op; struct Sym *sym; };
-extern union Op savop;
+extern union Op savop, readop();
 
 extern short *dotrel, *dot;
 extern int ifflg, line, numval, passno;
 extern char fbfil, argb[];
+
+extern void expres(struct Sym *, union Op);
+extern void opline(union Op);
 
 assem() {
     union Op op, op2;
     int i;
     short w;
     for (;;) {
-        op.op = readop();
+        op = readop();
         if (op.op == 5) {
             /* file name */
             line = 1;
@@ -38,7 +41,7 @@ assem() {
                 }
                 continue;
             }
-            op2.op = readop();
+            op2 = readop();
             if (op2.op == '=') {
                 let(op);
             } else if (op2.op == ':') {
@@ -48,7 +51,7 @@ assem() {
                 savop = op2;
                 opline(op);
             }
-            op.op = readop();
+            op = readop();
         }
         if (op.op == 4/*EOT*/) {
             if (ifflg) error("x");
@@ -58,7 +61,7 @@ assem() {
         } else if (op.op != ';') {
             error("x");
             while (!checkeos(op)) {
-                op.op = readop();
+                op = readop();
             }
         }
     }

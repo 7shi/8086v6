@@ -4,8 +4,9 @@ struct Sym { char type, num; short value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[], *xsymbol;
 
 union Op { intptr_t op; struct Sym *sym; };
+extern union Op savop, readop();
 
-extern intptr_t savop;
+void expres1(struct Sym *, union Op);
 
 expres(this, op)
 struct Sym *this;
@@ -17,6 +18,7 @@ union Op op;
 
 extern int numval, passno;
 
+void
 expres1(this, op)
 struct Sym *this;
 union Op op;
@@ -79,7 +81,7 @@ union Op op;
             case '!':
                 if (opr != '+') error("e");
                 opr = op.op;
-                op.op = readop();
+                op = readop();
                 continue;
             case '[':
                 expres1(&x, readop());
@@ -90,7 +92,7 @@ union Op op;
                 x.value = numval;
                 break;
             default:
-                savop = op.op;
+                savop = op;
                 return;
             }
         }
@@ -115,7 +117,7 @@ union Op op;
             }
         }
         opr = '+';
-        op.op = readop();
+        op = readop();
     }
 }
 

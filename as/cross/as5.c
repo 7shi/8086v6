@@ -9,7 +9,8 @@ intptr_t rname();
 
 intptr_t
 readop() {
-    int c, num, type, ret;
+    intptr_t ret;
+    int c, num, type;
     if (savop) {
         ret = savop;
         savop = 0;
@@ -145,7 +146,8 @@ intptr_t
 rname()
 {
     char *sym, symbol[8];
-    int c, i, key, tilde, idx;
+    int c, i, tilde, idx;
+    short key;
 
     c = rch();
     /* symbol not for hash table */

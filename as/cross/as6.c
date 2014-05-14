@@ -1,13 +1,17 @@
 #include <stdint.h>
 
 struct Sym { char type, num; short value; };
+
 union Op { intptr_t op; struct Sym *sym; };
+extern union Op savop, readop();
 
 extern short *dotrel, *dot;
-extern intptr_t savop, adrbuf[], xsymbol;
+extern intptr_t adrbuf[], xsymbol;
 extern int passno, line, abufi, numval, ifflg;
 extern int savdot[], tseeks[], rseeks[];
 extern char *txtp[], *relp[];
+
+extern void expres(struct Sym *, union Op);
 
 opline(op)
 union Op op;
@@ -115,8 +119,8 @@ union Op op;
         break;
     case 19: /* .globl */
         do {
-            if (!issym(op.op = readop())) {
-                savop = op.op;
+            if (!issym(op = readop())) {
+                savop = op;
                 break;
             }
             op.sym->type |= 32;
@@ -154,7 +158,7 @@ union Op op;
         }
         break;
     case 26: /* .comm */
-        op.op = readop();
+        op = readop();
         if (!issym(op) || !checkop(',')) return error("x");
         expres(&x, readop());
         if (passno == 0) {
@@ -242,8 +246,8 @@ addres()
 addres1(astar)
 {
     struct Sym x;
-    union Op op;
-    switch (op.op = readop()) {
+    union Op op = readop();
+    switch (op.op) {
     case '(':
         expres(&x, readop());
         if (!checkop(')')) error(")");
@@ -338,8 +342,8 @@ getbr()
 
 checkop(ch)
 {
-    intptr_t op;
-    if ((op = readop()) == ch) return 1;
+    union Op op;
+    if ((op = readop()).op == ch) return 1;
     savop = op;
     return 0;
 }
