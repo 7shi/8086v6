@@ -156,7 +156,7 @@ rname()
     if (!tilde) ch = c;
 
     /* シンボル名のバッファを初期化 */
-    memset(symbol, 0, 8);
+    memset(symbol, 0, sizeof(symbol));
 
     /* 通常の文字が続く限り rch() でシンボル名を読み取り */
     for (key = 0, i = 0;; ++i) {

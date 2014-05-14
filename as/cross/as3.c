@@ -9,10 +9,14 @@ extern union Op savop, readop();
 
 extern short *dotrel, *dot;
 extern int ifflg, line, numval, passno;
-extern char fbfil, argb[];
+extern char fbfil, argb[22];
 
 extern void expres(struct Sym *, union Op);
 extern void opline(union Op);
+
+void let(union Op);
+void label(union Op);
+int checkeos(union Op);
 
 assem() {
     union Op op, op2;
@@ -23,7 +27,7 @@ assem() {
         if (op.op == 5) {
             /* file name */
             line = 1;
-            memset(argb, 0, 22);
+            memset(argb, 0, sizeof(argb));
             for (i = 0;; ++i) {
                 w = agetw();
                 if (w < 0) break;
@@ -67,6 +71,7 @@ assem() {
     }
 }
 
+void
 let(op)
 union Op op;
 {
@@ -107,6 +112,7 @@ union Op op;
     }
 }
 
+void
 label(op)
 union Op op;
 {

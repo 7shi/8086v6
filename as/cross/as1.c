@@ -10,10 +10,10 @@
 #endif
 
 struct Sym { char type, num; short value; };
-extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
+extern struct Sym curfbr[], *curfb[10], *nxtfb[10], *fbbufp;
 
 extern short *dotrel, *dot, *dotdot;
-extern int outmod, savdot[], datbase, bssbase, ibufc, defund, nargs;
+extern int outmod, savdot[3], datbase, bssbase, ibufc, defund, nargs;
 extern int brtabi, passno, errflg;
 extern int header[], *txtmagic, *txtsiz, *datsiz, *bsssiz, *symsiz;
 extern int *txtseek, *datseek, *trelseek, *drelseek, symseek;
@@ -140,7 +140,7 @@ go1()
     init();
 
     /* do pass 1 */
-    memset(savdot, 0, 6);
+    memset(savdot, 0, sizeof(savdot));
     ibufc = 0;
     fin = ofile(atmp1);
     assem();
@@ -223,8 +223,8 @@ init()
     *dot    = 0;
     *dotdot = 0; /* .. */
     brtabi  = 0;
-    memset(curfb, 0, 20);
-    memset(nxtfb, 0, 20);
+    memset(curfb, 0, sizeof(curfb));
+    memset(nxtfb, 0, sizeof(nxtfb));
     for (i = 0; i < 10; ++i) {
         fbadv(i);
     }
