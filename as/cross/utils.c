@@ -7,15 +7,16 @@ max(a, b) { return a > b ? a : b; }
 #include <fcntl.h>
 #include <time.h>
 #include <errno.h>
+#include <limits.h>
 #include <sys/stat.h>
 
 int mkstemp(char *fn) {
     int ret, len;
     if (!strncmp(fn, "/tmp/", 5)) {
-        char buf[MAX_PATH];
+        char buf[PATH_MAX];
         GetTempPath(sizeof(buf), buf);
-        strncat(buf, &fn[5], MAX_PATH - 1);
-        strncpy(fn, buf, MAX_PATH - 1);
+        strncat(buf, &fn[5], PATH_MAX - 1);
+        strncpy(fn, buf, PATH_MAX - 1);
     }
     len = strlen(fn);
     if (len >= 6 && !strcmp(&fn[len - 6], "XXXXXX")) {

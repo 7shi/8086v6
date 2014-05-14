@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdint.h>
+#include <limits.h>
 
 char chartab[256] = {
     /*  0*/ -12, -12, -12, -12,  -2, -12, -12, -12,
@@ -34,9 +35,9 @@ char chartab[256] = {
                    _abcdefghijklmnopqrstuvwxyz~
 */
 
-char atmp1[MAX_PATH] = "/tmp/atm1_XXXXXX";
-char atmp2[MAX_PATH] = "/tmp/atm2_XXXXXX";
-char atmp3[MAX_PATH] = "/tmp/atm3_XXXXXX";
+char atmp1[PATH_MAX] = "/tmp/atm1_XXXXXX";
+char atmp2[PATH_MAX] = "/tmp/atm2_XXXXXX";
+char atmp3[PATH_MAX] = "/tmp/atm3_XXXXXX";
 char *aout = "a.out";
 
 /* atmp2 */

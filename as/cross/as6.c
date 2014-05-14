@@ -234,8 +234,6 @@ struct Sym *this;
     }
 }
 
-extern int savop;
-
 addres()
 {
     return addres1(0);

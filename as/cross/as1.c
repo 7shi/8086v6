@@ -5,6 +5,10 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+
 struct Sym { char type, num; short value; };
 extern struct Sym curfbr[], *curfb[], *nxtfb[], *fbbufp;
 

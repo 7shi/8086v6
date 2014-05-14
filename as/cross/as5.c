@@ -5,6 +5,8 @@ extern intptr_t savop;
 extern int numval, passno;
 extern char ch, chartab[], *txtp[], symtab[], *usymtab;
 
+intptr_t rname();
+
 intptr_t
 readop() {
     int c, num, type, ret;
