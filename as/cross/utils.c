@@ -19,18 +19,15 @@ int mkstemp(char *fn) {
         strncpy(fn, buf, PATH_MAX - 1);
     }
     len = strlen(fn);
-    if (len >= 6 && !strcmp(&fn[len - 6], "XXXXXX")) {
-        srand(time(NULL));
-        do {
-            int i;
-            for (i = len - 6; i < len; ++i) {
-                fn[i] = '0' + ((rand() >> 3) % 10);
-            }
-            ret = open(fn, O_CREAT | O_EXCL | O_BINARY | O_WRONLY, S_IWRITE);
-        } while (ret == -1 && errno == EEXIST);
-    } else {
+    if (len < 6 || strcmp(&fn[len - 6], "XXXXXX")) return -1;
+    srand(time(NULL));
+    do {
+        int i;
+        for (i = len - 6; i < len; ++i) {
+            fn[i] = '0' + ((rand() >> 3) % 10);
+        }
         ret = open(fn, O_CREAT | O_EXCL | O_BINARY | O_WRONLY, S_IWRITE);
-    }
+    } while (ret == -1 && errno == EEXIST);
     return ret;
 }
 #endif
