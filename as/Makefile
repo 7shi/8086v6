@@ -5,6 +5,8 @@ all:
 	$(MAKE) $@ -C orig
 	$(MAKE) $@ -C as1
 	$(MAKE) $@ -C as2
+	$(MAKE) $@ -C as
+	$(MAKE) $@ -C cross
 
 all-orig:
 	$(MAKE) all -C orig
@@ -30,4 +32,6 @@ clean:
 	$(MAKE) $@ -C orig
 	$(MAKE) $@ -C as1
 	$(MAKE) $@ -C as2
+	$(MAKE) $@ -C as
+	$(MAKE) $@ -C cross
 	rm -f a.out
