@@ -23,22 +23,31 @@ extern char *usymtab, *symend, *endtable, *memend, *aout, **curarg;
 main(argc, argv)
 char *argv[];
 {
-    if (argc < 2) {
-        printf("usage: as [-] source1 [source2 ...]\n");
-        exit(1);
-    }
+    int v2;
+    v2 = 0;
 
     nargs  = argc;
     curarg = argv;
 
-    if (argv[1][0] == '-') {
+    if (nargs > 1 && !strcmp(curarg[1], "-v2")) {
+        v2 = 1;
+        --nargs;
+        ++curarg;
+    }
+
+    if (nargs > 1 && !strcmp(curarg[1], "-")) {
         /* globalize all undefineds */
         defund = 040;
         --nargs;
         ++curarg;
     }
 
-    setup();
+    if (nargs < 2) {
+        printf("usage: as [-v2] [-] source1 [source2 ...]\n");
+        exit(1);
+    }
+
+    setup(v2);
     go0();
     go1();
     go2();

@@ -90,7 +90,6 @@ struct BSym symtab[] = {
     { "stty",      1, 0000037 },
     { "gtty",      1, 0000040 },
     { "nice",      1, 0000042 },
-    { "signal",    1, 0000060 },
 
     /* double operand */
 
@@ -241,10 +240,6 @@ struct BSym symtab[] = {
     { "als",      24, 0072000 },
     { "alsc",     24, 0073000 },
     { "mpy",      24, 0070000 },
-    { "mul",      24, 0070000 },
-    { "div",      24, 0071000 },
-    { "ash",      24, 0072000 },
-    { "ashc",     24, 0073000 },
     { "dvd",      24, 0071000 },
     { "xor",       7, 0074000 },
     { "sxt",      13, 0006700 },
@@ -263,7 +258,46 @@ struct BSym symtab[] = {
     { ".bss",     23, 0000000 },
     { ".comm",    26, 0000000 },
 
-    { "",          0, 0000000 }
+    { "",          0, 0000000 },
+
+    /** for UNIX V2 (eae=1) **/
+
+    /* system calls */
+
+    { "quit",      1, 0000032 },
+    { "intr",      1, 0000033 },
+    { "cemt",      1, 0000035 },
+    { "ilgins",    1, 0000041 },
+
+    /* eae & switches */
+
+    { "csw",       1, 0177570 },
+    { "div",       1, 0177300 },
+    { "ac",        1, 0177302 },
+    { "mq",        1, 0177304 },
+    { "mul",       1, 0177306 },
+    { "sc",        1, 0177310 },
+    { "sr",        1, 0177311 },
+    { "nor",       1, 0177312 },
+    { "lsh",       1, 0177314 },
+    { "ash",       1, 0177316 },
+
+    { "",          0, 0000000 },
+
+    /** for UNIX V6 (eae=0) **/
+
+    /* system calls */
+
+    { "signal",    1, 0000060 },
+
+    /* 11/45 operations */
+
+    { "mul",      24, 0070000 },
+    { "div",      24, 0071000 },
+    { "ash",      24, 0072000 },
+    { "ashc",     24, 0073000 },
+
+    { "",          0, 0000000 },
 };
 
 short *dotrel = &symtab[0].type;
@@ -300,19 +334,24 @@ const char *name;
 }
 
 /* builtinシンボルをハッシュテーブルに追加 */
-setup()
+setup(v2)
 {
-    int i, j, idx;
+    int i, j, n, idx;
     unsigned short key;
     struct BSym *bsym;
 
-    for (i = 0; bsym = &symtab[i], bsym->name[0]; ++i) {
-        /* 文字を加算してバイト反転しながらハッシュ値を算出 */
-        for(key = 0, j = 0; j < 8 && bsym->name[j]; ++j) {
-            key += bsym->name[j];
-            key = (key << 8) + ((key >> 8) & 255);
+    for (i = 0, n = 0; n < 3; ++i) {
+        bsym = &symtab[i];
+        if (!bsym->name[0]) {
+            ++n;
+        } else if (n == 0 || (n == 1 && v2) || (n == 2 && !v2)) {
+            /* 文字を加算してバイト反転しながらハッシュ値を算出 */
+            for(key = 0, j = 0; j < 8 && bsym->name[j]; ++j) {
+                key += bsym->name[j];
+                key = (key << 8) + ((key >> 8) & 255);
+            }
+            idx = symget(key, bsym->name);
+            hshtab[idx] = &symtab[i];
         }
-        idx = symget(key, bsym->name);
-        hshtab[idx] = &symtab[i];
     }
 }
