@@ -3,6 +3,7 @@ syntax: glob
 *.a
 *.out
 *.exe
+*.sym
 dest/
 as/orig/as1
 as/orig/as2
@@ -16,6 +17,9 @@ sys/conf/c.c
 sys/conf/l.s
 sys/conf/mkconf
 sys/*unix
+v1/sys/unix
+v1/cmd/init
+v1/cmd/sh
 GPATH
 GRTAGS
 GTAGS

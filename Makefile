@@ -1,9 +1,7 @@
-TOPDIR = .
-include $(TOPDIR)/Makefile.inc
-
 all install distrib:
 	$(MAKE) $@ -C as
 	$(MAKE) $@ -C sys
+	$(MAKE) $@ -C v1
 
 test:
 	$(MAKE) $@ -C tests
@@ -13,4 +11,5 @@ clean:
 	$(MAKE) $@ -C tests
 	$(MAKE) $@ -C as
 	$(MAKE) $@ -C sys
+	$(MAKE) $@ -C v1
 	rm -rf $(DESTDIR)
