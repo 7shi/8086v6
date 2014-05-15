@@ -10,6 +10,8 @@ as/as1/as1
 as/as2/as2
 as/as/as
 as/cross/as
+as/v2/as1
+as/v2/as2
 sys/conf/c.c
 sys/conf/l.s
 sys/conf/mkconf
