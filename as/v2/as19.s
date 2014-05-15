@@ -1,6 +1,6 @@
 / a9 -- pdp-11 assembler pass 1
 
-eae = 0
+eae = 1
 
 / key to types
 
@@ -37,7 +37,7 @@ symtab:
 / special variables
 
 166600; 000000; dotrel: 02; dot:000000 /.
-171560; 000000; 01; dotdot:000000 /..
+171560; 000000; 01; dotdot:040000 /..
 
 / register
 

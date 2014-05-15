@@ -11,16 +11,14 @@ all: $(TARGET)
 
 as1: $(AS) $(SRCS1)
 	$(AS) $(AFLAGS) $(SRCS1)
-	$(LD) a.out
 	mv a.out $@
 
 as2: $(AS) $(SRCS2)
 	$(AS) $(AFLAGS) $(SRCS2)
-	$(LD) a.out
 	mv a.out $@
 
 $(AS):
-	$(MAKE) -C ../cross
+	$(MAKE) -C `dirname $@`
 
 clean:
 	rm -f $(TARGET) a.out

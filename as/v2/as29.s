@@ -1,13 +1,13 @@
 / as9 -- PDP-11 assembler pass 2
 
-eae = 0
+eae = 1
 
 symtab = .-200
 
 / special variables
 
  02; dot:000000 /.
- 01; dotdot:000000 /..
+ 01; dotdot:040000 /..
 
 / register
 
