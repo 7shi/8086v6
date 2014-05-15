@@ -29,8 +29,9 @@ char *argv[];
     nargs  = argc;
     curarg = argv;
 
-    if (nargs > 1 && !strcmp(curarg[1], "-v2")) {
+    if (nargs > 1 && !strcmp(curarg[1], "-2")) {
         v2 = 1;
+        *dotdot = 0x4000;
         --nargs;
         ++curarg;
     }
@@ -230,7 +231,6 @@ init()
     int i;
     *dotrel = 2;
     *dot    = 0;
-    *dotdot = 0; /* .. */
     brtabi  = 0;
     memset(curfb, 0, sizeof(curfb));
     memset(nxtfb, 0, sizeof(nxtfb));
