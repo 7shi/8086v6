@@ -281,8 +281,8 @@ char *argv[];
 
     if (argv[1][0] == '-') {
         unglob = "-g";
-        nargs--;
-        curarg++;
+        --nargs;
+        ++curarg;
     }
 
     setup();

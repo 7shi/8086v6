@@ -34,8 +34,8 @@ char *argv[];
     if (argv[1][0] == '-') {
         /* globalize all undefineds */
         defund = 040;
-        nargs--;
-        curarg++;
+        --nargs;
+        ++curarg;
     }
 
     setup();
