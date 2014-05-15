@@ -27,7 +27,7 @@ test: $(TARGET)
 	cmp a.out ../orig/as2
 
 clean:
-	rm -f $(TARGET) *.o a.out
+	rm -f $(TARGET) $(TARGET).exe *.o a.out
 
 #conv:
 #	perl -pi -e "s/=([\+\-\*\/|\&])/\$$1=/g" *.c
