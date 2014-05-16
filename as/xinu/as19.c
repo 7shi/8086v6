@@ -13,7 +13,6 @@ main(argc, argv) char **argv; {
 	int (*oldsig)();
 	int aexit();
 	int chr;
-	extern int end;
 
 	oldsig = signal(SIGINT, SIG_IGN);
 	if( ((int)oldsig & 01) == 0) signal(SIGINT, aexit);
@@ -34,7 +33,7 @@ main(argc, argv) char **argv; {
 	}
 	nargs = argc;
 	curarg = argv - 1;
-	symend = endcore = (char *)&end;
+	symend = endcore = (char *)sbrk(0);
 	usymtab = (struct symbol *)endcore;
 	pof = fcreat(a_tmp1);
 	/* setbuf(pof, _sobuf); */

@@ -14,7 +14,6 @@ main(argc,argv) char **argv; {
 	int (*savint)();
 	int saexit();
 	int chr;
-	extern int end;
 
 	savint = signal(SIGINT, SIG_IGN);
 	if(((int)savint & 1) == 0) signal(SIGINT, saexit);
@@ -35,8 +34,8 @@ main(argc,argv) char **argv; {
 	a_tmp2 = *argv++;
 	a_tmp3 = *argv++;
 	if((fout = creat(a_outp, 0666)) < 0) filerr(a_outp);
-	memptr = (short *)&end;
 	endcore = sbrk(0);
+	memptr = (short *)endcore;
 	go();
 }
 
@@ -44,7 +43,6 @@ go() {
 	int temp, temp1, i;
 	short *iptr;
 	struct symbol *sptr;
-	extern int end;
 
 	ofile(a_tmp3);
 	usymtab = (struct symbol *)memptr;
