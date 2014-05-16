@@ -21,6 +21,39 @@ struct symbol symtab[] = {
 	{ name("sp")		TREG,	0, 	000006 },
 	{ name("pc")		TREG,	0, 	000007 },
 
+/* system calls */
+
+	{ name("exit")		TABS,	0, 	0000001 },
+	{ name("fork")		TABS,	0, 	0000002 },
+	{ name("read")		TABS,	0, 	0000003 },
+	{ name("write")		TABS,	0, 	0000004 },
+	{ name("open")		TABS,	0, 	0000005 },
+	{ name("close")		TABS,	0, 	0000006 },
+	{ name("wait")		TABS,	0, 	0000007 },
+	{ name("creat")		TABS,	0, 	0000010 },
+	{ name("link")		TABS,	0, 	0000011 },
+	{ name("unlink")	TABS,	0, 	0000012 },
+	{ name("exec")		TABS,	0, 	0000013 },
+	{ name("chdir")		TABS,	0, 	0000014 },
+	{ name("time")		TABS,	0, 	0000015 },
+	{ name("makdir")	TABS,	0, 	0000016 },
+	{ name("chmod")		TABS,	0, 	0000017 },
+	{ name("chown")		TABS,	0, 	0000020 },
+	{ name("break")		TABS,	0, 	0000021 },
+	{ name("stat")		TABS,	0, 	0000022 },
+	{ name("seek")		TABS,	0, 	0000023 },
+	{ name("tell")		TABS,	0, 	0000024 },
+	{ name("mount")		TABS,	0, 	0000025 },
+	{ name("umount")	TABS,	0, 	0000026 },
+	{ name("setuid")	TABS,	0, 	0000027 },
+	{ name("getuid")	TABS,	0, 	0000030 },
+	{ name("stime")		TABS,	0, 	0000031 },
+	{ name("fstat")		TABS,	0, 	0000034 },
+	{ name("mdate")		TABS,	0, 	0000036 },
+	{ name("stty")		TABS,	0, 	0000037 },
+	{ name("gtty")		TABS,	0, 	0000040 },
+	{ name("nice")		TABS,	0, 	0000042 },
+
 #ifdef eae
 /* eae & switches */
 
