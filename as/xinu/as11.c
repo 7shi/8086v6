@@ -61,7 +61,7 @@ fcreat(name) char *name; {
 		fprintf(stderr, "%s?\n", name);
 		exit(3);
 	}
-	return(fdopen(fd, "w"));
+	return(fdopen(fd, "wb"));
 }
 
 /* VARARGS1 */

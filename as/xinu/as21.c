@@ -166,6 +166,6 @@ setup() {
 
 ofile(name) char *name; {
 
-	if(freopen(name, "r", stdin) == NULL) filerr(name);
+	if(freopen(name, "rb", stdin) == NULL) filerr(name);
 }
 

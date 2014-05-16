@@ -127,7 +127,7 @@ rch() {
 			}
 			curarg++;
 			fileflg++;
-			if(freopen(*curarg, "r", stdin) == NULL) {
+			if(freopen(*curarg, "rb", stdin) == NULL) {
 				fprintf(stderr, "%s?\n", *curarg);
 				aexit();
 			}
