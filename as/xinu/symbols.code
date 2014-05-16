@@ -53,6 +53,7 @@ struct symbol symtab[] = {
 	{ name("stty")		TABS,	0, 	0000037 },
 	{ name("gtty")		TABS,	0, 	0000040 },
 	{ name("nice")		TABS,	0, 	0000042 },
+	{ name("signal")	TABS,	0, 	0000060 },
 
 #ifdef eae
 /* eae & switches */
