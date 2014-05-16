@@ -37,9 +37,9 @@ main(argc, argv) char **argv; {
 	symend = endcore = (char *)&end;
 	usymtab = (struct symbol *)endcore;
 	pof = fcreat(a_tmp1);
-	setbuf(pof, _sobuf);
+	/* setbuf(pof, _sobuf); */
 	fbfil = fcreat(a_tmp2);
-	setbuf(fbfil, iobuf);
+	/* setbuf(fbfil, iobuf); */
 	setup();
 	fclose(stdin);
 	go();

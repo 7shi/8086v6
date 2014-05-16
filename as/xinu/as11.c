@@ -35,7 +35,7 @@ go() {
 		aexit();
 	if ((fd = fcreat(a_tmp3)) == NULL)
 		wrterr("can't create %s", a_tmp3);
-	setbuf(fd, _sobuf);
+	/* setbuf(fd, _sobuf); */
 	if (symend != (char *)usymtab)
 		if (fwrite((char *)usymtab, symend-(char *)usymtab, 1, fd) != 1)
 			wrterr("can't write on %s", a_tmp3);
