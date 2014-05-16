@@ -48,7 +48,7 @@ extern int outmod, brtabp, defund, fout, errflg;
 extern short bssbase, datbase;
 extern short savdot[];
 extern long relseeks[], dataseeks[], symseek;
-extern struct symbol *usymtab, *curfb[], *nxtfb[];
+extern struct symbol *usymtab, *curfb[], **nxtfb;
 
 extern long *tseekp, *rseekp;
 
