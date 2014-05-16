@@ -11,8 +11,8 @@ int outmod = 0777;
 
 
 main(argc,argv) char **argv; {
-	int (*savint)();
-	int saexit();
+	void (*savint)(int);
+	void saexit(int);
 	int chr;
 
 	savint = signal(SIGINT, SIG_IGN);
@@ -113,7 +113,8 @@ go() {
 	aexit();
 }
 
-saexit() {
+void
+saexit(_) {
 	errflg = 1;
 	aexit();
 }

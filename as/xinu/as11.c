@@ -45,6 +45,11 @@ go() {
 	fprintf(stderr, "%s?\n", fpass2);
 }
 
+void
+saexit(_) {
+	aexit();
+}
+
 aexit() {
 	unlink(a_tmp1);
 	unlink(a_tmp2);

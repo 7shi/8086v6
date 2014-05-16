@@ -10,12 +10,12 @@
 #define SYMSIZE (sizeof(symtab)/sizeof(struct symbol))
 
 main(argc, argv) char **argv; {
-	int (*oldsig)();
-	int aexit();
+	void (*oldsig)(int);
+	void saexit(int);
 	int chr;
 
 	oldsig = signal(SIGINT, SIG_IGN);
-	if( ((int)oldsig & 01) == 0) signal(SIGINT, aexit);
+	if( ((int)oldsig & 01) == 0) signal(SIGINT, saexit);
 	argv++;
 	argc--;
 	while(argv[0][0] == '-' && argc > 0) {
