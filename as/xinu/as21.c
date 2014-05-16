@@ -94,19 +94,19 @@ go() {
 	oset(&txtp, 0L);
 	oset(&relp, relseeks[0]);
 	for(i = 8, iptr = (short *)&txtmagic; i > 0; i--)
-		putw(*iptr++, &txtp);
+		putshort(*iptr++, &txtp);
 	assem();
 	flush(&txtp);
 	flush(&relp);
 	ofile(a_tmp3);
 	oset(&txtp, symseek);
 	for(iptr = (short *)usymtab; (i = getshort()) != -1; ) {
-		putw(i, &txtp);
-		putw(getshort(), &txtp);
-		putw(getshort(), &txtp);
-		putw(getshort(), &txtp);
-		putw((int)*iptr++, &txtp);
-		putw((int)*iptr++, &txtp);
+		putshort(i, &txtp);
+		putshort(getshort(), &txtp);
+		putshort(getshort(), &txtp);
+		putshort(getshort(), &txtp);
+		putshort((int)*iptr++, &txtp);
+		putshort((int)*iptr++, &txtp);
 		getshort();
 		getshort();
 	}

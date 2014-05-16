@@ -38,9 +38,9 @@ outw(flag, val) short flag, val; {
 	}
 	flag <<= 1;
 	flag |= temp;
-	putw(val, &txtp);
+	putshort(val, &txtp);
 	(*tseekp) += 2;
-	putw(flag, &relp);
+	putshort(flag, &relp);
 	(*rseekp) += 2;
 }
 
@@ -53,8 +53,8 @@ outb(flag, val) {
 		*((char *)txtp.f_ptr-1) = val;
 		return;
 	}
-	putw(val, &txtp);
-	putw(0, &relp);
+	putshort(val, &txtp);
+	putshort(0, &relp);
 	(*tseekp) += 2;
 	(*rseekp) += 2;
 }

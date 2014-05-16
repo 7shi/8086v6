@@ -12,7 +12,7 @@ oset(file, pos) register struct afile *file; long pos; {
 	file->f_ptr = (short *)((char *)file->f_buffer + (file->f_seek & 0777));
 }
 
-putw(word, file) register struct afile *file; {
+putshort(word, file) register struct afile *file; {
 	if(file->f_ptr >= file->f_end) flush(file);
 	*file->f_ptr++ = word;
 }
