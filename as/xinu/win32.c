@@ -7,7 +7,7 @@
 #include <limits.h>
 #include <sys/stat.h>
 
-int mkstemp(char *fn)
+int mkstemp(char fn[PATH_MAX])
 {
     int ret, len;
     if (!strncmp(fn, "/tmp/", 5)) {

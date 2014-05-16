@@ -10,7 +10,8 @@ max(a, b) { return a > b ? a : b; }
 #include <limits.h>
 #include <sys/stat.h>
 
-int mkstemp(char *fn) {
+int mkstemp(char fn[PATH_MAX])
+{
     int ret, len;
     if (!strncmp(fn, "/tmp/", 5)) {
         char buf[PATH_MAX];
