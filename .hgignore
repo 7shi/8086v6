@@ -13,6 +13,8 @@ as/as/as
 as/cross/as
 as/v2/as1
 as/v2/as2
+as/xinu/as1
+as/xinu/as2
 sys/conf/c.c
 sys/conf/l.s
 sys/conf/mkconf
