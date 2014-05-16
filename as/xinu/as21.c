@@ -122,6 +122,7 @@ saexit(_) {
 aexit() {
 	int mask;
 
+	fclose(stdin);
 	unlink(a_tmp1);
 	unlink(a_tmp2);
 	unlink(a_tmp3);
