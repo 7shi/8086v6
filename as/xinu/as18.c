@@ -2,10 +2,11 @@
 /* PDP-11 Assembler for the VAX Pass 0 */
 
 #include "vars1.h"
+#include <limits.h>
 
-char a_tmp1[] =	"/tmp/atm1a";
-char a_tmp2[] = "/tmp/atm2a";
-char a_tmp3[] = "/tmp/atm3a";
+char a_tmp1[PATH_MAX] =	"/tmp/atm1_XXXXXX";
+char a_tmp2[PATH_MAX] = "/tmp/atm2_XXXXXX";
+char a_tmp3[PATH_MAX] = "/tmp/atm3_XXXXXX";
 
 char iobuf[BUFSIZ];
 

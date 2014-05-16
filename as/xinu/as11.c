@@ -54,14 +54,13 @@ aexit() {
 
 FILE *
 fcreat(name) char *name; {
-	struct stat statb;
 	int fd;
 
-	while(stat(name, &statb) >= 0 || (fd = creat(name,0444)) < 0)
-		if(name[9]++ == 'z') {
-			fprintf(stderr, "%s?\n", name);
-			exit(3);
-		}
+	fd = mkstemp(name);
+	if(fd == -1) {
+		fprintf(stderr, "%s?\n", name);
+		exit(3);
+	}
 	return(fdopen(fd, "w"));
 }
 
