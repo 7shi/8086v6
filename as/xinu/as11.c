@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#define	PASS2	"/usr/Xinu/lib/as11-2"
+#define	PASS2	"as2"
 
 char fpass2[] = PASS2;
 char globfl[] = "-\0";
