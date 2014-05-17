@@ -36,4 +36,5 @@ clean:
 	$(MAKE) $@ -C as
 	$(MAKE) $@ -C cross
 	$(MAKE) $@ -C v2
+	$(MAKE) $@ -C xinu
 	rm -f a.out
