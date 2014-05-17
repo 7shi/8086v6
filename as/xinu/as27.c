@@ -35,12 +35,20 @@ char relte2[36] = {
 
 struct symbol *xsymbol;
 
-expres(nextop) {
+intptr_t expres1(intptr_t);
+
+intptr_t
+expres(nextop)
+intptr_t nextop;
+{
 	xsymbol = 0;
 	return(expres1(nextop));
 }
 
-expres1(nextop) {
+intptr_t
+expres1(nextop)
+intptr_t nextop;
+{
 	int op = 0;
 	short leftval = 0, rightval;
 	char lefttype = 1, righttype;

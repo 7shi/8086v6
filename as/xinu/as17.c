@@ -6,7 +6,10 @@
 int eval;
 char etype;
 
-expres(nextop) {
+intptr_t
+expres(nextop)
+intptr_t nextop;
+{
 	int op = 0;
 	int opfound = 0;
 	short leftval = 0, rightval;

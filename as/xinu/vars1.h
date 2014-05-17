@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdint.h>
 
 struct symbol {
 	char s_name[8];
@@ -56,7 +57,7 @@ extern char etype;
 extern short curfb[];
 extern char curfbr[];
 
-extern int saveop;
+extern intptr_t saveop;
 extern short numval;
 extern char chartab[];
 
@@ -68,3 +69,7 @@ extern int nargs;
 extern char *endcore;
 
 extern char unglob;
+
+extern intptr_t readop();
+extern intptr_t opline(intptr_t);
+extern intptr_t expres(intptr_t);

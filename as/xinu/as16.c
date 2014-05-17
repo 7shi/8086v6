@@ -5,7 +5,13 @@
 
 int adrinc;
 
-opline(op) {
+intptr_t address(intptr_t);
+intptr_t getx(intptr_t);
+
+intptr_t
+opline(op)
+intptr_t op;
+{
 	char optype;
 	int offset, temp;
 
@@ -107,7 +113,10 @@ xpr:
 	return(op);
 }	
 
-address(op) {
+intptr_t
+address(op)
+intptr_t op;
+{
 	switch(op) {
 	    case '(':
 		return(alp());
@@ -126,7 +135,10 @@ address(op) {
 	}
 }
 
-getx(op) {
+intptr_t
+getx(op)
+intptr_t op;
+{
 	op = expres(op);
 	if(op == '(') {
 		op = expres(readop());

@@ -38,6 +38,7 @@ char *s, *n;
 	saexit();
 }
 
+intptr_t
 readop() {
 	int tmp;
 
@@ -48,8 +49,8 @@ readop() {
 	tmp = getshort();
 	if(tmp == -1) return(ASEOF);
 	if((unsigned)tmp < 0200) return(tmp);
-	if((unsigned)tmp < 04000) return(tmp + (int)symtab - 01000);
-	return(tmp + (int)usymtab - 04000);
+	if((unsigned)tmp < 04000) return(tmp + (intptr_t)symtab - 01000);
+	return(tmp + (intptr_t)usymtab - 04000);
 }
 
 getshort() {

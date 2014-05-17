@@ -11,7 +11,7 @@ short curfb[10] = {
 	};
 
 assem() {
-	int op, svop;
+	intptr_t op, svop;
 
   astart:
 	for(;;) {

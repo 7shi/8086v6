@@ -3,6 +3,8 @@
 
 #include "vars1.h"
 
+struct sinfo *rname();
+
 hashsym(ptr) register char *ptr; {
 	register int i, hash = 0;
 
@@ -34,6 +36,7 @@ findsym(hash, name) char *name; {
 	}
 }
 
+struct sinfo *
 rname() {
 	int local = 0, hash;
 	register char *symptr;
@@ -71,7 +74,7 @@ rname() {
 		putshort(04000 + ((symptr - (char *)usymtab) / 3) );
 	else 
 		putshort(01000 + ((symptr - (char *)symtab) / 3) );
-	return( (int)(&((struct symbol *)symptr)->s_info) );
+	return( (&((struct symbol *)symptr)->s_info) );
 }
 
 

@@ -3,12 +3,25 @@
 #include "vars2.h"
 #include "stypes.h"
 
-int *aptr;
+intptr_t *aptr;
 
-opline(op) {
+intptr_t address(intptr_t, int);
+intptr_t getx(intptr_t, int);
+intptr_t alp(int);
+intptr_t amin(int);
+intptr_t adoll(int);
+intptr_t astar(int);
+intptr_t checkrp(intptr_t);
+
+intptr_t
+opline(op)
+intptr_t op;
+{
 	char optype, swapf;
 	short opval, op1;
-	int temp, rlimit, *aptr1;
+	intptr_t temp;
+    int rlimit;
+    intptr_t *aptr1;
 
 	if((unsigned)op < 0200) {
 		if(op == 05) {
@@ -211,7 +224,10 @@ opline(op) {
 	/* NOTREACHED */
 }
 
-address(op, value) {
+intptr_t
+address(op, value)
+intptr_t op;
+{
 	switch(op) {
 	    case '(':
 		return(alp(value));
@@ -230,12 +246,15 @@ address(op, value) {
 	}
 }
 
-getx(op, value) {
+intptr_t
+getx(op, value)
+intptr_t op;
+{
 	op = expres(op);
 	if(op == '(') {
 		*aptr++ = eval;
 		*aptr++ = etype;
-		*aptr++ = (int)xsymbol;
+		*aptr++ = (intptr_t)xsymbol;
 		op = expres(readop());
 		checkreg();
 		op = checkrp(op);
@@ -251,13 +270,14 @@ getx(op, value) {
 	if(aptr != adrbuf) eval -= 2;
 	*aptr++ = eval;
 	*aptr++ = etype | 0100000;
-	*aptr++ = (int)xsymbol;
+	*aptr++ = (intptr_t)xsymbol;
 	eval = 067 | value;
 	return(op);
 }
 
+intptr_t
 alp(value) {
-	int op;
+	intptr_t op;
 
 	op = expres(readop());
 	op = checkrp(op);
@@ -270,13 +290,14 @@ alp(value) {
 		eval |= 070;
 		*aptr++ = 0;
 		*aptr++ = 0;
-		*aptr++ = (int)xsymbol;
+		*aptr++ = (intptr_t)xsymbol;
 	}
 	return(op);
 }
 
+intptr_t
 amin(value) {
-	int op;
+	intptr_t op;
 
 	if( (op = readop()) != '(') {
 		savop = op;
@@ -290,17 +311,19 @@ amin(value) {
 	return(op);
 }
 
+intptr_t
 adoll(value) {
-	int op;
+	intptr_t op;
 
 	op = expres(readop());
 	*aptr++ = eval;
 	*aptr++ = etype;
-	*aptr++ = (int)xsymbol;
+	*aptr++ = (intptr_t)xsymbol;
 	eval = value | 027;
 	return(op);
 }
 
+intptr_t
 astar(value) {
 	if(value != 0) error('*');
 	return(address(readop(), 010));
@@ -313,7 +336,10 @@ checkreg() {
 	eval = 0;
 }
 
-checkrp(op) {
+intptr_t
+checkrp(op)
+intptr_t op;
+{
 	if(op != ')') {
 		error(')');
 		return(op);

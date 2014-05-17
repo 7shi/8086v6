@@ -23,8 +23,8 @@ char chartab[128] = {
 	};
 
 static char strterm;
-int saveop;
 
+intptr_t
 readop() {
 	int val;
 

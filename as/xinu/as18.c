@@ -22,7 +22,7 @@ int line;
 int ifflg;
 int nargs;
 char **curarg;
-int saveop;
+intptr_t saveop;
 short numval;
 struct symbol *usymtab;
 char *endcore;

@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 struct symbol {
 	char s_type;
 	char s_index;
@@ -55,8 +57,13 @@ extern long *tseekp, *rseekp;
 extern struct symbol symtab[], *xsymbol;
 extern short brdelt, numval, eval;
 extern char etype;
-extern int savop, line;
-extern int adrbuf[];
+extern intptr_t savop;
+extern int line;
+extern intptr_t adrbuf[];
 
 extern char argb[];
 extern char brtab[];
+
+extern intptr_t readop();
+extern intptr_t opline(intptr_t);
+extern intptr_t expres(intptr_t);

@@ -4,7 +4,8 @@
 #include "vars2.h"
 
 assem() {
-	int op, svop, temp;
+	intptr_t op, svop;
+    int temp;
 	struct symbol *sptr;
 
   astart:
