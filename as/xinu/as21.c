@@ -1,7 +1,6 @@
 #
 /* PDP-11 Assembler for the VAX Pass 1 */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
 #include "vars2.h"
@@ -33,7 +32,7 @@ main(argc,argv) char **argv; {
 	a_tmp1 = *argv++;
 	a_tmp2 = *argv++;
 	a_tmp3 = *argv++;
-	if((fout = creat(a_outp, 0666)) < 0) filerr(a_outp);
+	if(!(fout = fopen(a_outp, "wb"))) filerr(a_outp);
 	endcore = sbrk(0);
 	memptr = (short *)endcore;
 	go();

@@ -1,6 +1,5 @@
 /* PDP-11 Assembler for the VAX Pass 1 */
 
-#include <stdio.h>
 #include "vars2.h"
 #include "stypes.h"
 

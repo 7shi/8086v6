@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdint.h>
 
 struct symbol {
@@ -46,7 +47,9 @@ extern char *a_tmp1, *a_tmp2, *a_tmp3, *a_outp, *a_outp1, *a_outp2;
 extern char *endcore, passno;
 extern short *memptr;
 extern struct symbol *fbbufp, *endtable;
-extern int outmod, brtabp, defund, fout, errflg;
+extern int outmod, brtabp, defund;
+extern FILE *fout;
+extern int errflg;
 extern short bssbase, datbase;
 extern short savdot[];
 extern long relseeks[], dataseeks[], symseek;

@@ -36,7 +36,7 @@ char passno;
 struct symbol *usymtab, *endtable;
 char argb[22];
 intptr_t adrbuf[6];
-int fout;
+FILE *fout;
 char etype;
 short eval;
 char *endcore;
