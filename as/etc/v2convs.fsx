@@ -1,4 +1,4 @@
-let chartab = "\x00abcdefghijklmnopqrstuvwxyz0123456789_."
+let chartab = "\000abcdefghijklmnopqrstuvwxyz0123456789_."
 
 let convs v =
     let a = v / 40
@@ -7,7 +7,7 @@ let convs v =
     |> String.concat ""
 
 let show v1 v2 =
-    let s = ((convs v1) + (convs v2)).Replace("\0", "")
+    let s = ((convs v1) + (convs v2)).Replace("\000", "")
     printfn "%06o %06o => %s" v1 v2 s
 
 show 0o072270 0
