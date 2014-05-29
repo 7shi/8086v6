@@ -65,7 +65,7 @@ rname() {
 		*hptr = (struct symbol *)symend;
 	}
 	if(symend + sizeof(struct symbol) > endcore)
-		endcore = sbrk(512);
+		endcore = sbrk(512) + 512;
 	for(symptr = (char *)&symbol; symptr < (char *)(&symbol + 1);)
 		*symend++ = *symptr++;
 	symptr = symend - sizeof(symbol);
