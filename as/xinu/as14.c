@@ -64,8 +64,10 @@ rname() {
 		}
 		*hptr = (struct symbol *)symend;
 	}
-	if(symend + sizeof(struct symbol) > endcore)
-		endcore = sbrk(512) + 512;
+	if(symend + sizeof(struct symbol) > endcore) {
+		fprintf(stderr, "as: out of memory\n");
+		aexit();
+	}
 	for(symptr = (char *)&symbol; symptr < (char *)(&symbol + 1);)
 		*symend++ = *symptr++;
 	symptr = symend - sizeof(symbol);

@@ -33,8 +33,9 @@ main(argc, argv) char **argv; {
 	}
 	nargs = argc;
 	curarg = argv - 1;
-	symend = endcore = (char *)sbrk(0);
-	usymtab = (struct symbol *)endcore;
+	symend = (char *)sbrk(0x10000);
+	endcore = symend + 0x10000;
+	usymtab = (struct symbol *)symend;
 	pof = fcreat(a_tmp1);
 	/* setbuf(pof, _sobuf); */
 	fbfil = fcreat(a_tmp2);

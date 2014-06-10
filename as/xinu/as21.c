@@ -33,8 +33,8 @@ main(argc,argv) char **argv; {
 	a_tmp2 = *argv++;
 	a_tmp3 = *argv++;
 	if(!(fout = fopen(a_outp, "wb"))) filerr(a_outp);
-	endcore = sbrk(0);
-	memptr = (short *)endcore;
+	memptr = (short *)sbrk(0x10000);
+	endcore = ((char *)memptr) + 0x10000;
 	go();
 }
 
@@ -149,8 +149,10 @@ doreloc(sptr) register struct symbol *sptr; {
 }
 
 setbrk() {
-	if((char *)memptr + 020 > endcore)
-		endcore = sbrk(512) + 512;
+	if((char *)memptr + 020 > endcore) {
+		fprintf(stderr, "as: out of memory\n");
+		aexit();
+	}
 }
 
 setup() {
