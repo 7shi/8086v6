@@ -26,7 +26,7 @@ static char strterm;
 
 intptr_t
 readop() {
-	int val;
+	intptr_t val;
 
 	if(val = saveop) {
 		saveop = 0;
@@ -62,7 +62,7 @@ readop() {
 			if(numsymbol) break;
 			return(snumval(val));
 		}
-		return(rname());
+		return((intptr_t)rname());
 
 	    case STRN:
 		putshort('<');

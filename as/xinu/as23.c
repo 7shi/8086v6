@@ -45,7 +45,7 @@ assem() {
 			sptr->s_value = eval;
 			goto ealoop;
 		} else if(op == ':') {
-			if(svop < 0200) { 
+			if((uintptr_t)svop < 0200) { 
 				if(svop != 02) error('x');
 				else {
 					fbadv(numval);

@@ -10,6 +10,8 @@ short curfb[10] = {
 	-1, -1, -1, -1, -1,
 	};
 
+int checkeos(intptr_t);
+
 assem() {
 	intptr_t op, svop;
 
@@ -18,7 +20,7 @@ assem() {
 		op = readop();
 		if(checkeos(op)) goto ealoop;
 		if(ifflg == 0) break;
-		if(op <= 0200) continue;
+		if((uintptr_t)op <= 0200) continue;
 		if( ((struct sinfo *)op)->s_type == TCIF) {
 			ifflg++;
 		}
@@ -30,7 +32,7 @@ assem() {
 	op = readop();
 	if(op == '=') {
 		op = expres(readop());
-		if(svop < 0200) {
+		if((uintptr_t)svop < 0200) {
 			error('x');
 			goto ealoop;
 		}
@@ -49,7 +51,7 @@ assem() {
 		goto ealoop;
 	}		
 	if(op == ':') {
-		if( (op = svop) >= 0200) {
+		if( (uintptr_t)(op = svop) >= 0200) {
 			if( ((struct sinfo *)op)->s_type & 037) error('m');
 			((struct sinfo *)op)->s_type |= DOTREL;
 			((struct sinfo *)op)->s_value = DOT;
@@ -87,6 +89,8 @@ assem() {
 	if(ifflg) error('x');
 }
 
-checkeos(op) {
+checkeos(op)
+intptr_t op;
+{
 	return( op == '\n' || op == ';' || op == ASEOF);
 }

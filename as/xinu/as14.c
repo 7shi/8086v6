@@ -3,8 +3,6 @@
 
 #include "vars1.h"
 
-struct sinfo *rname();
-
 hashsym(ptr) register char *ptr; {
 	register int i, hash = 0;
 

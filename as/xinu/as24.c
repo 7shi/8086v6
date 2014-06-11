@@ -37,7 +37,7 @@ char *s, *n;
 
 intptr_t
 readop() {
-	int tmp;
+	intptr_t tmp;
 
 	if((tmp = savop)) {
 		savop = 0;
@@ -45,13 +45,13 @@ readop() {
 	}
 	tmp = getshort();
 	if(tmp == -1) return(ASEOF);
-	if((unsigned)tmp < 0200) return(tmp);
-	if((unsigned)tmp < 04000) return(tmp + (intptr_t)symtab - 01000);
+	if((uintptr_t)tmp < 0200) return(tmp);
+	if((uintptr_t)tmp < 04000) return(tmp + (intptr_t)symtab - 01000);
 	return(tmp + (intptr_t)usymtab - 04000);
 }
 
 getshort() {
-	int tmp;
+	intptr_t tmp;
 
 	if((tmp = savop)) {
 		savop = 0;

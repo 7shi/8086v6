@@ -28,15 +28,4 @@ int mkstemp(char fn[PATH_MAX])
     } while (ret == -1 && errno == EEXIST);
     return ret;
 }
-
-static char buf[256 * 1024];
-static char *ps = &buf[0], *pe = &buf[sizeof(buf)];
-
-void *sbrk(int size)
-{
-    char *ret = ps;
-    if (ps + size > pe) return (void *)-1;
-    ps += size;
-    return ret;
-}
 #endif

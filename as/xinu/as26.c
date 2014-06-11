@@ -23,7 +23,7 @@ intptr_t op;
     int rlimit;
     intptr_t *aptr1;
 
-	if((unsigned)op < 0200) {
+	if((uintptr_t)op < 0200) {
 		if(op == 05) {
 			char *ptr;
 
@@ -122,7 +122,7 @@ intptr_t op;
 
 	    case TCGLOBL:
 		for(;;op = readop()) {
-			if((unsigned)op < 0200) return(op);
+			if((uintptr_t)op < 0200) return(op);
 			((struct symbol *)op)->s_type |= TGLOBAL;
 			if((op = readop()) != ',') return(op);
 		}
@@ -150,7 +150,7 @@ intptr_t op;
 		return(op);
 
 	    case TCCOMM:
-		if((unsigned)op >= 0200) {
+		if((uintptr_t)op >= 0200) {
 			temp = op;
 			op = readop();
 			op = expres(readop());

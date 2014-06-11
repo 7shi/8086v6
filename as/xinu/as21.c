@@ -5,7 +5,6 @@
 #include <signal.h>
 #include "vars2.h"
 
-char *sbrk();
 int outmod = 0777;
 
 
@@ -33,7 +32,7 @@ main(argc,argv) char **argv; {
 	a_tmp2 = *argv++;
 	a_tmp3 = *argv++;
 	if(!(fout = fopen(a_outp, "wb"))) filerr(a_outp);
-	memptr = (short *)sbrk(0x10000);
+	memptr = (short *)malloc(0x10000);
 	endcore = ((char *)memptr) + 0x10000;
 	go();
 }

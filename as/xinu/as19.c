@@ -2,6 +2,7 @@
 /* PDP-11 Assembler for the VAX Pass 0 */
 
 #include "vars1.h"
+#include <stdlib.h>
 #include <signal.h>
 
 #define PASS1		// Cause names to be inserted
@@ -33,7 +34,7 @@ main(argc, argv) char **argv; {
 	}
 	nargs = argc;
 	curarg = argv - 1;
-	symend = (char *)sbrk(0x10000);
+	symend = (char *)malloc(0x10000);
 	endcore = symend + 0x10000;
 	usymtab = (struct symbol *)symend;
 	pof = fcreat(a_tmp1);

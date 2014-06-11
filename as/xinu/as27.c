@@ -57,7 +57,7 @@ intptr_t nextop;
 	for(;;) {
 		if(op == 0) op = '+';
 		else nextop = readop();
-		if((unsigned)nextop >= 0200) {
+		if((uintptr_t)nextop >= 0200) {
 			sptr = (struct symbol *)nextop;
 			righttype = sptr->s_type;
 			if(righttype == 0 && passno) error('u');

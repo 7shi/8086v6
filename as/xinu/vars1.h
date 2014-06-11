@@ -30,7 +30,6 @@ struct symbol {
 
 #define HSHSIZE	3001
 
-char *sbrk();
 FILE *fcreat();
 
 extern char iobuf[BUFSIZ], _sobuf[BUFSIZ];
@@ -73,3 +72,4 @@ extern char unglob;
 extern intptr_t readop();
 extern intptr_t opline(intptr_t);
 extern intptr_t expres(intptr_t);
+extern struct sinfo *rname();
