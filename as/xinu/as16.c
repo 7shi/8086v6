@@ -5,17 +5,17 @@
 
 int adrinc;
 
-intptr_t address(intptr_t);
-intptr_t getx(intptr_t);
-intptr_t alp();
-intptr_t amin();
-intptr_t adoll();
-intptr_t astar();
-intptr_t checkrp(intptr_t);
+uintptr_t address(uintptr_t);
+uintptr_t getx(uintptr_t);
+uintptr_t alp();
+uintptr_t amin();
+uintptr_t adoll();
+uintptr_t astar();
+uintptr_t checkrp(uintptr_t);
 
-intptr_t
+uintptr_t
 opline(op)
-intptr_t op;
+uintptr_t op;
 {
 	char optype;
 	int offset, temp;
@@ -76,7 +76,7 @@ intptr_t op;
 
 	    case TCGLOBL:
 		for(;;op = readop()) {
-			if((uintptr_t)op < 0200) return(op);
+			if(op < 0200) return(op);
 			((struct sinfo *)op)->s_type |= 040;
 			if((op = readop()) != ',') return(op);
 		}
@@ -93,7 +93,7 @@ intptr_t op;
 		return(op);
 
 	    case TCCOMM:
-		if((uintptr_t)op < 0200) {
+		if(op < 0200) {
 		    comerr:
 			error('x');
 			return(op);
@@ -118,9 +118,9 @@ xpr:
 	return(op);
 }	
 
-intptr_t
+uintptr_t
 address(op)
-intptr_t op;
+uintptr_t op;
 {
 	switch(op) {
 	    case '(':
@@ -140,9 +140,9 @@ intptr_t op;
 	}
 }
 
-intptr_t
+uintptr_t
 getx(op)
-intptr_t op;
+uintptr_t op;
 {
 	op = expres(op);
 	if(op == '(') {
@@ -159,9 +159,9 @@ intptr_t op;
 	return(op);
 }
 
-intptr_t
+uintptr_t
 alp() {
-	intptr_t op;
+	uintptr_t op;
 
 	op = expres(readop());
 	op = checkrp(op);
@@ -173,9 +173,9 @@ alp() {
 	return(op);
 }
 
-intptr_t
+uintptr_t
 amin() {
-	intptr_t op;
+	uintptr_t op;
 
 	if( (op = readop()) != '(') {
 		saveop = op;
@@ -189,9 +189,9 @@ amin() {
 	return(op);
 }
 
-intptr_t
+uintptr_t
 adoll() {
-	intptr_t op;
+	uintptr_t op;
 
 	op = expres(readop());
 	DOT += 2;
@@ -199,9 +199,9 @@ adoll() {
 	return(op);
 }
 
-intptr_t
+uintptr_t
 astar() {
-	intptr_t op;
+	uintptr_t op;
 
 	if( (op = readop()) == '*') error('*');
 	op = address(op);
@@ -214,9 +214,9 @@ checkreg() {
 	if(eval > 7 || (etype != TABS && etype <= TBSS)) error('a');
 }
 
-intptr_t
+uintptr_t
 checkrp(op)
-intptr_t op;
+uintptr_t op;
 {
 	if(op != ')') {
 		error(')');

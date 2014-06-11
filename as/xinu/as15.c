@@ -24,9 +24,9 @@ char chartab[128] = {
 
 static char strterm;
 
-intptr_t
+uintptr_t
 readop() {
-	intptr_t val;
+	uintptr_t val;
 
 	if(val = saveop) {
 		saveop = 0;
@@ -62,7 +62,7 @@ readop() {
 			if(numsymbol) break;
 			return(snumval(val));
 		}
-		return((intptr_t)rname());
+		return((uintptr_t)rname());
 
 	    case STRN:
 		putshort('<');

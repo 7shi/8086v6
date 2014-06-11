@@ -14,7 +14,7 @@ main(argc,argv) char **argv; {
 	int chr;
 
 	savint = signal(SIGINT, SIG_IGN);
-	if(((intptr_t)savint & 1) == 0) signal(SIGINT, saexit);
+	if(((uintptr_t)savint & 1) == 0) signal(SIGINT, saexit);
 	argv++;
 	argc--;
 	while(argv[0][0] == '-') {

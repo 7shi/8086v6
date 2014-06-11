@@ -56,7 +56,7 @@ extern char etype;
 extern short curfb[];
 extern char curfbr[];
 
-extern intptr_t saveop;
+extern uintptr_t saveop;
 extern short numval;
 extern char chartab[];
 
@@ -69,7 +69,7 @@ extern char *endcore;
 
 extern char unglob;
 
-extern intptr_t readop();
-extern intptr_t opline(intptr_t);
-extern intptr_t expres(intptr_t);
+extern uintptr_t readop();
+extern uintptr_t opline(uintptr_t);
+extern uintptr_t expres(uintptr_t);
 extern struct sinfo *rname();

@@ -35,19 +35,19 @@ char relte2[36] = {
 
 struct symbol *xsymbol;
 
-intptr_t expres1(intptr_t);
+uintptr_t expres1(uintptr_t);
 
-intptr_t
+uintptr_t
 expres(nextop)
-intptr_t nextop;
+uintptr_t nextop;
 {
 	xsymbol = 0;
 	return(expres1(nextop));
 }
 
-intptr_t
+uintptr_t
 expres1(nextop)
-intptr_t nextop;
+uintptr_t nextop;
 {
 	int op = 0;
 	short leftval = 0, rightval;
@@ -57,7 +57,7 @@ intptr_t nextop;
 	for(;;) {
 		if(op == 0) op = '+';
 		else nextop = readop();
-		if((uintptr_t)nextop >= 0200) {
+		if(nextop >= 0200) {
 			sptr = (struct symbol *)nextop;
 			righttype = sptr->s_type;
 			if(righttype == 0 && passno) error('u');

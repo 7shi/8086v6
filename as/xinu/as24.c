@@ -35,9 +35,9 @@ char *s, *n;
 	saexit();
 }
 
-intptr_t
+uintptr_t
 readop() {
-	intptr_t tmp;
+	uintptr_t tmp;
 
 	if((tmp = savop)) {
 		savop = 0;
@@ -45,13 +45,13 @@ readop() {
 	}
 	tmp = getshort();
 	if(tmp == -1) return(ASEOF);
-	if((uintptr_t)tmp < 0200) return(tmp);
-	if((uintptr_t)tmp < 04000) return(tmp + (intptr_t)symtab - 01000);
-	return(tmp + (intptr_t)usymtab - 04000);
+	if(tmp < 0200) return(tmp);
+	if(tmp < 04000) return(tmp + (uintptr_t)symtab - 01000);
+	return(tmp + (uintptr_t)usymtab - 04000);
 }
 
 getshort() {
-	intptr_t tmp;
+	uintptr_t tmp;
 
 	if((tmp = savop)) {
 		savop = 0;

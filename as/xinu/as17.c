@@ -6,9 +6,9 @@
 int eval;
 char etype;
 
-intptr_t
+uintptr_t
 expres(nextop)
-intptr_t nextop;
+uintptr_t nextop;
 {
 	int op = 0;
 	int opfound = 0;

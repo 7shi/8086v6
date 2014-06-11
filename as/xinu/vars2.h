@@ -60,13 +60,13 @@ extern long *tseekp, *rseekp;
 extern struct symbol symtab[], *xsymbol;
 extern short brdelt, numval, eval;
 extern char etype;
-extern intptr_t savop;
+extern uintptr_t savop;
 extern int line;
-extern intptr_t adrbuf[];
+extern uintptr_t adrbuf[];
 
 extern char argb[];
 extern char brtab[];
 
-extern intptr_t readop();
-extern intptr_t opline(intptr_t);
-extern intptr_t expres(intptr_t);
+extern uintptr_t readop();
+extern uintptr_t opline(uintptr_t);
+extern uintptr_t expres(uintptr_t);

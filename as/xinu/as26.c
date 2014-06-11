@@ -3,27 +3,27 @@
 #include "vars2.h"
 #include "stypes.h"
 
-intptr_t *aptr;
+uintptr_t *aptr;
 
-intptr_t address(intptr_t, int);
-intptr_t getx(intptr_t, int);
-intptr_t alp(int);
-intptr_t amin(int);
-intptr_t adoll(int);
-intptr_t astar(int);
-intptr_t checkrp(intptr_t);
+uintptr_t address(uintptr_t, int);
+uintptr_t getx(uintptr_t, int);
+uintptr_t alp(int);
+uintptr_t amin(int);
+uintptr_t adoll(int);
+uintptr_t astar(int);
+uintptr_t checkrp(uintptr_t);
 
-intptr_t
+uintptr_t
 opline(op)
-intptr_t op;
+uintptr_t op;
 {
 	char optype, swapf;
 	short opval, op1;
-	intptr_t temp;
+	uintptr_t temp;
     int rlimit;
-    intptr_t *aptr1;
+    uintptr_t *aptr1;
 
-	if((uintptr_t)op < 0200) {
+	if(op < 0200) {
 		if(op == 05) {
 			char *ptr;
 
@@ -122,7 +122,7 @@ intptr_t op;
 
 	    case TCGLOBL:
 		for(;;op = readop()) {
-			if((uintptr_t)op < 0200) return(op);
+			if(op < 0200) return(op);
 			((struct symbol *)op)->s_type |= TGLOBAL;
 			if((op = readop()) != ',') return(op);
 		}
@@ -150,7 +150,7 @@ intptr_t op;
 		return(op);
 
 	    case TCCOMM:
-		if((uintptr_t)op >= 0200) {
+		if(op >= 0200) {
 			temp = op;
 			op = readop();
 			op = expres(readop());
@@ -224,9 +224,9 @@ intptr_t op;
 	/* NOTREACHED */
 }
 
-intptr_t
+uintptr_t
 address(op, value)
-intptr_t op;
+uintptr_t op;
 {
 	switch(op) {
 	    case '(':
@@ -246,15 +246,15 @@ intptr_t op;
 	}
 }
 
-intptr_t
+uintptr_t
 getx(op, value)
-intptr_t op;
+uintptr_t op;
 {
 	op = expres(op);
 	if(op == '(') {
 		*aptr++ = eval;
 		*aptr++ = etype;
-		*aptr++ = (intptr_t)xsymbol;
+		*aptr++ = (uintptr_t)xsymbol;
 		op = expres(readop());
 		checkreg();
 		op = checkrp(op);
@@ -270,14 +270,14 @@ intptr_t op;
 	if(aptr != adrbuf) eval -= 2;
 	*aptr++ = eval;
 	*aptr++ = etype | 0100000;
-	*aptr++ = (intptr_t)xsymbol;
+	*aptr++ = (uintptr_t)xsymbol;
 	eval = 067 | value;
 	return(op);
 }
 
-intptr_t
+uintptr_t
 alp(value) {
-	intptr_t op;
+	uintptr_t op;
 
 	op = expres(readop());
 	op = checkrp(op);
@@ -290,14 +290,14 @@ alp(value) {
 		eval |= 070;
 		*aptr++ = 0;
 		*aptr++ = 0;
-		*aptr++ = (intptr_t)xsymbol;
+		*aptr++ = (uintptr_t)xsymbol;
 	}
 	return(op);
 }
 
-intptr_t
+uintptr_t
 amin(value) {
-	intptr_t op;
+	uintptr_t op;
 
 	if( (op = readop()) != '(') {
 		savop = op;
@@ -311,19 +311,19 @@ amin(value) {
 	return(op);
 }
 
-intptr_t
+uintptr_t
 adoll(value) {
-	intptr_t op;
+	uintptr_t op;
 
 	op = expres(readop());
 	*aptr++ = eval;
 	*aptr++ = etype;
-	*aptr++ = (intptr_t)xsymbol;
+	*aptr++ = (uintptr_t)xsymbol;
 	eval = value | 027;
 	return(op);
 }
 
-intptr_t
+uintptr_t
 astar(value) {
 	if(value != 0) error('*');
 	return(address(readop(), 010));
@@ -336,9 +336,9 @@ checkreg() {
 	eval = 0;
 }
 
-intptr_t
+uintptr_t
 checkrp(op)
-intptr_t op;
+uintptr_t op;
 {
 	if(op != ')') {
 		error(')');

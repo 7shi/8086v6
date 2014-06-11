@@ -4,7 +4,7 @@
 #include "vars2.h"
 
 assem() {
-	intptr_t op, svop;
+	uintptr_t op, svop;
     int temp;
 	struct symbol *sptr;
 
@@ -45,7 +45,7 @@ assem() {
 			sptr->s_value = eval;
 			goto ealoop;
 		} else if(op == ':') {
-			if((uintptr_t)svop < 0200) { 
+			if(svop < 0200) { 
 				if(svop != 02) error('x');
 				else {
 					fbadv(numval);
