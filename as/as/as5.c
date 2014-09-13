@@ -32,11 +32,12 @@ readop() {
         ret = 31;
         break;
     case -20: /* escp: \ */
-        switch (ret = rch()) {
+        switch (rch()) {
         case '/': ret = '/'; break; /* \/ avoid comment */
         case '<': ret = 29; break;
         case '>': ret = 30; break;
         case '%': ret = 31; break;
+        default : ret = '\\'; break;
         }
         break;
     case -16: /* retread: !$%&()*+,-:=[]^ */
