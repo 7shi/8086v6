@@ -305,7 +305,7 @@ addres1(astar)
 checkreg(this)
 struct Sym *this;
 {
-    if (this->value > 7 || (this->value > 1 && this->type < 5)) {
+    if (this->value > 7 || (1 < this->type && this->type < 5)) {
         error("a");
         this->type = this->value = 0;
     }
