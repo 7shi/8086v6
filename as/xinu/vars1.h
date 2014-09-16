@@ -35,7 +35,7 @@ FILE *fcreat();
 extern char iobuf[BUFSIZ], _sobuf[BUFSIZ];
 
 extern char a_tmp1[], a_tmp2[], a_tmp3[], globfl[];
-extern char *argv2[];
+extern const char *argv2[];
 extern FILE *pof, *fbfil;
 extern char errflg;
 extern struct symbol *usymtab;

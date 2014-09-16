@@ -14,7 +14,7 @@ char globfl[] = "-\0";
 char outfl[] = "-o";
 char outfile[] = "a.out";
 
-char *argv2[] = {
+const char *argv2[] = {
 	fpass2,
 	globfl,
 	outfl,
