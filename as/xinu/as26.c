@@ -18,7 +18,7 @@ opline(op)
 uintptr_t op;
 {
 	char optype, swapf;
-	short opval, op1;
+	short opval, op1 = 0;
 	uintptr_t temp;
 	int rlimit;
 	uintptr_t *aptr1;
