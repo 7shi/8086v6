@@ -5,7 +5,7 @@
 
 assem() {
 	uintptr_t op, svop;
-    int temp;
+	int temp;
 	struct symbol *sptr;
 
   astart:

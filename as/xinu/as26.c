@@ -20,8 +20,8 @@ uintptr_t op;
 	char optype, swapf;
 	short opval, op1;
 	uintptr_t temp;
-    int rlimit;
-    uintptr_t *aptr1;
+	int rlimit;
+	uintptr_t *aptr1;
 
 	if(op < 0200) {
 		if(op == 05) {
