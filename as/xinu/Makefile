@@ -18,10 +18,12 @@ as2: $(COBJS2)
 
 test: $(TARGET)
 	$(MAKE) all-orig -C ..
-	./as1 ../orig/as1?.s
+	cd ../orig && ../xinu/as1 as1?.s
+	mv ../orig/a.out .
 	$(LD) a.out
 	cmp a.out ../orig/as1
-	./as1 ../orig/as2?.s
+	cd ../orig && ../xinu/as1 as2?.s
+	mv ../orig/a.out .
 	$(LD) a.out
 	cmp a.out ../orig/as2
 
