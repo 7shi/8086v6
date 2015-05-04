@@ -81,7 +81,7 @@ go0()
     symf  = fcreat(atmp3);
 
     /* SIGINTが無視されていなければ、中断時に後片付け */
-    if (signal(2/*SIGINT*/, 1) & 1 == 0) {
+    if (signal(2/*SIGINT*/, SIG_IGN) != SIG_IGN) {
         signal(2, aexit);
     }
 
