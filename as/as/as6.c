@@ -298,7 +298,7 @@ addres1(astar)
 checkreg(this)
 struct Op *this;
 {
-    if (this->value > 7 || (1 < this->type && this->type < 5)) {
+    if (this->type != 20 || this->value < 0 || this->value > 7) {
         error("a");
         this->type = this->value = 0;
     }
