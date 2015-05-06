@@ -74,7 +74,7 @@ readop() {
             aputw(txtp, c | 256);
         }
         aputw(txtp, -1);
-        return (union Op)'<';
+        return (union Op)(intptr_t)'<';
     default: /* ASCII */
         ch = c;
         if ('0' <= c && c <= '9') {
