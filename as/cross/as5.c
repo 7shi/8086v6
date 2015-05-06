@@ -7,24 +7,26 @@ extern char ch, chartab[], *txtp[], symtab[], *usymtab;
 
 intptr_t rname();
 
-intptr_t
+union Op { intptr_t op; struct Sym *sym; };
+
+union Op
 readop() {
     intptr_t ret;
     int c, num, type;
     if (savop) {
         ret = savop;
         savop = 0;
-        return ret;
+        return (union Op)ret;
     } else if (passno) {
         ret = agetw();
         if (ret >= 04000) {
-            return (intptr_t)(usymtab + (ret - 04000));
+            ret = (intptr_t)(usymtab + (ret - 04000));
         } else if (ret >= 01000) {
-            return (intptr_t)( symtab + (ret - 01000) * 3 + 8);
+            ret = (intptr_t)( symtab + (ret - 01000) * 3 + 8);
         } else if (ret == 1) {
             numval = agetw();
         }
-        return ret;
+        return (union Op)ret;
     }
     for (;;) {
         c = rch(); /* 0-127 */
@@ -72,21 +74,21 @@ readop() {
             aputw(txtp, c | 256);
         }
         aputw(txtp, -1);
-        return '<';
+        return (union Op)'<';
     default: /* ASCII */
         ch = c;
         if ('0' <= c && c <= '9') {
             ret = number(&num);
             break;
         }
-        return rname();
+        return (union Op)rname();
     }
     aputw(txtp, ret);
     if (ret == 1) {
         /* default(数字), squote, dquote */
         aputw(txtp, numval = num);
     }
-    return ret;
+    return (union Op)ret;
 }
 
 rsch(isstr)
