@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <signal.h>
 
 #ifndef O_BINARY
 #define O_BINARY 0
